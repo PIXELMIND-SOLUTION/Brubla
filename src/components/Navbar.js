@@ -493,7 +493,7 @@ export default function Navbar() {
 
 
                         <div onClick={() => navigate('/')}>
-                            <img src="/logo.png" className="h-8 w-8" />
+                            <img src="/logo2.png" className="h-12 w-12" />
                         </div>
 
                         <div className="md:hidden px-3 pb-2.5 flex items-center gap-2">
