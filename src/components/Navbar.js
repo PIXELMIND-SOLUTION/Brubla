@@ -333,7 +333,7 @@ const BottomNavBar = ({ onExclusiveOpen, catOpen }) => {
     const handlePress = (id, link) => {
         setActive(id);
         if (id === "exclusive") {
-            navigate("/exclusive");
+            navigate("/exclusiveproducts");
         } else {
             navigate(link);
         }
