@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 // ─────────────────────────────────────────────────────────────────────────────
 // CATEGORY DATA
@@ -239,6 +240,7 @@ export default function CategorySection() {
   const [headerVis, setHeaderVis] = useState(false);
   const headerRef = useRef(null);
 
+  const navigate = useNavigate();
   // header entrance
   useEffect(() => {
     const el = headerRef.current;
@@ -317,6 +319,7 @@ export default function CategorySection() {
             <button
               className="hidden sm:flex items-center gap-1.5 text-xs font-bold ml-2 transition-all duration-200 group"
               style={{ color: "#0C0C0C" }}
+              onClick={()=>navigate('/category')}
             >
               View All
               <span className="flex items-center justify-center rounded-full transition-all duration-200 group-hover:scale-110"

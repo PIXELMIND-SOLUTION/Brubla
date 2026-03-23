@@ -41,6 +41,7 @@ const HeartIcon = ({ c }) => (
         <path d="M4.318 6.318a4.5 4.5 0 016.364 0L12 7.636l1.318-1.318a4.5 4.5 0 116.364 6.364L12 21.364 4.318 12.682a4.5 4.5 0 010-6.364z" />
     </Ic>
 );
+// const ProfileIcon = ({ c }) => <Ic className={c || "w-5 h-5"}><path d="M16 7a4 4 0 11-8 0 4 4 0 018 0z" /><path d="M12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" /></Ic>;
 const TruckIcon = ({ c }) => <Ic className={c || "w-5 h-5"}><rect x="1" y="3" width="15" height="13" rx="1" /><path d="M16 8h4l3 5v3h-7V8z" /><circle cx="5.5" cy="18.5" r="2.5" /><circle cx="18.5" cy="18.5" r="2.5" /></Ic>;
 const ScissorsIcon = ({ c }) => <Ic className={c || "w-5 h-5"}><circle cx="6" cy="6" r="3" /><circle cx="6" cy="18" r="3" /><path d="M20 4L8.12 15.88M14.47 14.48L20 20M8.12 8.12L12 12" /></Ic>;
 const BrushIcon = ({ c }) => <Ic className={c || "w-5 h-5"}><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L3 14.67l.06.06a4 4 0 005.6 5.6l.06.06 10.06-10.06a5.5 5.5 0 000-7.78z" /><path d="M7.5 21a2.5 2.5 0 01-3-3" /></Ic>;
@@ -319,10 +320,12 @@ const CartBtn = ({ count }) => (
 
 const SIDE_TABS = [
     { id: "home", label: "Home", Icon: HomeIcon, badge: null, link: "/" },
-    { id: "favourites", label: "favourites", Icon: HeartIcon, sublabel: "Delivery", link: "/" },
-    // centre slot = Exclusive (rendered separately)
+    // { id: "favourites", label: "favourites", Icon: HeartIcon, sublabel: "Delivery", link: "/" },
     { id: "tailor", label: "Tailor", Icon: ScissorsIcon, badge: null, link: "/" },
+    // centre slot = Exclusive (rendered separately)
     { id: "stylist", label: "Stylist", Icon: BrushIcon, badge: null, link: "/" },
+    { id: "profile", label: "Profile", Icon: ProfileIcon, badge: null, link: "/profile" },
+    
 ];
 
 const BottomNavBar = ({ onExclusiveOpen, catOpen }) => {
@@ -519,7 +522,7 @@ export default function Navbar() {
                                 <SearchIcon />
                             </button>
                             <CartBtn count={cartCount} />
-                            <button className="hidden lg:flex p-2 rounded-full transition-colors hover:bg-[#F5F0E8]"
+                            <button onClick={()=>navigate('/profile')} className="hidden lg:flex p-2 rounded-full transition-colors hover:bg-[#F5F0E8]"
                                 style={{ color: "#3a3530" }} aria-label="Profile">
                                 <ProfileIcon />
                             </button>
