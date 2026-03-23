@@ -377,7 +377,7 @@ const BottomNavBar = ({ onExclusiveOpen, catOpen }) => {
                     return (
                         <button
                             key={id}
-                            onClick={() => handlePress(id,link)}
+                            onClick={() => handlePress(id, link)}
                             className="flex flex-col items-center justify-end flex-1 pb-2 text-xs"
                         >
                             <Icon
@@ -488,13 +488,17 @@ export default function Navbar() {
                     {/* ROW 1 — Logo · Location · Nav · Search · Icons */}
                     <div className="flex items-center gap-2 md:gap-3 lg:gap-4 px-3 md:px-5 lg:px-8 h-14 md:h-16">
 
-                        
-                        <div onClick={()=>navigate('/')}>
-                            <img src="/logo.png" className="h-8 w-8"/>
+
+                        <div onClick={() => navigate('/')}>
+                            <img src="/logo.png" className="h-8 w-8" />
+                        </div>
+
+                        <div className="md:hidden px-3 pb-2.5 flex items-center gap-2">
+                            <div className="flex-shrink-0"><LocationSelector compact /></div>
                         </div>
 
                         {/* Location md+ */}
-                        <div className="hidden md:flex items-center flex-shrink-0 pl-3 ml-1"
+                        <div className="hidden md:flex items-center justify-center flex-shrink-0 pl-3 ml-1"
                             style={{ borderLeft: "1px solid #EDE7D9" }}>
                             <LocationSelector />
                         </div>
@@ -520,12 +524,6 @@ export default function Navbar() {
                                 <ProfileIcon />
                             </button>
                         </div>
-                    </div>
-
-                    {/* ROW 2 mobile — compact location + search */}
-                    <div className="md:hidden px-3 pb-2.5 flex items-center gap-2">
-                        <div className="flex-shrink-0"><LocationSelector compact /></div>
-                        <div className="flex-1 min-w-0"><SearchBar placeholder="Search products…" /></div>
                     </div>
 
                     {/* ROW 2 tablet md–lg — scrollable nav pills */}
