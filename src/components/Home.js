@@ -5,6 +5,7 @@ import FlashBanner from "./FlashBanner";
 import RecommendedProducts from "./RecommendedProducts";
 import CollectionGrid from "./CollectionGrid";
 import UpcomingAndRadar, { DesignsOnRadar, UpcomingSection } from "./UpcommingAndRadar";
+import AdBanner from "./AdBanner";
 
 const Home = () => {
     return (
@@ -17,6 +18,7 @@ const Home = () => {
                 <RecommendedProducts />
                 <CollectionGrid />
                 <UpcomingSection />
+                <AdBanner />
                 <DesignsOnRadar />
             </main>
 

@@ -155,41 +155,41 @@ const PRODUCTS = [
 // ─────────────────────────────────────────────────────────────────────────────
 const HeartIcon = ({ filled, size = 16 }) => (
   <svg width={size} height={size} viewBox="0 0 24 24" fill={filled ? "currentColor" : "none"}
-       stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
+    stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
     <path d="M4.318 6.318a4.5 4.5 0 016.364 0L12 7.636l1.318-1.318a4.5 4.5 0 116.364 6.364L12 21.364 4.318 12.682a4.5 4.5 0 010-6.364z" />
   </svg>
 );
 
 const StarIcon = ({ filled = true, size = 12 }) => (
   <svg width={size} height={size} viewBox="0 0 24 24"
-       fill={filled ? "currentColor" : "none"} stroke="currentColor" strokeWidth={1.5}>
+    fill={filled ? "currentColor" : "none"} stroke="currentColor" strokeWidth={1.5}>
     <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
   </svg>
 );
 
 const CartAddIcon = ({ size = 16 }) => (
   <svg width={size} height={size} viewBox="0 0 24 24" fill="none"
-       stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
-    <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/>
-    <line x1="3" y1="6" x2="21" y2="6"/>
-    <path d="M16 10a4 4 0 01-8 0"/>
-    <line x1="12" y1="13" x2="12" y2="19"/>
-    <line x1="9" y1="16" x2="15" y2="16"/>
+    stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
+    <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z" />
+    <line x1="3" y1="6" x2="21" y2="6" />
+    <path d="M16 10a4 4 0 01-8 0" />
+    <line x1="12" y1="13" x2="12" y2="19" />
+    <line x1="9" y1="16" x2="15" y2="16" />
   </svg>
 );
 
 const ChevronIcon = ({ dir = "right", size = 14 }) => (
   <svg width={size} height={size} viewBox="0 0 24 24" fill="none"
-       stroke="currentColor" strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round">
-    {dir === "right" ? <path d="M9 18l6-6-6-6"/> : <path d="M15 18l-6-6 6-6"/>}
+    stroke="currentColor" strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round">
+    {dir === "right" ? <path d="M9 18l6-6-6-6" /> : <path d="M15 18l-6-6 6-6" />}
   </svg>
 );
 
 const EyeIcon = ({ size = 15 }) => (
   <svg width={size} height={size} viewBox="0 0 24 24" fill="none"
-       stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
-    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
-    <circle cx="12" cy="12" r="3"/>
+    stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
+    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+    <circle cx="12" cy="12" r="3" />
   </svg>
 );
 
@@ -197,11 +197,11 @@ const EyeIcon = ({ size = 15 }) => (
 // STAR RATING
 // ─────────────────────────────────────────────────────────────────────────────
 const StarRating = ({ rating }) => {
-  const full  = Math.floor(rating);
+  const full = Math.floor(rating);
   const empty = 5 - Math.ceil(rating);
   return (
     <div className="flex items-center gap-0.5" style={{ color: "#C9A96E" }}>
-      {Array.from({ length: full  }).map((_, i) => <StarIcon key={`f${i}`} filled />)}
+      {Array.from({ length: full }).map((_, i) => <StarIcon key={`f${i}`} filled />)}
       {rating % 1 !== 0 && (
         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5}>
           <defs>
@@ -222,11 +222,11 @@ const StarRating = ({ rating }) => {
 // PRODUCT CARD
 // ─────────────────────────────────────────────────────────────────────────────
 const ProductCard = ({ product, index }) => {
-  const [hovered,  setHovered]  = useState(false);
-  const [wishlisted, setWish]   = useState(product.wishlist);
-  const [addedCart, setCart]    = useState(false);
-  const [selColor, setColor]    = useState(0);
-  const [visible,  setVisible]  = useState(false);
+  const [hovered, setHovered] = useState(false);
+  const [wishlisted, setWish] = useState(product.wishlist);
+  const [addedCart, setCart] = useState(false);
+  const [selColor, setColor] = useState(0);
+  const [visible, setVisible] = useState(false);
   const ref = useRef(null);
 
   useEffect(() => {
@@ -251,9 +251,9 @@ const ProductCard = ({ product, index }) => {
       ref={ref}
       className="flex-shrink-0 group cursor-pointer"
       style={{
-        width:      "clamp(180px,38vw,230px)",
-        opacity:    visible ? 1 : 0,
-        transform:  visible ? "translateY(0)" : "translateY(24px)",
+        width: "clamp(180px,38vw,230px)",
+        opacity: visible ? 1 : 0,
+        transform: visible ? "translateY(0)" : "translateY(24px)",
         transition: `opacity 0.5s ease ${index * 0.07}s, transform 0.5s ease ${index * 0.07}s`,
       }}
       onMouseEnter={() => setHovered(true)}
@@ -261,7 +261,7 @@ const ProductCard = ({ product, index }) => {
     >
       {/* ── IMAGE BLOCK ── */}
       <div
-        className="relative overflow-hidden rounded-2xl"
+        className="relative overflow-hidden"
         style={{
           aspectRatio: "3/4",
           boxShadow: hovered
@@ -277,8 +277,8 @@ const ProductCard = ({ product, index }) => {
           className="absolute inset-0 w-full h-full object-cover object-top"
           style={{
             transition: "opacity 0.45s ease, transform 0.6s ease",
-            opacity:    hovered ? 0 : 1,
-            transform:  hovered ? "scale(1.06)" : "scale(1.0)",
+            opacity: hovered ? 0 : 1,
+            transform: hovered ? "scale(1.06)" : "scale(1.0)",
           }}
           loading="lazy"
           draggable={false}
@@ -290,22 +290,22 @@ const ProductCard = ({ product, index }) => {
           className="absolute inset-0 w-full h-full object-cover object-top"
           style={{
             transition: "opacity 0.45s ease, transform 0.6s ease",
-            opacity:    hovered ? 1 : 0,
-            transform:  hovered ? "scale(1.0)" : "scale(1.06)",
+            opacity: hovered ? 1 : 0,
+            transform: hovered ? "scale(1.0)" : "scale(1.06)",
           }}
           loading="lazy"
           draggable={false}
         />
 
         {/* Subtle bottom vignette */}
-        <div className="absolute inset-0 rounded-2xl pointer-events-none"
-             style={{ background: "linear-gradient(180deg,transparent 55%,rgba(12,12,12,0.22) 100%)" }} />
+        <div className="absolute inset-0 pointer-events-none"
+          style={{ background: "linear-gradient(180deg,transparent 55%,rgba(12,12,12,0.22) 100%)" }} />
 
         {/* ── BADGE ── */}
         <div className="absolute top-3 left-3 z-10">
           <span
-            className="text-[9px] font-black tracking-[0.14em] uppercase px-2 py-1 rounded-lg"
-            style={{ background: product.badgeColor, color: "#0C0C0C", letterSpacing: "0.1em" }}
+            className="text-[9px] font-black tracking-[0.14em] uppercase px-2 py-1"
+            style={{ background: "#6F4E37", color: "#fff", letterSpacing: "0.1em" }}
           >
             {product.badge}
           </span>
@@ -314,9 +314,11 @@ const ProductCard = ({ product, index }) => {
         {/* ── DISCOUNT CHIP ── */}
         <div className="absolute top-3 right-3 z-10">
           <span
-            className="text-[9px] font-black px-1.5 py-0.5 rounded-md"
-            style={{ background: "rgba(12,12,12,0.75)", color: "#E8C97A",
-                     backdropFilter: "blur(4px)" }}
+            className="text-[9px] font-black px-1.5 py-0.5"
+            style={{
+              background: "#6F4E37", color: "#fff",
+              backdropFilter: "blur(4px)"
+            }}
           >
             -{product.discount}%
           </span>
@@ -324,18 +326,32 @@ const ProductCard = ({ product, index }) => {
 
         {/* ── WISHLIST BUTTON ── */}
         <button
-          onClick={(e) => { e.preventDefault(); setWish(w => !w); }}
-          className="absolute z-20 flex items-center justify-center rounded-full transition-all duration-300"
+          onClick={(e) => {
+            e.preventDefault();
+            setWish((w) => !w);
+          }}
+          className="
+    absolute z-20 flex items-center justify-center
+    transition-all duration-300
+    rounded-full
+  "
           style={{
             top: hovered ? "46px" : "44px",
-            right: "12px",
-            width:   "32px",
-            height:  "32px",
-            background: wishlisted ? "#e85d4a" : "rgba(255,255,255,0.90)",
-            color:      wishlisted ? "#fff" : "#0C0C0C",
-            boxShadow:  "0 2px 12px rgba(12,12,12,0.15)",
-            transform:  hovered ? "scale(1)" : "scale(0.92)",
-            opacity:    hovered ? 1 : 0.85,
+            right: "10px",
+
+            width: "30px",
+            height: "30px",
+
+            background: wishlisted
+              ? "#e85d4a"
+              : "rgba(255,255,255,0.92)",
+
+            color: wishlisted ? "#fff" : "#0C0C0C",
+
+            boxShadow: "0 4px 14px rgba(0,0,0,0.15)",
+
+            transform: hovered ? "scale(1)" : "scale(0.9)",
+            opacity: hovered ? 1 : 0.85,
           }}
           aria-label="Wishlist"
         >
@@ -346,15 +362,15 @@ const ProductCard = ({ product, index }) => {
         <button
           className="absolute bottom-0 left-0 right-0 z-20 flex items-center justify-center gap-2 transition-all duration-300"
           style={{
-            height:     "40px",
+            height: "40px",
             background: "rgba(12,12,12,0.82)",
             backdropFilter: "blur(6px)",
-            color:      "#F5F0E8",
-            fontSize:   "11px",
+            color: "#F5F0E8",
+            fontSize: "11px",
             fontWeight: 700,
             letterSpacing: "0.08em",
-            transform:  hovered ? "translateY(0)" : "translateY(100%)",
-            borderRadius: "0 0 16px 16px",
+            transform: hovered ? "translateY(0)" : "translateY(100%)",
+            borderRadius: "0 0 0px 0px",
           }}
           onClick={(e) => e.preventDefault()}
         >
@@ -371,11 +387,11 @@ const ProductCard = ({ product, index }) => {
             <button
               key={ci}
               onClick={(e) => { e.preventDefault(); setColor(ci); }}
-              className="rounded-full transition-all duration-200"
+              className="transition-all duration-200"
               style={{
-                width:   selColor === ci ? "14px" : "10px",
-                height:  selColor === ci ? "14px" : "10px",
-                background: col,
+                width: selColor === ci ? "14px" : "10px",
+                height: selColor === ci ? "14px" : "10px",
+                background: "#6F4E37",
                 border: selColor === ci ? "2px solid #FEFCF8" : "1.5px solid rgba(255,255,255,0.4)",
                 boxShadow: selColor === ci ? `0 0 0 2px ${col}` : "none",
               }}
@@ -389,7 +405,7 @@ const ProductCard = ({ product, index }) => {
       <div className="mt-3 px-0.5">
         {/* Brand */}
         <p className="text-[10px] font-bold uppercase tracking-[0.15em] mb-0.5"
-           style={{ color: "#8A8070" }}>
+          style={{ color: "#8A8070" }}>
           {product.brand}
         </p>
 
@@ -397,8 +413,8 @@ const ProductCard = ({ product, index }) => {
         <h3
           className="font-black leading-tight mb-1.5 truncate"
           style={{
-            fontSize:   "clamp(13px,2vw,15px)",
-            color:      "#0C0C0C",
+            fontSize: "clamp(13px,2vw,15px)",
+            color: "#0C0C0C",
             fontFamily: "Georgia,'Times New Roman',serif",
             letterSpacing: "-0.01em",
           }}
@@ -409,7 +425,7 @@ const ProductCard = ({ product, index }) => {
         {/* Rating row */}
         <div className="flex items-center gap-1.5 mb-2">
           <StarRating rating={product.rating} />
-          <span className="text-[10px] font-semibold" style={{ color: "#8A8070" }}>
+          <span className="text-[10px] font-semibold" style={{ color: "#6F4E37" }}>
             {product.rating} ({product.reviews.toLocaleString()})
           </span>
         </div>
@@ -418,7 +434,7 @@ const ProductCard = ({ product, index }) => {
         <div className="flex items-center gap-1 mb-2.5 flex-wrap">
           {product.sizes.slice(0, 4).map(sz => (
             <span key={sz}
-              className="text-[9px] font-bold px-1.5 py-0.5 rounded-md"
+              className="text-[9px] font-bold px-1.5 py-0.5"
               style={{ background: "#F5F0E8", color: "#3a3530", border: "1px solid #EDE7D9" }}>
               {sz}
             </span>
@@ -441,7 +457,7 @@ const ProductCard = ({ product, index }) => {
                 ₹{product.originalPrice.toLocaleString()}
               </span>
             </div>
-            <span className="text-[10px] font-black" style={{ color: "#C9A96E" }}>
+            <span className="text-[10px] font-black" style={{ color: "#6F4E37" }}>
               Save ₹{(product.originalPrice - product.price).toLocaleString()}
             </span>
           </div>
@@ -449,24 +465,24 @@ const ProductCard = ({ product, index }) => {
           {/* Add to Cart button */}
           <button
             onClick={handleCart}
-            className="flex items-center justify-center rounded-xl transition-all duration-300 active:scale-95"
+            className="flex items-center justify-center transition-all duration-300 active:scale-95"
             style={{
-              width:      "38px",
-              height:     "38px",
+              width: "38px",
+              height: "38px",
               background: addedCart
                 ? "#6fcf97"
-                : "linear-gradient(145deg,#1a1812 0%,#0C0C0C 100%)",
-              color:      addedCart ? "#0C0C0C" : "#C9A96E",
-              boxShadow:  addedCart
+                : "#6F4E37",
+              color: addedCart ? "#fff" : "#fff",
+              boxShadow: addedCart
                 ? "0 4px 14px rgba(111,207,151,0.4)"
                 : "0 4px 14px rgba(12,12,12,0.25)",
-              border:     "1.5px solid rgba(201,169,110,0.2)",
-              transform:  addedCart ? "scale(1.12)" : "scale(1)",
+              border: "1.5px solid rgba(201,169,110,0.2)",
+              transform: addedCart ? "scale(1.12)" : "scale(1)",
             }}
             aria-label="Add to cart"
           >
             {addedCart
-              ? <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5} strokeLinecap="round"><path d="M5 13l4 4L19 7"/></svg>
+              ? <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5} strokeLinecap="round"><path d="M5 13l4 4L19 7" /></svg>
               : <CartAddIcon size={15} />}
           </button>
         </div>
@@ -486,14 +502,18 @@ const FilterTabs = ({ active, onChange }) => (
       <button
         key={f}
         onClick={() => onChange(f)}
-        className="flex-shrink-0 text-[11px] font-bold px-3.5 py-1.5 rounded-full transition-all duration-200 whitespace-nowrap"
+        className="flex-shrink-0 text-[11px] font-bold px-3.5 py-1.5 transition-all duration-200 whitespace-nowrap"
         style={
           active === f
-            ? { background: "#0C0C0C", color: "#C9A96E",
-                border: "1.5px solid rgba(201,169,110,0.3)",
-                boxShadow: "0 4px 14px rgba(12,12,12,0.2)" }
-            : { background: "#F5F0E8", color: "#3a3530",
-                border: "1.5px solid #EDE7D9" }
+            ? {
+              background: "#6F4E37", color: "#fff",
+              border: "1.5px solid rgba(201,169,110,0.3)",
+              boxShadow: "0 4px 14px rgba(12,12,12,0.2)"
+            }
+            : {
+              background: "#F5F0E8", color: "#3a3530",
+              border: "1.5px solid #EDE7D9"
+            }
         }
       >
         {f}
@@ -509,14 +529,14 @@ const ScrollBtn = ({ dir, onClick, show }) => (
   <button
     onClick={onClick}
     aria-label={dir}
-    className="flex-shrink-0 flex items-center justify-center rounded-full transition-all duration-200 hover:scale-110 active:scale-95"
+    className="flex-shrink-0 flex items-center justify-center transition-all duration-200 hover:scale-110 active:scale-95"
     style={{
-      width:      "36px", height: "36px",
-      background: "#0C0C0C",
-      color:      "#C9A96E",
-      border:     "1.5px solid rgba(201,169,110,0.25)",
-      boxShadow:  "0 4px 14px rgba(12,12,12,0.2)",
-      opacity:    show ? 1 : 0.25,
+      width: "36px", height: "36px",
+      background: "#6F4E37",
+      color: "#fff",
+      border: "1.5px solid rgba(201,169,110,0.25)",
+      boxShadow: "0 4px 14px rgba(12,12,12,0.2)",
+      opacity: show ? 1 : 0.25,
       pointerEvents: show ? "auto" : "none",
     }}
   >
@@ -528,11 +548,11 @@ const ScrollBtn = ({ dir, onClick, show }) => (
 // MAIN EXPORT
 // ─────────────────────────────────────────────────────────────────────────────
 export default function RecommendedProducts() {
-  const [filter,   setFilter]   = useState("All");
-  const [canLeft,  setCanLeft]  = useState(false);
+  const [filter, setFilter] = useState("All");
+  const [canLeft, setCanLeft] = useState(false);
   const [canRight, setCanRight] = useState(true);
   const [headerVis, setHdrVis] = useState(false);
-  const trackRef  = useRef(null);
+  const trackRef = useRef(null);
   const headerRef = useRef(null);
 
   // header entrance animation
@@ -570,7 +590,7 @@ export default function RecommendedProducts() {
   return (
     <section
       className="w-full py-12 md:py-16 overflow-hidden"
-      style={{ background: "#FEFCF8" }}
+      style={{ background: "#fff" }}
       aria-label="Recommended Products"
     >
       {/* Injected styles */}
@@ -585,7 +605,7 @@ export default function RecommendedProducts() {
           ref={headerRef}
           className="px-4 md:px-6 lg:px-10 xl:px-14 mb-6 md:mb-8"
           style={{
-            opacity:   headerVis ? 1 : 0,
+            opacity: headerVis ? 1 : 0,
             transform: headerVis ? "translateY(0)" : "translateY(16px)",
             transition: "opacity 0.55s ease, transform 0.55s ease",
           }}
@@ -594,14 +614,14 @@ export default function RecommendedProducts() {
           <div className="flex items-start justify-between mb-4 md:mb-5">
             <div>
               <p className="text-[10px] font-black uppercase tracking-[0.24em] mb-1"
-                 style={{ color: "#C9A96E" }}>
+                style={{ color: "#6F4E37" }}>
                 Curated for you
               </p>
               <h2
                 className="font-black leading-none"
                 style={{
-                  fontSize:   "clamp(24px,4vw,42px)",
-                  color:      "#0C0C0C",
+                  fontSize: "clamp(24px,4vw,42px)",
+                  color: "#0C0C0C",
                   fontFamily: "Georgia,'Times New Roman',serif",
                   letterSpacing: "-0.02em",
                 }}
@@ -610,27 +630,27 @@ export default function RecommendedProducts() {
               </h2>
               {/* Underline */}
               <div className="flex items-center gap-2 mt-2">
-                <div className="h-[3px] w-10 rounded-full"
-                     style={{ background: "linear-gradient(90deg,#C9A96E,#E8C97A)" }} />
-                <div className="h-[3px] w-4 rounded-full"
-                     style={{ background: "rgba(201,169,110,0.3)" }} />
-                <div className="h-[3px] w-2 rounded-full"
-                     style={{ background: "rgba(201,169,110,0.15)" }} />
+                <div className="h-[3px] w-10"
+                  style={{ background: "linear-gradient(90deg,#6F4E37,#6F4E37)" }} />
+                <div className="h-[3px] w-4"
+                  style={{ background: "#6F4E37" }} />
+                <div className="h-[3px] w-2"
+                  style={{ background: "#6F4E37" }} />
               </div>
             </div>
 
             {/* Right: arrows + view all */}
             <div className="flex items-center gap-2 mt-1">
-              <ScrollBtn dir="left"  onClick={() => scrollBy("left")}  show={canLeft} />
+              <ScrollBtn dir="left" onClick={() => scrollBy("left")} show={canLeft} />
               <ScrollBtn dir="right" onClick={() => scrollBy("right")} show={canRight} />
               <button
                 className="hidden sm:flex items-center gap-1.5 ml-1 text-xs font-black tracking-wide
                            transition-all duration-200 group"
-                style={{ color: "#0C0C0C" }}
+                style={{ color: "#000" }}
               >
                 View All
-                <span className="flex items-center justify-center rounded-full transition-all duration-200 group-hover:scale-110"
-                      style={{ width: "26px", height: "26px", background: "#0C0C0C", color: "#C9A96E" }}>
+                <span className="flex items-center justify-center transition-all duration-200 group-hover:scale-110"
+                  style={{ width: "26px", height: "26px", background: "#6F4E37", color: "#fff" }}>
                   <ChevronIcon dir="right" size={11} />
                 </span>
               </button>
@@ -646,8 +666,8 @@ export default function RecommendedProducts() {
           ref={trackRef}
           className="prod-track flex gap-4 overflow-x-auto"
           style={{
-            paddingLeft:   "clamp(16px,4vw,56px)",
-            paddingRight:  "clamp(16px,4vw,56px)",
+            paddingLeft: "clamp(16px,4vw,56px)",
+            paddingRight: "clamp(16px,4vw,56px)",
             paddingBottom: "16px",
             scrollbarWidth: "none",
             WebkitOverflowScrolling: "touch",
@@ -665,13 +685,13 @@ export default function RecommendedProducts() {
         {/* ── MOBILE: View All button ── */}
         <div className="sm:hidden flex justify-center mt-5 px-4">
           <button
-            className="w-full max-w-sm flex items-center justify-center gap-2 py-3.5 rounded-2xl
+            className="w-full max-w-sm flex items-center justify-center gap-2 py-3.5
                        font-black text-sm tracking-wide transition-all active:scale-98"
             style={{
-              background: "#0C0C0C",
-              color:      "#C9A96E",
-              border:     "1.5px solid rgba(201,169,110,0.2)",
-              boxShadow:  "0 6px 20px rgba(12,12,12,0.18)",
+              background: "#6F4E37",
+              color: "#fff",
+              border: "1.5px solid rgba(201,169,110,0.2)",
+              boxShadow: "0 6px 20px rgba(12,12,12,0.18)",
             }}
           >
             View All Products

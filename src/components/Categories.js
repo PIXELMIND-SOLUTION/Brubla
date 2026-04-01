@@ -145,7 +145,7 @@ export default function CategoriesGrid() {
                     {categories.map((cat) => (
                         <div
                             key={cat.id}
-                            className={`${cat.span} relative overflow-hidden rounded-2xl cursor-pointer group`}
+                            className={`${cat.span} relative overflow-hidden cursor-pointer group`}
                             onMouseEnter={() => setHovered(cat.id)}
                             onMouseLeave={() => setHovered(null)}
                             onClick={()=>navigate(`/category/${cat.name}`)}
@@ -171,7 +171,7 @@ export default function CategoriesGrid() {
                             <div className="absolute top-4 left-4">
                                 <span
                                     className={`${tagColors[cat.tag] || "bg-zinc-700"
-                                        } text-white text-[10px] font-bold uppercase tracking-widest px-2.5 py-1 rounded-full`}
+                                        } text-white text-[10px] font-bold uppercase tracking-widest px-2.5 py-1`}
                                 >
                                     {cat.tag}
                                 </span>
@@ -184,7 +184,7 @@ export default function CategoriesGrid() {
                                         : "opacity-0 -translate-y-2"
                                     }`}
                             >
-                                <button className="bg-white text-black text-xs font-bold px-3 py-1.5 rounded-full hover:bg-zinc-200 transition-colors">
+                                <button className="bg-white text-black text-xs font-bold px-3 py-1.5 hover:bg-zinc-200 transition-colors">
                                     Save
                                 </button>
                             </div>
@@ -216,7 +216,7 @@ export default function CategoriesGrid() {
 
                 {/* Footer CTA */}
                 <div className="max-w-7xl mx-auto mt-10 flex justify-center">
-                    <button className="group relative overflow-hidden border border-zinc-700 text-zinc-300 text-sm tracking-widest uppercase px-8 py-3.5 rounded-full hover:border-white hover:text-white transition-all duration-300">
+                    <button className="group relative overflow-hidden border border-zinc-700 text-zinc-300 text-sm tracking-widest uppercase px-8 py-3.5 hover:border-white hover:text-white transition-all duration-300">
                         <span className="relative z-10">View All Categories</span>
                         <div className="absolute inset-0 bg-white/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                     </button>

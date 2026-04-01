@@ -10,69 +10,69 @@ const CATEGORIES = [
     label: "Men",
     sublabel: "432 styles",
     img: "https://images.unsplash.com/photo-1617137968427-85924c800a22?w=400&h=520&fit=crop&q=80&auto=format",
-    accent: "#C9A96E",
+    accent: "#6F4E37",
   },
   {
     id: 2,
     label: "Women",
     sublabel: "860 styles",
     img: "https://images.unsplash.com/photo-1509631179647-0177331693ae?w=400&h=520&fit=crop&q=80&auto=format",
-    accent: "#C9A96E",
+    accent: "#6F4E37",
   },
   {
     id: 3,
     label: "Kids",
     sublabel: "210 styles",
     img: "https://images.unsplash.com/photo-1503919545889-aef636e10ad4?w=400&h=520&fit=crop&q=80&auto=format",
-    accent: "#E8C97A",
+    accent: "#6F4E37",
   },
   {
     id: 4,
     label: "Home & Living",
     sublabel: "380 items",
     img: "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=400&h=520&fit=crop&q=80&auto=format",
-    accent: "#C9A96E",
+    accent: "#6F4E37",
   },
   {
     id: 5,
     label: "Beauty",
     sublabel: "190 products",
     img: "https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?w=400&h=520&fit=crop&q=80&auto=format",
-    accent: "#E8C97A",
+    accent: "#6F4E37",
   },
   {
     id: 6,
     label: "Accessories",
     sublabel: "145 pieces",
     img: "https://images.unsplash.com/photo-1523170335258-f5ed11844a49?w=400&h=520&fit=crop&q=80&auto=format",
-    accent: "#C9A96E",
+    accent: "#6F4E37",
   },
   {
     id: 7,
     label: "Footwear",
     sublabel: "260 pairs",
     img: "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=400&h=520&fit=crop&q=80&auto=format",
-    accent: "#6fcf97",
+    accent: "#6F4E37",
   },
   {
     id: 8,
     label: "Sale",
     sublabel: "BUY 1 GET 1",
     img: "https://images.unsplash.com/photo-1483985988355-763728e1935b?w=400&h=520&fit=crop&q=80&auto=format",
-    accent: "#e85d4a",
+    accent: "#6F4E37",
   },
 ];
 
 // ─────────────────────────────────────────────────────────────────────────────
 // ARROW ICON
 // ─────────────────────────────────────────────────────────────────────────────
-const ChevRight = ({ color = "#0C0C0C", size = 13 }) => (
+const ChevRight = ({ color = "#6F4E37", size = 13 }) => (
   <svg width={size} height={size} viewBox="0 0 24 24" fill="none"
        stroke={color} strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round">
     <path d="M9 18l6-6-6-6" />
   </svg>
 );
-const ChevLeft = ({ color = "#0C0C0C", size = 13 }) => (
+const ChevLeft = ({ color = "#6F4E37", size = 13 }) => (
   <svg width={size} height={size} viewBox="0 0 24 24" fill="none"
        stroke={color} strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round">
     <path d="M15 18l-6-6 6-6" />
@@ -103,7 +103,7 @@ const CategoryCard = ({ cat, index }) => {
   return (
     <div
       ref={ref}
-      className="relative flex-shrink-0 overflow-hidden rounded-2xl cursor-pointer"
+      className="relative flex-shrink-0 overflow-hidden cursor-pointer"
       style={{
         // responsive card width: fills on mobile, fixed on desktop
         width: "clamp(140px, 40vw, 200px)",
@@ -133,7 +133,7 @@ const CategoryCard = ({ cat, index }) => {
       />
 
       {/* OVERLAY — rest */}
-      <div className="absolute inset-0 rounded-2xl"
+      <div className="absolute inset-0"
            style={{
              background: "linear-gradient(180deg,rgba(12,12,12,0) 40%,rgba(12,12,12,0.78) 100%)",
              opacity: hovered ? 0 : 1,
@@ -141,7 +141,7 @@ const CategoryCard = ({ cat, index }) => {
            }} />
 
       {/* OVERLAY — hover */}
-      <div className="absolute inset-0 rounded-2xl"
+      <div className="absolute inset-0"
            style={{
              background: "linear-gradient(180deg,rgba(12,12,12,0.08) 0%,rgba(12,12,12,0.88) 100%)",
              opacity: hovered ? 1 : 0,
@@ -150,14 +150,14 @@ const CategoryCard = ({ cat, index }) => {
 
       {/* SALE badge */}
       {isSale && (
-        <div className="absolute top-3 right-3 z-10 text-[9px] font-black tracking-[0.12em] uppercase px-2 py-0.5 rounded-full"
+        <div className="absolute top-3 right-3 z-10 text-[9px] font-black tracking-[0.12em] uppercase px-2 py-0.5"
              style={{ background: cat.accent, color: "#0C0C0C" }}>
           HOT
         </div>
       )}
 
       {/* TOP ACCENT LINE on hover */}
-      <div className="absolute top-0 left-0 right-0 h-[3px] rounded-t-2xl z-10"
+      <div className="absolute top-0 left-0 right-0 h-[3px] z-10"
            style={{
              background: `linear-gradient(90deg,transparent,${cat.accent},transparent)`,
              opacity: hovered ? 1 : 0,
@@ -181,7 +181,7 @@ const CategoryCard = ({ cat, index }) => {
         <div className="flex items-center justify-between mt-0.5">
           <p className="text-[10px] font-semibold tracking-wide"
              style={{
-               color: cat.accent,
+               color: "#c9b7b7",
                opacity: hovered ? 1 : 0.75,
                transition: "opacity 0.3s ease",
                letterSpacing: "0.05em",
@@ -189,7 +189,7 @@ const CategoryCard = ({ cat, index }) => {
             {cat.sublabel}
           </p>
           {/* Arrow chip */}
-          <div className="flex items-center justify-center rounded-full"
+          <div className="flex items-center justify-center"
                style={{
                  width: "26px", height: "26px",
                  background: cat.accent,
@@ -197,7 +197,7 @@ const CategoryCard = ({ cat, index }) => {
                  transform:  hovered ? "scale(1) translateX(0)" : "scale(0.5) translateX(8px)",
                  transition: "opacity 0.28s ease, transform 0.32s cubic-bezier(0.34,1.56,0.64,1)",
                }}>
-            <ChevRight color="#0C0C0C" size={11} />
+            <ChevRight color="#fff" size={11} />
           </div>
         </div>
       </div>
@@ -212,21 +212,21 @@ const ScrollBtn = ({ dir, onClick, visible }) => (
   <button
     onClick={onClick}
     aria-label={dir === "left" ? "Scroll left" : "Scroll right"}
-    className="flex-shrink-0 flex items-center justify-center rounded-full transition-all duration-200
+    className="flex-shrink-0 flex items-center justify-center transition-all duration-200
                hover:scale-110 active:scale-95"
     style={{
       width: "38px", height: "38px",
-      background: "#0C0C0C",
+      background: "#6F4E37",
       border: "1.5px solid rgba(201,169,110,0.3)",
       opacity:   visible ? 1 : 0.25,
       cursor:    visible ? "pointer" : "not-allowed",
-      boxShadow: "0 4px 14px rgba(12,12,12,0.18)",
+      boxShadow: "0 4px 14px rgba(12, 12, 12, 0)",
       pointerEvents: visible ? "auto" : "none",
     }}
   >
     {dir === "left"
-      ? <ChevLeft color="#C9A96E" size={13} />
-      : <ChevRight color="#C9A96E" size={13} />}
+      ? <ChevLeft color="#fff" size={13} />
+      : <ChevRight color="#fff" size={13} />}
   </button>
 );
 
@@ -278,7 +278,7 @@ export default function CategorySection() {
   return (
     <section
       className="w-full py-10 md:py-14"
-      style={{ background: "#FEFCF8" }}
+      style={{ background: "#fff" }}
       aria-label="Shop by Category"
     >
       <div className="max-w-7xl mx-auto">
@@ -296,7 +296,7 @@ export default function CategorySection() {
           {/* Left: title */}
           <div>
             <p className="text-[10px] font-black uppercase tracking-[0.22em] mb-1"
-               style={{ color: "#C9A96E" }}>
+               style={{ color: "#6F4E37" }}>
               Shop by
             </p>
             <h2 className="font-black leading-none"
@@ -308,8 +308,8 @@ export default function CategorySection() {
                 }}>
               Categories
             </h2>
-            <div className="mt-2 h-[3px] w-10 rounded-full"
-                 style={{ background: "linear-gradient(90deg,#C9A96E,#E8C97A)" }} />
+            <div className="mt-2 h-[3px] w-10"
+                 style={{ background: "linear-gradient(90deg,#6F4E37,#6F4E37)" }} />
           </div>
 
           {/* Right: scroll arrows + view all */}
@@ -318,13 +318,13 @@ export default function CategorySection() {
             <ScrollBtn dir="right" onClick={() => scrollBy("right")} visible={canRight} />
             <button
               className="hidden sm:flex items-center gap-1.5 text-xs font-bold ml-2 transition-all duration-200 group"
-              style={{ color: "#0C0C0C" }}
+              style={{ color: "#000" }}
               onClick={()=>navigate('/category')}
             >
               View All
-              <span className="flex items-center justify-center rounded-full transition-all duration-200 group-hover:scale-110"
-                    style={{ width: "26px", height: "26px", background: "#0C0C0C" }}>
-                <ChevRight color="#C9A96E" size={11} />
+              <span className="flex items-center justify-center transition-all duration-200 group-hover:scale-110"
+                    style={{ width: "26px", height: "26px", background: "#6F4E37" }}>
+                <ChevRight color="#fff" size={11} />
               </span>
             </button>
           </div>
@@ -365,15 +365,15 @@ export default function CategorySection() {
         {/* ── MOBILE "View All" below track ── */}
         <div className="flex justify-center mt-5 sm:hidden">
           <button
-            className="flex items-center gap-2 text-xs font-bold px-5 py-2.5 rounded-full transition-all active:scale-95"
+            className="flex items-center gap-2 text-xs font-bold px-5 py-2.5 transition-all active:scale-95"
             style={{
-              background: "#0C0C0C",
-              color: "#C9A96E",
+              background: "#6F4E37",
+              color: "#fff",
               border: "1.5px solid rgba(201,169,110,0.2)",
             }}
           >
             View All Categories
-            <ChevRight color="#C9A96E" size={11} />
+            <ChevRight color="#fff" size={11} />
           </button>
         </div>
 

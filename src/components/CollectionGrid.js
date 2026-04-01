@@ -12,7 +12,7 @@ const COLLECTIONS = [
     desc: "International styles, global trends, locally delivered",
     cta: "Explore World",
     img: "https://images.unsplash.com/photo-1469334031218-e382a71b716b?w=800&h=1000&fit=crop&q=85&auto=format",
-    accent: "#C9A96E",
+    accent: "#6F4E37",
     overlay: "linear-gradient(170deg,rgba(12,12,12,0.12) 0%,rgba(12,12,12,0.30) 40%,rgba(12,12,12,0.82) 100%)",
     gridArea: "global",
     count: "240+ Styles",
@@ -25,7 +25,7 @@ const COLLECTIONS = [
     desc: "Hand-picked opulence, crafted for the discerning few",
     cta: "Shop Luxury",
     img: "https://images.unsplash.com/photo-1512436991641-6745cdb1723f?w=800&h=600&fit=crop&q=85&auto=format",
-    accent: "#E8C97A",
+    accent: "#6F4E37",
     overlay: "linear-gradient(170deg,rgba(10,8,4,0.08) 0%,rgba(10,8,4,0.25) 45%,rgba(10,8,4,0.88) 100%)",
     gridArea: "luxury",
     count: "85+ Pieces",
@@ -38,7 +38,7 @@ const COLLECTIONS = [
     desc: "Designed in-house. Worn everywhere.",
     cta: "View Originals",
     img: "https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=800&h=600&fit=crop&q=85&auto=format",
-    accent: "#C9A96E",
+    accent: "#6F4E37",
     overlay: "linear-gradient(170deg,rgba(12,12,12,0.05) 0%,rgba(12,12,12,0.20) 45%,rgba(12,12,12,0.85) 100%)",
     gridArea: "originals",
     count: "320+ Designs",
@@ -51,7 +51,7 @@ const COLLECTIONS = [
     desc: "Celebrating the timeless craft of Indian artisans",
     cta: "Discover Heritage",
     img: "https://images.unsplash.com/photo-1509631179647-0177331693ae?w=800&h=1000&fit=crop&q=85&auto=format",
-    accent: "#E8C97A",
+    accent: "#6F4E37",
     overlay: "linear-gradient(170deg,rgba(12,4,0,0.10) 0%,rgba(12,4,0,0.28) 40%,rgba(12,4,0,0.88) 100%)",
     gridArea: "indian",
     count: "180+ Styles",
@@ -64,7 +64,7 @@ const COLLECTIONS = [
     desc: "Every thread tells a love story. Dress the moment.",
     cta: "Plan Your Look",
     img: "https://images.unsplash.com/photo-1485230895905-ec40ba36b9bc?w=1600&h=500&fit=crop&q=85&auto=format",
-    accent: "#C9A96E",
+    accent: "#6F4E37",
     overlay: "linear-gradient(170deg,rgba(12,4,0,0.05) 0%,rgba(12,4,0,0.22) 50%,rgba(12,4,0,0.84) 100%)",
     gridArea: "wedding",
     count: "500+ Looks",
@@ -76,7 +76,7 @@ const COLLECTIONS = [
 // ─────────────────────────────────────────────────────────────────────────────
 const ArrowIcon = ({ size = 13, color = "#0C0C0C" }) => (
   <svg width={size} height={size} viewBox="0 0 24 24" fill="none"
-       stroke={color} strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round">
+    stroke={color} strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round">
     <path d="M9 18l6-6-6-6" />
   </svg>
 );
@@ -106,9 +106,9 @@ const CollectionCard = ({ col, index, style = {} }) => {
       className="relative overflow-hidden cursor-pointer group"
       style={{
         ...style,
-        borderRadius: "20px",
-        opacity:    visible ? 1 : 0,
-        transform:  visible ? "scale(1) translateY(0)" : "scale(0.97) translateY(18px)",
+        borderRadius: "0px",
+        opacity: visible ? 1 : 0,
+        transform: visible ? "scale(1) translateY(0)" : "scale(0.97) translateY(18px)",
         transition: `opacity 0.58s ease ${index * 0.1}s, transform 0.58s ease ${index * 0.1}s,
                      box-shadow 0.35s ease`,
         boxShadow: hovered
@@ -125,45 +125,45 @@ const CollectionCard = ({ col, index, style = {} }) => {
         className="absolute inset-0 w-full h-full object-cover object-center"
         style={{
           transition: "transform 0.7s cubic-bezier(0.25,0.46,0.45,0.94)",
-          transform:  hovered ? "scale(1.07)" : "scale(1.0)",
+          transform: hovered ? "scale(1.07)" : "scale(1.0)",
         }}
         loading="lazy"
         draggable={false}
       />
 
       {/* ── GRADIENT OVERLAY ── rest state */}
-      <div className="absolute inset-0 rounded-[20px]"
-           style={{ background: col.overlay, transition: "opacity 0.4s ease", opacity: hovered ? 0 : 1 }} />
+      <div className="absolute inset-0"
+        style={{ background: col.overlay, transition: "opacity 0.4s ease", opacity: hovered ? 0 : 1 }} />
 
       {/* ── GRADIENT OVERLAY ── hover state (deeper) */}
-      <div className="absolute inset-0 rounded-[20px]"
-           style={{
-             background: col.overlay.replace(/0\.\d+\)/g, (m) => {
-               const n = parseFloat(m);
-               return `${Math.min(n + 0.18, 0.97)})`;
-             }),
-             transition: "opacity 0.4s ease",
-             opacity: hovered ? 1 : 0,
-           }} />
+      <div className="absolute inset-0"
+        style={{
+          background: col.overlay.replace(/0\.\d+\)/g, (m) => {
+            const n = parseFloat(m);
+            return `${Math.min(n + 0.18, 0.97)})`;
+          }),
+          transition: "opacity 0.4s ease",
+          opacity: hovered ? 1 : 0,
+        }} />
 
       {/* ── TOP ACCENT LINE on hover ── */}
-      <div className="absolute top-0 left-0 right-0 h-[3px] rounded-t-[20px]"
-           style={{
-             background: `linear-gradient(90deg, transparent, ${col.accent}, transparent)`,
-             opacity: hovered ? 1 : 0,
-             transition: "opacity 0.3s ease",
-           }} />
+      <div className="absolute top-0 left-0 right-0 h-[3px]"
+        style={{
+          background: `linear-gradient(90deg, transparent, ${col.accent}, transparent)`,
+          opacity: hovered ? 1 : 0,
+          transition: "opacity 0.3s ease",
+        }} />
 
       {/* ── COUNT CHIP top-right ── */}
       <div
         className="absolute top-4 right-4 z-10 text-[9px] font-black tracking-[0.12em] uppercase
-                   px-2.5 py-1 rounded-full"
+                   px-2.5 py-1"
         style={{
           background: "rgba(12,12,12,0.55)",
-          color:      col.accent,
+          color: "#fff",
           backdropFilter: "blur(6px)",
-          border:     `1px solid ${col.accent}30`,
-          opacity:    hovered ? 1 : 0.75,
+          border: `1px solid ${col.accent}30`,
+          opacity: hovered ? 1 : 0.75,
           transition: "opacity 0.3s ease",
         }}
       >
@@ -173,11 +173,11 @@ const CollectionCard = ({ col, index, style = {} }) => {
       {/* ── TAG top-left ── */}
       <div className="absolute top-4 left-4 z-10">
         <span
-          className="text-[9px] font-black tracking-[0.16em] uppercase px-2 py-1 rounded-lg"
+          className="text-[9px] font-black tracking-[0.16em] uppercase px-2 py-1"
           style={{
             background: col.accent,
-            color:      "#0C0C0C",
-            opacity:    hovered ? 1 : 0.9,
+            color: "#fff",
+            opacity: hovered ? 1 : 0.9,
             transition: "opacity 0.3s ease",
           }}
         >
@@ -189,7 +189,7 @@ const CollectionCard = ({ col, index, style = {} }) => {
       <div
         className="absolute bottom-0 left-0 right-0 z-10 px-5 pb-5 pt-4"
         style={{
-          transform:  hovered ? "translateY(0)" : "translateY(4px)",
+          transform: hovered ? "translateY(0)" : "translateY(4px)",
           transition: "transform 0.4s cubic-bezier(0.25,0.46,0.45,0.94)",
         }}
       >
@@ -198,7 +198,7 @@ const CollectionCard = ({ col, index, style = {} }) => {
           <span
             className="font-black text-white"
             style={{
-              fontSize:   "clamp(22px,3.5vw,32px)",
+              fontSize: "clamp(22px,3.5vw,32px)",
               fontFamily: "Georgia,'Times New Roman',serif",
               lineHeight: 0.92,
               letterSpacing: "-0.02em",
@@ -209,8 +209,8 @@ const CollectionCard = ({ col, index, style = {} }) => {
           <span
             className="font-black"
             style={{
-              fontSize:   "clamp(22px,3.5vw,32px)",
-              color:      col.accent,
+              fontSize: "clamp(22px,3.5vw,32px)",
+              color: "#fff",
               fontFamily: "Georgia,'Times New Roman',serif",
               lineHeight: 0.92,
               letterSpacing: "-0.02em",
@@ -224,11 +224,11 @@ const CollectionCard = ({ col, index, style = {} }) => {
         <p
           className="text-white/65 font-medium leading-snug mb-3"
           style={{
-            fontSize:   "11px",
+            fontSize: "11px",
             letterSpacing: "0.02em",
-            maxWidth:   "240px",
-            opacity:    hovered ? 1 : 0,
-            transform:  hovered ? "translateY(0)" : "translateY(6px)",
+            maxWidth: "240px",
+            opacity: hovered ? 1 : 0,
+            transform: hovered ? "translateY(0)" : "translateY(6px)",
             transition: "opacity 0.35s ease 0.05s, transform 0.35s ease 0.05s",
           }}
         >
@@ -239,19 +239,19 @@ const CollectionCard = ({ col, index, style = {} }) => {
         <div
           className="flex items-center gap-0"
           style={{
-            opacity:    hovered ? 1 : 0.85,
+            opacity: hovered ? 1 : 0.85,
             transition: "opacity 0.3s ease",
           }}
         >
           <button
-            className="flex items-center gap-2 rounded-xl font-black text-[11px] tracking-wide
+            className="flex items-center gap-2 font-black text-[11px] tracking-wide
                        transition-all duration-200 hover:gap-3 active:scale-95"
             style={{
               background: col.accent,
-              color:      "#0C0C0C",
-              padding:    "8px 16px",
+              color: "#fff",
+              padding: "8px 16px",
               letterSpacing: "0.08em",
-              boxShadow:  `0 4px 18px ${col.accent}50`,
+              boxShadow: `0 4px 18px ${col.accent}50`,
             }}
           >
             {col.cta}
@@ -283,21 +283,21 @@ const SectionHeader = () => {
       ref={ref}
       className="flex items-end justify-between mb-7 md:mb-10"
       style={{
-        opacity:    vis ? 1 : 0,
-        transform:  vis ? "translateY(0)" : "translateY(14px)",
+        opacity: vis ? 1 : 0,
+        transform: vis ? "translateY(0)" : "translateY(14px)",
         transition: "opacity 0.5s ease, transform 0.5s ease",
       }}
     >
       <div>
         <p className="text-[10px] font-black uppercase tracking-[0.24em] mb-1"
-           style={{ color: "#C9A96E" }}>
+          style={{ color: "#6F4E37" }}>
           Our Universe
         </p>
         <h2
           className="font-black leading-none"
           style={{
-            fontSize:   "clamp(26px,4.5vw,44px)",
-            color:      "#0C0C0C",
+            fontSize: "clamp(26px,4.5vw,44px)",
+            color: "#fff",
             fontFamily: "Georgia,'Times New Roman',serif",
             letterSpacing: "-0.02em",
           }}
@@ -305,20 +305,20 @@ const SectionHeader = () => {
           Collections
         </h2>
         <div className="flex items-center gap-2 mt-2.5">
-          <div className="h-[3px] w-10 rounded-full"
-               style={{ background: "linear-gradient(90deg,#C9A96E,#E8C97A)" }} />
-          <div className="h-[3px] w-4 rounded-full" style={{ background: "rgba(201,169,110,0.3)" }} />
-          <div className="h-[3px] w-2 rounded-full" style={{ background: "rgba(201,169,110,0.14)" }} />
+          <div className="h-[3px] w-10"
+            style={{ background: "linear-gradient(90deg,#C9A96E,#E8C97A)" }} />
+          <div className="h-[3px] w-4" style={{ background: "rgba(111, 78, 55, 0.3)" }} />
+          <div className="h-[3px] w-2" style={{ background: "rgba(111, 78, 55, 0.14)" }} />
         </div>
       </div>
       <button
         className="hidden sm:flex items-center gap-1.5 text-xs font-black tracking-wide group transition-all"
-        style={{ color: "#0C0C0C" }}
+        style={{ color: "#d1c2c2" }}
       >
         All Collections
-        <span className="flex items-center justify-center rounded-full transition-all duration-200 group-hover:scale-110"
-              style={{ width: "26px", height: "26px", background: "#0C0C0C", color: "#C9A96E" }}>
-          <ArrowIcon size={11} color="#C9A96E" />
+        <span className="flex items-center justify-center transition-all duration-200 group-hover:scale-110"
+          style={{ width: "26px", height: "26px", background: "#6F4E37", color: "#fff" }}>
+          <ArrowIcon size={11} color="#fff" />
         </span>
       </button>
     </div>
@@ -348,7 +348,7 @@ export default function CollectionGrid() {
   return (
     <section
       className="w-full py-12 md:py-16"
-      style={{ background: "#F5F0E8" }}
+      style={{ background: "#000" }}
       aria-label="Collections"
     >
       <style>{`
