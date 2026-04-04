@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useCallback } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 
 /* ─────────────────────────────────────────────
@@ -8,121 +8,96 @@ import { useNavigate } from "react-router-dom";
 const DESKTOP_BANNERS = [
   {
     id: 1,
-    title: "Mega Fashion Sale",
-    img: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=1400&h=600&fit=crop&q=80&auto=format",
-    buttonText: "Shop Now",
-    action: "/shop",
+    type: "image",
+    src: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=1400",
   },
   {
     id: 2,
-    title: "Summer Collection 2025",
-    img: "https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=1400&h=600&fit=crop&q=80&auto=format",
-    buttonText: "Explore",
-    action: "/summer",
+    type: "video",
+    src: "https://www.w3schools.com/html/mov_bbb.mp4",
   },
   {
     id: 3,
-    title: "Premium Exclusive Wear",
-    img: "https://images.unsplash.com/photo-1469334031218-e382a71b716b?w=1400&h=600&fit=crop&q=80&auto=format",
-    buttonText: "View Collection",
-    action: "/premium",
-  },
-  {
-    id: 4,
-    title: "Flash Sale Under ₹499",
-    img: "https://images.unsplash.com/photo-1445205170230-053b83016050?w=1400&h=600&fit=crop&q=80&auto=format",
-    buttonText: "Grab Deals",
-    action: "/sale",
-  },
-  {
-    id: 5,
-    title: "Fast Delivery in 3 Days",
-    img: "https://images.unsplash.com/photo-1512436991641-6745cdb1723f?w=1400&h=600&fit=crop&q=80&auto=format",
-    buttonText: "Track Order",
-    action: "/orders",
+    type: "youtube",
+    src: "https://youtu.be/yycVNcishrE?si=aqzsRwLIaT7YjK6A",
   },
 ];
 
 const MOBILE_BANNERS = [
   {
     id: 1,
-    title: "Mega Sale",
-    img: "https://images.unsplash.com/photo-1509631179647-0177331693ae?w=600&h=900&fit=crop&q=80&auto=format",
-    buttonText: "Shop",
-    action: "/shop",
+    type: "image",
+    src: "https://images.unsplash.com/photo-1509631179647-0177331693ae?w=600",
   },
   {
     id: 2,
-    title: "Summer 2025",
-    img: "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=600&h=900&fit=crop&q=80&auto=format",
-    buttonText: "Explore",
-    action: "/summer",
+    type: "video",
+    src: "https://www.w3schools.com/html/mov_bbb.mp4",
   },
   {
     id: 3,
-    title: "Premium Wear",
-    img: "https://images.unsplash.com/photo-1485230895905-ec40ba36b9bc?w=600&h=900&fit=crop&q=80&auto=format",
-    buttonText: "View",
-    action: "/premium",
-  },
-  {
-    id: 4,
-    title: "Flash Deals",
-    img: "https://images.unsplash.com/photo-1483985988355-763728e1935b?w=600&h=900&fit=crop&q=80&auto=format",
-    buttonText: "Deals",
-    action: "/sale",
-  },
-  {
-    id: 5,
-    title: "Fast Delivery",
-    img: "https://images.unsplash.com/photo-1496747611176-843222e1e57c?w=600&h=900&fit=crop&q=80&auto=format",
-    buttonText: "Track",
-    action: "/orders",
+    type: "youtube",
+    src: "https://youtu.be/yycVNcishrE?si=aqzsRwLIaT7YjK6A",
   },
 ];
 
-const ACCENTS = ["#C9A96E", "#C9A96E", "#E8C97A", "#e85d4a", "#6fcf97"];
-
 /* ─────────────────────────────────────────────
-   ARROW BUTTON
+   MODAL
 ───────────────────────────────────────────── */
 
-const ArrowBtn = ({ dir, onClick, accent }) => (
-  <button
-    onClick={onClick}
-    className="flex items-center justify-center rounded-full hover:scale-110 transition"
-    style={{
-      width: "38px",
-      height: "38px",
-      background: "rgba(122, 122, 122, 0)",
-    }}
-  >
-    <svg width="15" height="15" stroke={accent} strokeWidth={2.5}>
-      {dir === "prev" ? <path d="M15 18l-6-6 6-6" /> : <path d="M9 18l6-6-6-6" />}
-    </svg>
-  </button>
-);
+const BannerModal = ({ banner, onClose, getYouTubeEmbedUrl }) => {
+  if (!banner) return null;
 
-/* ─────────────────────────────────────────────
-   DOTS
-───────────────────────────────────────────── */
+  return (
+    <div
+      className="fixed inset-0 bg-black/90 z-50 flex items-center justify-center"
+      onClick={onClose}
+    >
+      {/* Stop closing when clicking inside */}
+      <div
+        className="relative w-[90%] md:w-[70%] h-[60%] md:h-[70%] bg-black rounded-xl overflow-hidden"
+        onClick={(e) => e.stopPropagation()}
+      >
+        {/* Close */}
+        <button
+          onClick={onClose}
+          className="absolute top-3 right-3 text-white text-xl z-10"
+        >
+          ✕
+        </button>
 
-const Dots = ({ total, current, onSelect, accent }) => (
-  <div className="flex gap-1.5">
-    {Array.from({ length: total }).map((_, i) => (
-      <button
-        key={i}
-        onClick={() => onSelect(i)}
-        className="rounded-full transition-all"
-        style={{
-          width: i === current ? "20px" : "6px",
-          height: "6px",
-          background: i === current ? accent : "#ccc",
-        }}
-      />
-    ))}
-  </div>
-);
+        {/* MEDIA */}
+        {banner.type === "image" && (
+          <img
+            key={banner.src}
+            src={banner.src}
+            className="w-full h-full object-contain"
+          />
+        )}
+
+        {banner.type === "video" && (
+          <video
+            key={banner.src}
+            src={banner.src}
+            controls
+            autoPlay
+            className="w-full h-full object-contain"
+          />
+        )}
+
+        {banner.type === "youtube" && (
+          <iframe
+            key={banner.src}
+            src={getYouTubeEmbedUrl(banner.src)}
+            className="w-full h-full"
+            allow="autoplay; encrypted-media"
+            allowFullScreen
+          />
+        )}
+      </div>
+    </div>
+  );
+};
 
 /* ─────────────────────────────────────────────
    CAROUSEL
@@ -130,19 +105,42 @@ const Dots = ({ total, current, onSelect, accent }) => (
 
 const Carousel = ({ banners, aspectRatio, className = "" }) => {
   const navigate = useNavigate();
-
-  const count = banners.length;
   const [cur, setCur] = useState(0);
+  const [selectedBanner, setSelectedBanner] = useState(null);
 
-  const next = useCallback(() => setCur((c) => (c + 1) % count), [count]);
-  const prev = useCallback(() => setCur((c) => (c - 1 + count) % count), [count]);
+  const next = useCallback(
+    () => setCur((c) => (c + 1) % banners.length),
+    [banners.length]
+  );
+
+  const prev = useCallback(
+    () => setCur((c) => (c - 1 + banners.length) % banners.length),
+    [banners.length]
+  );
 
   useEffect(() => {
     const t = setInterval(next, 4000);
     return () => clearInterval(t);
   }, [next]);
 
-  const accent = ACCENTS[cur];
+  /* ✅ YouTube converter */
+  const getYouTubeEmbedUrl = (url) => {
+    try {
+      let videoId = "";
+
+      if (url.includes("youtu.be")) {
+        videoId = url.split("youtu.be/")[1]?.split("?")[0];
+      } else if (url.includes("youtube.com/watch")) {
+        videoId = new URL(url).searchParams.get("v");
+      } else if (url.includes("youtube.com/embed")) {
+        videoId = url.split("/embed/")[1]?.split("?")[0];
+      }
+
+      return `https://www.youtube.com/embed/${videoId}?autoplay=1&mute=0&controls=1&rel=0`;
+    } catch {
+      return "";
+    }
+  };
 
   return (
     <div
@@ -156,35 +154,38 @@ const Carousel = ({ banners, aspectRatio, className = "" }) => {
           style={{ opacity: i === cur ? 1 : 0 }}
         >
           <div className="relative w-full h-full">
-            {/* IMAGE */}
-            <img src={b.img} alt={b.title} className="w-full h-full object-cover" />
 
-            {/* OVERLAY */}
-            <div className="absolute inset-0 bg-black/40" />
+            {/* MEDIA */}
+            {b.type === "image" && (
+              <img src={b.src} className="w-full h-full object-cover" />
+            )}
 
-            {/* CENTER CONTENT */}
-            <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-4">
-              
-              {/* TITLE */}
-              <h2 className="text-white text-lg sm:text-xl md:text-3xl lg:text-4xl font-bold mb-3 md:mb-4 drop-shadow-lg">
-                {b.title}
-              </h2>
+            {b.type === "video" && (
+              <video
+                src={b.src}
+                autoPlay
+                muted
+                loop
+                className="w-full h-full object-cover"
+              />
+            )}
 
-              {/* BUTTON */}
+            {b.type === "youtube" && (
+              <iframe
+                src={getYouTubeEmbedUrl(b.src)}
+                className="w-full h-full object-cover pointer-events-none"
+                allow="autoplay; encrypted-media"
+                allowFullScreen
+              />
+            )}
+
+            {/* BUTTON */}
+            <div className="absolute inset-0 flex items-center justify-center">
               <button
-                onClick={() => navigate(b.action)}
-                className="
-                  px-5 py-2 md:px-6 md:py-3
-                  rounded-full
-                  text-xs md:text-sm font-semibold
-                  bg-gradient-to-r from-[#6F4E37] to-[#6F4E37]
-                  text-white
-                  shadow-xl
-                  hover:scale-105 active:scale-95
-                  transition-all duration-300
-                "
+                onClick={() => setSelectedBanner(b)}
+                className="px-6 py-3 rounded-full bg-white/90 text-black font-semibold hover:scale-105 transition"
               >
-                {b.buttonText}
+                {b.type === "image" ? "View" : "Play"}
               </button>
             </div>
           </div>
@@ -193,36 +194,48 @@ const Carousel = ({ banners, aspectRatio, className = "" }) => {
 
       {/* ARROWS */}
       <div className="absolute left-3 top-1/2 -translate-y-1/2">
-        <ArrowBtn dir="prev" onClick={prev} accent={accent} />
+        <button onClick={prev} className="text-white text-xl">◀</button>
       </div>
 
       <div className="absolute right-3 top-1/2 -translate-y-1/2">
-        <ArrowBtn dir="next" onClick={next} accent={accent} />
+        <button onClick={next} className="text-white text-xl">▶</button>
       </div>
 
       {/* DOTS */}
-      <div className="absolute bottom-3 left-0 right-0 flex justify-center">
-        <Dots total={count} current={cur} onSelect={setCur} accent={accent} />
+      <div className="absolute bottom-3 left-0 right-0 flex justify-center gap-2">
+        {banners.map((_, i) => (
+          <button
+            key={i}
+            onClick={() => setCur(i)}
+            className={`h-2 rounded-full ${
+              i === cur ? "w-6 bg-white" : "w-2 bg-gray-400"
+            }`}
+          />
+        ))}
       </div>
+
+      {/* MODAL */}
+      <BannerModal
+        banner={selectedBanner}
+        onClose={() => setSelectedBanner(null)}
+        getYouTubeEmbedUrl={getYouTubeEmbedUrl}
+      />
     </div>
   );
 };
 
 /* ─────────────────────────────────────────────
-   MAIN COMPONENT
+   MAIN
 ───────────────────────────────────────────── */
 
 export default function HeroBanner() {
   return (
     <section className="w-full bg-black">
-      {/* MOBILE */}
       <Carousel
         banners={MOBILE_BANNERS}
         aspectRatio="9/14"
         className="block md:hidden"
       />
-
-      {/* DESKTOP */}
       <Carousel
         banners={DESKTOP_BANNERS}
         aspectRatio="21/7"

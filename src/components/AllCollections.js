@@ -1,157 +1,541 @@
 import { useState, useRef, useEffect, useCallback } from "react";
 
 // ─────────────────────────────────────────────────────────────────────────────
-// PRODUCT DATA
+// PRODUCT DATA FOR EACH COLLECTION
 // ─────────────────────────────────────────────────────────────────────────────
-const PRODUCTS = [
+
+// Global Collections - International inspired fashion
+const GLOBAL_COLLECTION = [
   {
     id: 1,
-    name: "Linen Kurta",
-    brand: "NewMe Originals",
-    price: 899,
-    originalPrice: 1799,
-    discount: 50,
-    rating: 4.8,
-    reviews: 1240,
-    badge: "BESTSELLER",
-    badgeColor: "#C9A96E",
-    isNew: false,
-    wishlist: false,
-    img: "https://images.unsplash.com/photo-1617137968427-85924c800a22?w=400&h=500&fit=crop&q=80&auto=format",
-    hoverImg: "https://images.unsplash.com/photo-1594938298603-c8148c4dae35?w=400&h=500&fit=crop&q=80&auto=format",
-    colors: ["#C9A96E", "#8A8070", "#1a1812"],
-    sizes: ["S", "M", "L", "XL"],
-  },
-  {
-    id: 2,
-    name: "Silk Blend Saree",
-    brand: "Heritage Weaves",
-    price: 2499,
-    originalPrice: 4999,
-    discount: 50,
+    name: "Italian Leather Jacket",
+    brand: "Brubla Global",
+    price: 12999,
+    originalPrice: 24999,
+    discount: 48,
     rating: 4.9,
-    reviews: 863,
-    badge: "EXCLUSIVE",
-    badgeColor: "#E8C97A",
-    isNew: false,
-    wishlist: false,
-    img: "https://images.unsplash.com/photo-1509631179647-0177331693ae?w=400&h=500&fit=crop&q=80&auto=format",
-    hoverImg: "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=400&h=500&fit=crop&q=80&auto=format",
-    colors: ["#c0392b", "#1a1812", "#C9A96E"],
-    sizes: ["Free Size"],
-  },
-  {
-    id: 3,
-    name: "Casual Co-ord Set",
-    brand: "Studio NM",
-    price: 1199,
-    originalPrice: 2199,
-    discount: 45,
-    rating: 4.7,
-    reviews: 528,
-    badge: "NEW",
-    badgeColor: "#6fcf97",
-    isNew: true,
-    wishlist: false,
-    img: "https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=400&h=500&fit=crop&q=80&auto=format",
-    hoverImg: "https://images.unsplash.com/photo-1483985988355-763728e1935b?w=400&h=500&fit=crop&q=80&auto=format",
-    colors: ["#F5F0E8", "#0C0C0C", "#6fcf97"],
-    sizes: ["XS", "S", "M", "L"],
-  },
-  {
-    id: 4,
-    name: "Oxford Sneakers",
-    brand: "StepOut",
-    price: 1599,
-    originalPrice: 2999,
-    discount: 47,
-    rating: 4.6,
-    reviews: 2103,
-    badge: "FLASH",
-    badgeColor: "#e85d4a",
-    isNew: false,
-    wishlist: false,
-    img: "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=400&h=500&fit=crop&q=80&auto=format",
-    hoverImg: "https://images.unsplash.com/photo-1560769629-975ec94e6a86?w=400&h=500&fit=crop&q=80&auto=format",
-    colors: ["#1a1812", "#F5F0E8", "#c0392b"],
-    sizes: ["6", "7", "8", "9", "10"],
-  },
-  {
-    id: 5,
-    name: "Premium Blazer",
-    brand: "NewMe Atelier",
-    price: 3299,
-    originalPrice: 5999,
-    discount: 45,
-    rating: 4.9,
-    reviews: 412,
-    badge: "PREMIUM",
-    badgeColor: "#C9A96E",
-    isNew: false,
-    wishlist: false,
-    img: "https://images.unsplash.com/photo-1469334031218-e382a71b716b?w=400&h=500&fit=crop&q=80&auto=format",
-    hoverImg: "https://images.unsplash.com/photo-1512436991641-6745cdb1723f?w=400&h=500&fit=crop&q=80&auto=format",
-    colors: ["#1a1812", "#3a3530", "#C9A96E"],
-    sizes: ["S", "M", "L", "XL", "XXL"],
-  },
-  {
-    id: 6,
-    name: "Floral Maxi Dress",
-    brand: "Bloom Studio",
-    price: 1399,
-    originalPrice: 2499,
-    discount: 44,
-    rating: 4.7,
-    reviews: 776,
-    badge: "TRENDING",
+    reviews: 234,
+    badge: "LIMITED EDITION",
     badgeColor: "#C9A96E",
     isNew: true,
-    wishlist: false,
-    img: "https://images.unsplash.com/photo-1485230895905-ec40ba36b9bc?w=400&h=500&fit=crop&q=80&auto=format",
-    hoverImg: "https://images.unsplash.com/photo-1496747611176-843222e1e57c?w=400&h=500&fit=crop&q=80&auto=format",
-    colors: ["#e85d4a", "#F5F0E8", "#6fcf97"],
+    img: "https://images.unsplash.com/photo-1551028719-00167b16eac5?w=400&h=500&fit=crop&q=80&auto=format",
+    hoverImg: "https://images.unsplash.com/photo-1548624313-0396c75e4a63?w=400&h=500&fit=crop&q=80&auto=format",
+    colors: ["#1a1a1a", "#8B4513", "#2F4F4F"],
     sizes: ["XS", "S", "M", "L", "XL"],
   },
   {
-    id: 7,
-    name: "Ethnic Jacket",
-    brand: "Craft House",
-    price: 2199,
-    originalPrice: 3999,
-    discount: 45,
+    id: 2,
+    name: "Parisian Linen Blazer",
+    brand: "Brubla Global",
+    price: 8999,
+    originalPrice: 15999,
+    discount: 44,
     rating: 4.8,
-    reviews: 334,
-    badge: "HANDCRAFTED",
-    badgeColor: "#E8C97A",
+    reviews: 189,
+    badge: "BESTSELLER",
+    badgeColor: "#C9A96E",
     isNew: false,
-    wishlist: false,
-    img: "https://images.unsplash.com/photo-1503341504253-dff4815485f1?w=400&h=500&fit=crop&q=80&auto=format",
+    img: "https://images.unsplash.com/photo-1594938298603-c8148c4dae35?w=400&h=500&fit=crop&q=80&auto=format",
     hoverImg: "https://images.unsplash.com/photo-1617137968427-85924c800a22?w=400&h=500&fit=crop&q=80&auto=format",
-    colors: ["#C9A96E", "#8A8070", "#0C0C0C"],
-    sizes: ["S", "M", "L"],
+    colors: ["#F5F0E8", "#1a1812", "#C9A96E"],
+    sizes: ["S", "M", "L", "XL"],
   },
   {
-    id: 8,
-    name: "Skincare Ritual Kit",
-    brand: "Glow Lab",
-    price: 999,
-    originalPrice: 1799,
+    id: 3,
+    name: "Tokyo Streetwear Hoodie",
+    brand: "Brubla Global",
+    price: 3499,
+    originalPrice: 6999,
+    discount: 50,
+    rating: 4.7,
+    reviews: 567,
+    badge: "TRENDING",
+    badgeColor: "#6fcf97",
+    isNew: true,
+    img: "https://images.unsplash.com/photo-1556821840-3a63f95609a7?w=400&h=500&fit=crop&q=80&auto=format",
+    hoverImg: "https://images.unsplash.com/photo-1578768079046-ec1c1fb79c84?w=400&h=500&fit=crop&q=80&auto=format",
+    colors: ["#2d2d2d", "#8B0000", "#2E8B57"],
+    sizes: ["S", "M", "L", "XL", "XXL"],
+  },
+  {
+    id: 4,
+    name: "New York Tailored Trousers",
+    brand: "Brubla Global",
+    price: 4999,
+    originalPrice: 8999,
     discount: 44,
+    rating: 4.8,
+    reviews: 312,
+    badge: "PREMIUM",
+    badgeColor: "#C9A96E",
+    isNew: false,
+    img: "https://images.unsplash.com/photo-1473966968600-fa801b869a1a?w=400&h=500&fit=crop&q=80&auto=format",
+    hoverImg: "https://images.unsplash.com/photo-1594938298603-c8148c4dae35?w=400&h=500&fit=crop&q=80&auto=format",
+    colors: ["#1a1812", "#2F4F4F", "#8B4513"],
+    sizes: ["28", "30", "32", "34", "36"],
+  },
+  {
+    id: 5,
+    name: "London Checkered Coat",
+    brand: "Brubla Global",
+    price: 11999,
+    originalPrice: 19999,
+    discount: 40,
     rating: 4.9,
-    reviews: 1891,
+    reviews: 178,
+    badge: "EXCLUSIVE",
+    badgeColor: "#E8C97A",
+    isNew: true,
+    img: "https://images.unsplash.com/photo-1539533113208-f6df8cc8b543?w=400&h=500&fit=crop&q=80&auto=format",
+    hoverImg: "https://images.unsplash.com/photo-1548624313-0396c75e4a63?w=400&h=500&fit=crop&q=80&auto=format",
+    colors: ["#696969", "#1a1812", "#8B4513"],
+    sizes: ["S", "M", "L", "XL"],
+  },
+  {
+    id: 6,
+    name: "Milan Silk Scarf",
+    brand: "Brubla Global",
+    price: 2499,
+    originalPrice: 4499,
+    discount: 44,
+    rating: 4.8,
+    reviews: 892,
     badge: "LOVED",
     badgeColor: "#6fcf97",
     isNew: false,
-    wishlist: false,
-    img: "https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?w=400&h=500&fit=crop&q=80&auto=format",
-    hoverImg: "https://images.unsplash.com/photo-1556228578-0d85b1a4d571?w=400&h=500&fit=crop&q=80&auto=format",
-    colors: ["#F5F0E8", "#6fcf97"],
+    img: "https://images.unsplash.com/photo-1601924994987-69e26d50dc26?w=400&h=500&fit=crop&q=80&auto=format",
+    hoverImg: "https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=400&h=500&fit=crop&q=80&auto=format",
+    colors: ["#C9A96E", "#8B0000", "#2E8B57"],
     sizes: ["One Size"],
   },
 ];
 
+// Luxury Collections - Premium high-end pieces
+const LUXURY_COLLECTION = [
+  {
+    id: 1,
+    name: "Hand-Embroidered Gown",
+    brand: "Brubla Atelier",
+    price: 45999,
+    originalPrice: 89999,
+    discount: 49,
+    rating: 5.0,
+    reviews: 89,
+    badge: "COUTURE",
+    badgeColor: "#C9A96E",
+    isNew: true,
+    img: "https://images.unsplash.com/photo-1566174053879-31528523f8ae?w=400&h=500&fit=crop&q=80&auto=format",
+    hoverImg: "https://images.unsplash.com/photo-1539008835657-9e8e9680c956?w=400&h=500&fit=crop&q=80&auto=format",
+    colors: ["#1a1812", "#C9A96E", "#8B0000"],
+    sizes: ["XS", "S", "M", "L"],
+  },
+  {
+    id: 2,
+    name: "Cashmere Wrap Coat",
+    brand: "Brubla Atelier",
+    price: 32999,
+    originalPrice: 59999,
+    discount: 45,
+    rating: 4.9,
+    reviews: 67,
+    badge: "LIMITED",
+    badgeColor: "#E8C97A",
+    isNew: false,
+    img: "https://images.unsplash.com/photo-1544022613-e87ca75a784a?w=400&h=500&fit=crop&q=80&auto=format",
+    hoverImg: "https://images.unsplash.com/photo-1539533113208-f6df8cc8b543?w=400&h=500&fit=crop&q=80&auto=format",
+    colors: ["#F5F0E8", "#1a1812", "#8B4513"],
+    sizes: ["S", "M", "L", "XL"],
+  },
+  {
+    id: 3,
+    name: "Diamond-Embellished Clutch",
+    brand: "Brubla Atelier",
+    price: 18999,
+    originalPrice: 34999,
+    discount: 46,
+    rating: 4.9,
+    reviews: 123,
+    badge: "BESPOKE",
+    badgeColor: "#C9A96E",
+    isNew: true,
+    img: "https://images.unsplash.com/photo-1566150905458-1bf1fc113f0d?w=400&h=500&fit=crop&q=80&auto=format",
+    hoverImg: "https://images.unsplash.com/photo-1590874103328-eac38a683ce7?w=400&h=500&fit=crop&q=80&auto=format",
+    colors: ["#C9A96E", "#1a1812"],
+    sizes: ["One Size"],
+  },
+  {
+    id: 4,
+    name: "Silk Evening Gown",
+    brand: "Brubla Atelier",
+    price: 39999,
+    originalPrice: 74999,
+    discount: 47,
+    rating: 5.0,
+    reviews: 56,
+    badge: "RUNWAY",
+    badgeColor: "#E8C97A",
+    isNew: true,
+    img: "https://images.unsplash.com/photo-1496747611176-843222e1e57c?w=400&h=500&fit=crop&q=80&auto=format",
+    hoverImg: "https://images.unsplash.com/photo-1485230895905-ec40ba36b9bc?w=400&h=500&fit=crop&q=80&auto=format",
+    colors: ["#1a1812", "#8B0000", "#2E8B57"],
+    sizes: ["XS", "S", "M", "L"],
+  },
+  {
+    id: 5,
+    name: "Pearl Necklace Set",
+    brand: "Brubla Atelier",
+    price: 24999,
+    originalPrice: 45999,
+    discount: 46,
+    rating: 4.9,
+    reviews: 234,
+    badge: "HEIRLOOM",
+    badgeColor: "#C9A96E",
+    isNew: false,
+    img: "https://images.unsplash.com/photo-1611591437281-460bfbe1220a?w=400&h=500&fit=crop&q=80&auto=format",
+    hoverImg: "https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?w=400&h=500&fit=crop&q=80&auto=format",
+    colors: ["#C9A96E", "#F5F0E8"],
+    sizes: ["One Size"],
+  },
+  {
+    id: 6,
+    name: "Velvet Tuxedo Blazer",
+    brand: "Brubla Atelier",
+    price: 27999,
+    originalPrice: 49999,
+    discount: 44,
+    rating: 4.8,
+    reviews: 89,
+    badge: "PREMIUM",
+    badgeColor: "#E8C97A",
+    isNew: false,
+    img: "https://images.unsplash.com/photo-1507679799987-c73779587ccf?w=400&h=500&fit=crop&q=80&auto=format",
+    hoverImg: "https://images.unsplash.com/photo-1469334031218-e382a71b716b?w=400&h=500&fit=crop&q=80&auto=format",
+    colors: ["#1a1812", "#8B0000", "#2F4F4F"],
+    sizes: ["S", "M", "L", "XL"],
+  },
+];
+
+// Originals by Brubla - Signature brand collection
+const ORIGINALS_COLLECTION = [
+  {
+    id: 1,
+    name: "Signature Kurta Set",
+    brand: "Originals by Brubla",
+    price: 4999,
+    originalPrice: 9999,
+    discount: 50,
+    rating: 4.9,
+    reviews: 1234,
+    badge: "ICONIC",
+    badgeColor: "#C9A96E",
+    isNew: false,
+    img: "https://images.unsplash.com/photo-1617137968427-85924c800a22?w=400&h=500&fit=crop&q=80&auto=format",
+    hoverImg: "https://images.unsplash.com/photo-1594938298603-c8148c4dae35?w=400&h=500&fit=crop&q=80&auto=format",
+    colors: ["#C9A96E", "#1a1812", "#F5F0E8"],
+    sizes: ["S", "M", "L", "XL", "XXL"],
+  },
+  {
+    id: 2,
+    name: "Handblock Print Saree",
+    brand: "Originals by Brubla",
+    price: 8999,
+    originalPrice: 16999,
+    discount: 47,
+    rating: 4.8,
+    reviews: 892,
+    badge: "ARTISAN",
+    badgeColor: "#E8C97A",
+    isNew: true,
+    img: "https://images.unsplash.com/photo-1509631179647-0177331693ae?w=400&h=500&fit=crop&q=80&auto=format",
+    hoverImg: "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=400&h=500&fit=crop&q=80&auto=format",
+    colors: ["#8B0000", "#C9A96E", "#1a1812"],
+    sizes: ["Free Size"],
+  },
+  {
+    id: 3,
+    name: "Brubla Classic Shirt",
+    brand: "Originals by Brubla",
+    price: 2499,
+    originalPrice: 4999,
+    discount: 50,
+    rating: 4.7,
+    reviews: 2156,
+    badge: "BESTSELLER",
+    badgeColor: "#6fcf97",
+    isNew: false,
+    img: "https://images.unsplash.com/photo-1596755094514-f87e34085b2c?w=400&h=500&fit=crop&q=80&auto=format",
+    hoverImg: "https://images.unsplash.com/photo-1483985988355-763728e1935b?w=400&h=500&fit=crop&q=80&auto=format",
+    colors: ["#F5F0E8", "#1a1812", "#2F4F4F"],
+    sizes: ["XS", "S", "M", "L", "XL"],
+  },
+  {
+    id: 4,
+    name: "Embroidered Waistcoat",
+    brand: "Originals by Brubla",
+    price: 5999,
+    originalPrice: 10999,
+    discount: 45,
+    rating: 4.9,
+    reviews: 445,
+    badge: "HERITAGE",
+    badgeColor: "#C9A96E",
+    isNew: true,
+    img: "https://images.unsplash.com/photo-1503341504253-dff4815485f1?w=400&h=500&fit=crop&q=80&auto=format",
+    hoverImg: "https://images.unsplash.com/photo-1617137968427-85924c800a22?w=400&h=500&fit=crop&q=80&auto=format",
+    colors: ["#C9A96E", "#1a1812", "#8B4513"],
+    sizes: ["S", "M", "L", "XL"],
+  },
+  {
+    id: 5,
+    name: "Dupatta Set",
+    brand: "Originals by Brubla",
+    price: 3499,
+    originalPrice: 6999,
+    discount: 50,
+    rating: 4.8,
+    reviews: 678,
+    badge: "TRENDING",
+    badgeColor: "#6fcf97",
+    isNew: false,
+    img: "https://images.unsplash.com/photo-1617627143750-d86bc21e42bb?w=400&h=500&fit=crop&q=80&auto=format",
+    hoverImg: "https://images.unsplash.com/photo-1583391733956-3750e0b4e1cf?w=400&h=500&fit=crop&q=80&auto=format",
+    colors: ["#C9A96E", "#8B0000", "#2E8B57"],
+    sizes: ["Free Size"],
+  },
+  {
+    id: 6,
+    name: "Brubla Bomber Jacket",
+    brand: "Originals by Brubla",
+    price: 4499,
+    originalPrice: 8499,
+    discount: 47,
+    rating: 4.8,
+    reviews: 1234,
+    badge: "LIMITED",
+    badgeColor: "#E8C97A",
+    isNew: true,
+    img: "https://images.unsplash.com/photo-1556821840-3a63f95609a7?w=400&h=500&fit=crop&q=80&auto=format",
+    hoverImg: "https://images.unsplash.com/photo-1578768079046-ec1c1fb79c84?w=400&h=500&fit=crop&q=80&auto=format",
+    colors: ["#1a1812", "#2F4F4F", "#8B4513"],
+    sizes: ["S", "M", "L", "XL", "XXL"],
+  },
+];
+
+// Indian Roots - Traditional & ethnic wear
+const INDIAN_ROOTS = [
+  {
+    id: 1,
+    name: "Banarasi Silk Saree",
+    brand: "Indian Roots",
+    price: 15999,
+    originalPrice: 29999,
+    discount: 47,
+    rating: 4.9,
+    reviews: 2341,
+    badge: "HERITAGE",
+    badgeColor: "#C9A96E",
+    isNew: false,
+    img: "https://images.unsplash.com/photo-1583391733956-3750e0b4e1cf?w=400&h=500&fit=crop&q=80&auto=format",
+    hoverImg: "https://images.unsplash.com/photo-1617627143750-d86bc21e42bb?w=400&h=500&fit=crop&q=80&auto=format",
+    colors: ["#C9A96E", "#8B0000", "#1a1812"],
+    sizes: ["Free Size"],
+  },
+  {
+    id: 2,
+    name: "Handwoven Khadi Kurta",
+    brand: "Indian Roots",
+    price: 3499,
+    originalPrice: 6999,
+    discount: 50,
+    rating: 4.8,
+    reviews: 1876,
+    badge: "KHADI",
+    badgeColor: "#6fcf97",
+    isNew: false,
+    img: "https://images.unsplash.com/photo-1594938298603-c8148c4dae35?w=400&h=500&fit=crop&q=80&auto=format",
+    hoverImg: "https://images.unsplash.com/photo-1617137968427-85924c800a22?w=400&h=500&fit=crop&q=80&auto=format",
+    colors: ["#F5F0E8", "#1a1812", "#C9A96E"],
+    sizes: ["S", "M", "L", "XL", "XXL"],
+  },
+  {
+    id: 3,
+    name: "Phulkari Dupatta",
+    brand: "Indian Roots",
+    price: 2499,
+    originalPrice: 4999,
+    discount: 50,
+    rating: 4.9,
+    reviews: 3456,
+    badge: "HANDCRAFTED",
+    badgeColor: "#C9A96E",
+    isNew: true,
+    img: "https://images.unsplash.com/photo-1617627143750-d86bc21e42bb?w=400&h=500&fit=crop&q=80&auto=format",
+    hoverImg: "https://images.unsplash.com/photo-1583391733956-3750e0b4e1cf?w=400&h=500&fit=crop&q=80&auto=format",
+    colors: ["#C9A96E", "#8B0000", "#2E8B57"],
+    sizes: ["One Size"],
+  },
+  {
+    id: 4,
+    name: "Bandhani Lehenga",
+    brand: "Indian Roots",
+    price: 12999,
+    originalPrice: 24999,
+    discount: 48,
+    rating: 4.9,
+    reviews: 1234,
+    badge: "TRADITIONAL",
+    badgeColor: "#E8C97A",
+    isNew: true,
+    img: "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=400&h=500&fit=crop&q=80&auto=format",
+    hoverImg: "https://images.unsplash.com/photo-1509631179647-0177331693ae?w=400&h=500&fit=crop&q=80&auto=format",
+    colors: ["#8B0000", "#C9A96E", "#1a1812"],
+    sizes: ["S", "M", "L", "XL"],
+  },
+  {
+    id: 5,
+    name: "Pashmina Shawl",
+    brand: "Indian Roots",
+    price: 8999,
+    originalPrice: 16999,
+    discount: 47,
+    rating: 4.9,
+    reviews: 2345,
+    badge: "CASHMERE",
+    badgeColor: "#C9A96E",
+    isNew: false,
+    img: "https://images.unsplash.com/photo-1617137968427-85924c800a22?w=400&h=500&fit=crop&q=80&auto=format",
+    hoverImg: "https://images.unsplash.com/photo-1594938298603-c8148c4dae35?w=400&h=500&fit=crop&q=80&auto=format",
+    colors: ["#C9A96E", "#F5F0E8", "#1a1812"],
+    sizes: ["One Size"],
+  },
+  {
+    id: 6,
+    name: "Jutti Footwear",
+    brand: "Indian Roots",
+    price: 1999,
+    originalPrice: 3999,
+    discount: 50,
+    rating: 4.8,
+    reviews: 4567,
+    badge: "ARTISAN",
+    badgeColor: "#6fcf97",
+    isNew: false,
+    img: "https://images.unsplash.com/photo-1605810230434-7631ac76ec81?w=400&h=500&fit=crop&q=80&auto=format",
+    hoverImg: "https://images.unsplash.com/photo-1533867617858-e7b97e060509?w=400&h=500&fit=crop&q=80&auto=format",
+    colors: ["#C9A96E", "#8B0000", "#1a1812"],
+    sizes: ["5", "6", "7", "8", "9"],
+  },
+];
+
+// Weddings & Celebrations - Special occasion wear
+const WEDDING_COLLECTION = [
+  {
+    id: 1,
+    name: "Bridal Lehenga Set",
+    brand: "Brubla Weddings",
+    price: 45999,
+    originalPrice: 89999,
+    discount: 49,
+    rating: 5.0,
+    reviews: 456,
+    badge: "BRIDAL",
+    badgeColor: "#C9A96E",
+    isNew: true,
+    img: "https://images.unsplash.com/photo-1583391733956-3750e0b4e1cf?w=400&h=500&fit=crop&q=80&auto=format",
+    hoverImg: "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=400&h=500&fit=crop&q=80&auto=format",
+    colors: ["#8B0000", "#C9A96E", "#1a1812"],
+    sizes: ["S", "M", "L", "XL"],
+  },
+  {
+    id: 2,
+    name: "Groom Sherwani",
+    brand: "Brubla Weddings",
+    price: 34999,
+    originalPrice: 64999,
+    discount: 46,
+    rating: 4.9,
+    reviews: 234,
+    badge: "GROOM",
+    badgeColor: "#E8C97A",
+    isNew: false,
+    img: "https://images.unsplash.com/photo-1503341504253-dff4815485f1?w=400&h=500&fit=crop&q=80&auto=format",
+    hoverImg: "https://images.unsplash.com/photo-1617137968427-85924c800a22?w=400&h=500&fit=crop&q=80&auto=format",
+    colors: ["#C9A96E", "#1a1812", "#8B4513"],
+    sizes: ["S", "M", "L", "XL", "XXL"],
+  },
+  {
+    id: 3,
+    name: "Bridesmaid Saree",
+    brand: "Brubla Weddings",
+    price: 12999,
+    originalPrice: 24999,
+    discount: 48,
+    rating: 4.8,
+    reviews: 567,
+    badge: "WEDDING",
+    badgeColor: "#6fcf97",
+    isNew: true,
+    img: "https://images.unsplash.com/photo-1509631179647-0177331693ae?w=400&h=500&fit=crop&q=80&auto=format",
+    hoverImg: "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=400&h=500&fit=crop&q=80&auto=format",
+    colors: ["#C9A96E", "#8B0000", "#2E8B57"],
+    sizes: ["Free Size"],
+  },
+  {
+    id: 4,
+    name: "Celebration Gown",
+    brand: "Brubla Weddings",
+    price: 19999,
+    originalPrice: 38999,
+    discount: 49,
+    rating: 4.9,
+    reviews: 345,
+    badge: "PARTY",
+    badgeColor: "#C9A96E",
+    isNew: true,
+    img: "https://images.unsplash.com/photo-1496747611176-843222e1e57c?w=400&h=500&fit=crop&q=80&auto=format",
+    hoverImg: "https://images.unsplash.com/photo-1485230895905-ec40ba36b9bc?w=400&h=500&fit=crop&q=80&auto=format",
+    colors: ["#1a1812", "#C9A96E", "#8B0000"],
+    sizes: ["XS", "S", "M", "L"],
+  },
+  {
+    id: 5,
+    name: "Wedding Accessory Set",
+    brand: "Brubla Weddings",
+    price: 5999,
+    originalPrice: 11999,
+    discount: 50,
+    rating: 4.8,
+    reviews: 1234,
+    badge: "ACCESSORIES",
+    badgeColor: "#E8C97A",
+    isNew: false,
+    img: "https://images.unsplash.com/photo-1611591437281-460bfbe1220a?w=400&h=500&fit=crop&q=80&auto=format",
+    hoverImg: "https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?w=400&h=500&fit=crop&q=80&auto=format",
+    colors: ["#C9A96E", "#F5F0E8"],
+    sizes: ["One Size"],
+  },
+  {
+    id: 6,
+    name: "Reception Blazer",
+    brand: "Brubla Weddings",
+    price: 15999,
+    originalPrice: 29999,
+    discount: 47,
+    rating: 4.9,
+    reviews: 234,
+    badge: "RECEPTION",
+    badgeColor: "#C9A96E",
+    isNew: false,
+    img: "https://images.unsplash.com/photo-1507679799987-c73779587ccf?w=400&h=500&fit=crop&q=80&auto=format",
+    hoverImg: "https://images.unsplash.com/photo-1469334031218-e382a71b716b?w=400&h=500&fit=crop&q=80&auto=format",
+    colors: ["#1a1812", "#2F4F4F", "#8B4513"],
+    sizes: ["S", "M", "L", "XL"],
+  },
+];
+
 // ─────────────────────────────────────────────────────────────────────────────
-// ICONS
+// ICONS (Reused from original)
 // ─────────────────────────────────────────────────────────────────────────────
 const HeartIcon = ({ filled, size = 16 }) => (
   <svg width={size} height={size} viewBox="0 0 24 24" fill={filled ? "currentColor" : "none"}
@@ -219,11 +603,11 @@ const StarRating = ({ rating }) => {
 };
 
 // ─────────────────────────────────────────────────────────────────────────────
-// PRODUCT CARD
+// PRODUCT CARD (Reusable component)
 // ─────────────────────────────────────────────────────────────────────────────
 const ProductCard = ({ product, index }) => {
   const [hovered, setHovered] = useState(false);
-  const [wishlisted, setWish] = useState(product.wishlist);
+  const [wishlisted, setWish] = useState(false);
   const [addedCart, setCart] = useState(false);
   const [selColor, setColor] = useState(0);
   const [visible, setVisible] = useState(false);
@@ -270,7 +654,6 @@ const ProductCard = ({ product, index }) => {
           transition: "box-shadow 0.4s ease",
         }}
       >
-        {/* Main image */}
         <img
           src={product.img}
           alt={product.name}
@@ -283,7 +666,6 @@ const ProductCard = ({ product, index }) => {
           loading="lazy"
           draggable={false}
         />
-        {/* Hover image */}
         <img
           src={product.hoverImg}
           alt={`${product.name} alt`}
@@ -297,11 +679,10 @@ const ProductCard = ({ product, index }) => {
           draggable={false}
         />
 
-        {/* Subtle bottom vignette */}
         <div className="absolute inset-0 pointer-events-none"
           style={{ background: "linear-gradient(180deg,transparent 55%,rgba(12,12,12,0.22) 100%)" }} />
 
-        {/* ── BADGE ── */}
+        {/* Badge */}
         <div className="absolute top-3 left-3 z-10">
           <span
             className="text-[9px] font-black tracking-[0.14em] uppercase px-2 py-1"
@@ -311,7 +692,7 @@ const ProductCard = ({ product, index }) => {
           </span>
         </div>
 
-        {/* ── DISCOUNT CHIP ── */}
+        {/* Discount chip */}
         <div className="absolute top-3 right-3 z-10">
           <span
             className="text-[9px] font-black px-1.5 py-0.5"
@@ -324,32 +705,21 @@ const ProductCard = ({ product, index }) => {
           </span>
         </div>
 
-        {/* ── WISHLIST BUTTON ── */}
+        {/* Wishlist button */}
         <button
           onClick={(e) => {
             e.preventDefault();
             setWish((w) => !w);
           }}
-          className="
-    absolute z-20 flex items-center justify-center
-    transition-all duration-300
-    rounded-full
-  "
+          className="absolute z-20 flex items-center justify-center transition-all duration-300 rounded-full"
           style={{
             top: hovered ? "46px" : "44px",
             right: "10px",
-
             width: "30px",
             height: "30px",
-
-            background: wishlisted
-              ? "#e85d4a"
-              : "rgba(255,255,255,0.92)",
-
+            background: wishlisted ? "#e85d4a" : "rgba(255,255,255,0.92)",
             color: wishlisted ? "#fff" : "#0C0C0C",
-
             boxShadow: "0 4px 14px rgba(0,0,0,0.15)",
-
             transform: hovered ? "scale(1)" : "scale(0.9)",
             opacity: hovered ? 1 : 0.85,
           }}
@@ -358,7 +728,7 @@ const ProductCard = ({ product, index }) => {
           <HeartIcon filled={wishlisted} size={14} />
         </button>
 
-        {/* ── QUICK VIEW ── slides up on hover ── */}
+        {/* Quick view */}
         <button
           className="absolute bottom-0 left-0 right-0 z-20 flex items-center justify-center gap-2 transition-all duration-300"
           style={{
@@ -378,7 +748,7 @@ const ProductCard = ({ product, index }) => {
           QUICK VIEW
         </button>
 
-        {/* ── COLOR DOTS ── appear on hover ── */}
+        {/* Color dots */}
         <div
           className="absolute left-3 bottom-12 z-10 flex items-center gap-1.5 transition-all duration-300"
           style={{ opacity: hovered ? 1 : 0, transform: hovered ? "translateY(0)" : "translateY(4px)" }}
@@ -401,15 +771,11 @@ const ProductCard = ({ product, index }) => {
         </div>
       </div>
 
-      {/* ── INFO BLOCK ── */}
+      {/* Info block */}
       <div className="mt-3 px-0.5">
-        {/* Brand */}
-        <p className="text-[10px] font-bold uppercase tracking-[0.15em] mb-0.5"
-          style={{ color: "#8A8070" }}>
+        <p className="text-[10px] font-bold uppercase tracking-[0.15em] mb-0.5" style={{ color: "#8A8070" }}>
           {product.brand}
         </p>
-
-        {/* Product name */}
         <h3
           className="font-black leading-tight mb-1.5 truncate"
           style={{
@@ -421,16 +787,12 @@ const ProductCard = ({ product, index }) => {
         >
           {product.name}
         </h3>
-
-        {/* Rating row */}
         <div className="flex items-center gap-1.5 mb-2">
           <StarRating rating={product.rating} />
           <span className="text-[10px] font-semibold" style={{ color: "#6F4E37" }}>
             {product.rating} ({product.reviews.toLocaleString()})
           </span>
         </div>
-
-        {/* Sizes row */}
         <div className="flex items-center gap-1 mb-2.5 flex-wrap">
           {product.sizes.slice(0, 4).map(sz => (
             <span key={sz}
@@ -445,8 +807,6 @@ const ProductCard = ({ product, index }) => {
             </span>
           )}
         </div>
-
-        {/* Price row + Add to Cart */}
         <div className="flex items-center justify-between">
           <div className="flex flex-col">
             <div className="flex items-baseline gap-1.5">
@@ -461,21 +821,15 @@ const ProductCard = ({ product, index }) => {
               Save ₹{(product.originalPrice - product.price).toLocaleString()}
             </span>
           </div>
-
-          {/* Add to Cart button */}
           <button
             onClick={handleCart}
             className="flex items-center justify-center transition-all duration-300 active:scale-95"
             style={{
               width: "38px",
               height: "38px",
-              background: addedCart
-                ? "#6fcf97"
-                : "#6F4E37",
+              background: addedCart ? "#6fcf97" : "#6F4E37",
               color: addedCart ? "#fff" : "#fff",
-              boxShadow: addedCart
-                ? "0 4px 14px rgba(111,207,151,0.4)"
-                : "0 4px 14px rgba(12,12,12,0.25)",
+              boxShadow: addedCart ? "0 4px 14px rgba(111,207,151,0.4)" : "0 4px 14px rgba(12,12,12,0.25)",
               border: "1.5px solid rgba(201,169,110,0.2)",
               transform: addedCart ? "scale(1.12)" : "scale(1)",
             }}
@@ -490,37 +844,6 @@ const ProductCard = ({ product, index }) => {
     </div>
   );
 };
-
-// ─────────────────────────────────────────────────────────────────────────────
-// FILTER TABS
-// ─────────────────────────────────────────────────────────────────────────────
-const FILTERS = ["All", "Trending", "New Arrivals", "Under ₹999", "Premium", "Sale"];
-
-const FilterTabs = ({ active, onChange }) => (
-  <div className="flex items-center gap-2 overflow-x-auto pb-0.5" style={{ scrollbarWidth: "none" }}>
-    {FILTERS.map(f => (
-      <button
-        key={f}
-        onClick={() => onChange(f)}
-        className="flex-shrink-0 text-[11px] font-bold px-3.5 py-1.5 transition-all duration-200 whitespace-nowrap"
-        style={
-          active === f
-            ? {
-              background: "#6F4E37", color: "#fff",
-              border: "1.5px solid rgba(201,169,110,0.3)",
-              boxShadow: "0 4px 14px rgba(12,12,12,0.2)"
-            }
-            : {
-              background: "#F5F0E8", color: "#3a3530",
-              border: "1.5px solid #EDE7D9"
-            }
-        }
-      >
-        {f}
-      </button>
-    ))}
-  </div>
-);
 
 // ─────────────────────────────────────────────────────────────────────────────
 // SCROLL ARROW BUTTON
@@ -545,17 +868,15 @@ const ScrollBtn = ({ dir, onClick, show }) => (
 );
 
 // ─────────────────────────────────────────────────────────────────────────────
-// MAIN EXPORT
+// COLLECTION SECTION COMPONENT (Reusable)
 // ─────────────────────────────────────────────────────────────────────────────
-export default function RecommendedProducts() {
-  const [filter, setFilter] = useState("All");
+const CollectionSection = ({ title, subtitle, products, bgColor = "#fff" }) => {
   const [canLeft, setCanLeft] = useState(false);
   const [canRight, setCanRight] = useState(true);
   const [headerVis, setHdrVis] = useState(false);
   const trackRef = useRef(null);
   const headerRef = useRef(null);
 
-  // header entrance animation
   useEffect(() => {
     const el = headerRef.current;
     if (!el) return;
@@ -567,7 +888,6 @@ export default function RecommendedProducts() {
     return () => obs.disconnect();
   }, []);
 
-  // scroll edge detection
   const updateScroll = useCallback(() => {
     const el = trackRef.current;
     if (!el) return;
@@ -590,17 +910,12 @@ export default function RecommendedProducts() {
   return (
     <section
       className="w-full py-12 md:py-16 overflow-hidden"
-      style={{ background: "#fff" }}
-      aria-label="Recommended Products"
+      style={{ background: bgColor }}
+      aria-label={title}
     >
-      {/* Injected styles */}
-      <style>{`
-        .prod-track::-webkit-scrollbar { display: none; }
-      `}</style>
-
+      <style>{`.prod-track-${title.replace(/\s/g, '')}::-webkit-scrollbar { display: none; }`}</style>
       <div className="max-w-7xl mx-auto">
-
-        {/* ── SECTION HEADER ── */}
+        {/* Section Header */}
         <div
           ref={headerRef}
           className="px-4 md:px-6 lg:px-10 xl:px-14 mb-6 md:mb-8"
@@ -610,12 +925,10 @@ export default function RecommendedProducts() {
             transition: "opacity 0.55s ease, transform 0.55s ease",
           }}
         >
-          {/* Top row: title + arrows */}
           <div className="flex items-start justify-between mb-4 md:mb-5">
             <div>
-              <p className="text-[10px] font-black uppercase tracking-[0.24em] mb-1"
-                style={{ color: "#6F4E37" }}>
-                Curated for you
+              <p className="text-[10px] font-black uppercase tracking-[0.24em] mb-1" style={{ color: "#6F4E37" }}>
+                {subtitle}
               </p>
               <h2
                 className="font-black leading-none"
@@ -626,26 +939,19 @@ export default function RecommendedProducts() {
                   letterSpacing: "-0.02em",
                 }}
               >
-                Recommended
+                {title}
               </h2>
-              {/* Underline */}
               <div className="flex items-center gap-2 mt-2">
-                <div className="h-[3px] w-10"
-                  style={{ background: "linear-gradient(90deg,#6F4E37,#6F4E37)" }} />
-                <div className="h-[3px] w-4"
-                  style={{ background: "#6F4E37" }} />
-                <div className="h-[3px] w-2"
-                  style={{ background: "#6F4E37" }} />
+                <div className="h-[3px] w-10" style={{ background: "linear-gradient(90deg,#6F4E37,#6F4E37)" }} />
+                <div className="h-[3px] w-4" style={{ background: "#6F4E37" }} />
+                <div className="h-[3px] w-2" style={{ background: "#6F4E37" }} />
               </div>
             </div>
-
-            {/* Right: arrows + view all */}
             <div className="flex items-center gap-2 mt-1">
               <ScrollBtn dir="left" onClick={() => scrollBy("left")} show={canLeft} />
               <ScrollBtn dir="right" onClick={() => scrollBy("right")} show={canRight} />
               <button
-                className="hidden sm:flex items-center gap-1.5 ml-1 text-xs font-black tracking-wide
-                           transition-all duration-200 group"
+                className="hidden sm:flex items-center gap-1.5 ml-1 text-xs font-black tracking-wide transition-all duration-200 group"
                 style={{ color: "#000" }}
               >
                 View All
@@ -656,15 +962,12 @@ export default function RecommendedProducts() {
               </button>
             </div>
           </div>
-
-          {/* Filter tabs */}
-          <FilterTabs active={filter} onChange={setFilter} />
         </div>
 
-        {/* ── PRODUCT SCROLL TRACK ── */}
+        {/* Product Scroll Track */}
         <div
           ref={trackRef}
-          className="prod-track flex gap-4 overflow-x-auto"
+          className={`prod-track-${title.replace(/\s/g, '')} flex gap-4 overflow-x-auto`}
           style={{
             paddingLeft: "clamp(16px,4vw,56px)",
             paddingRight: "clamp(16px,4vw,56px)",
@@ -674,7 +977,7 @@ export default function RecommendedProducts() {
             scrollSnapType: "x mandatory",
           }}
         >
-          {PRODUCTS.map((p, i) => (
+          {products.map((p, i) => (
             <div key={p.id} style={{ scrollSnapAlign: "start", flexShrink: 0 }}>
               <ProductCard product={p} index={i} />
             </div>
@@ -682,11 +985,10 @@ export default function RecommendedProducts() {
           <div style={{ minWidth: "4px", flexShrink: 0 }} />
         </div>
 
-        {/* ── MOBILE: View All button ── */}
+        {/* Mobile View All button */}
         <div className="sm:hidden flex justify-center mt-5 px-4">
           <button
-            className="w-full max-w-sm flex items-center justify-center gap-2 py-3.5
-                       font-black text-sm tracking-wide transition-all active:scale-98"
+            className="w-full max-w-sm flex items-center justify-center gap-2 py-3.5 font-black text-sm tracking-wide transition-all active:scale-98"
             style={{
               background: "#6F4E37",
               color: "#fff",
@@ -698,8 +1000,47 @@ export default function RecommendedProducts() {
             <ChevronIcon dir="right" size={13} />
           </button>
         </div>
-
       </div>
     </section>
+  );
+};
+
+// ─────────────────────────────────────────────────────────────────────────────
+// MAIN COMPONENT - All Collections
+// ─────────────────────────────────────────────────────────────────────────────
+export default function AllCollections() {
+  return (
+    <div className="w-full">
+      <CollectionSection
+        title="Global Collections"
+        subtitle="WORLD-CLASS CRAFTMANSHIP"
+        products={GLOBAL_COLLECTION}
+        bgColor="#fff"
+      />
+      <CollectionSection
+        title="Luxury Collections"
+        subtitle="BESPOKE ELEGANCE"
+        products={LUXURY_COLLECTION}
+        bgColor="#FEFCF8"
+      />
+      <CollectionSection
+        title="Originals by Brubla"
+        subtitle="SIGNATURE STYLE"
+        products={ORIGINALS_COLLECTION}
+        bgColor="#fff"
+      />
+      <CollectionSection
+        title="Indian Roots"
+        subtitle="TIMELESS TRADITIONS"
+        products={INDIAN_ROOTS}
+        bgColor="#FEFCF8"
+      />
+      <CollectionSection
+        title="Weddings & Celebrations"
+        subtitle="YOUR SPECIAL DAY"
+        products={WEDDING_COLLECTION}
+        bgColor="#fff"
+      />
+    </div>
   );
 }

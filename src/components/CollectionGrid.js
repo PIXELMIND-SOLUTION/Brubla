@@ -255,7 +255,7 @@ const CollectionCard = ({ col, index, style = {} }) => {
             }}
           >
             {col.cta}
-            <ArrowIcon size={11} color="#0C0C0C" />
+            <ArrowIcon size={11} color="#fff" />
           </button>
         </div>
       </div>

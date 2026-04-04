@@ -10,6 +10,7 @@ import ScrollToTop from './views/ScrollToTop';
 import CategorySection from './components/Category';
 import CategoriesGrid from './components/Categories';
 import CategoryProductsPage from './pages/CategoryProductsPage';
+import JoinUs from './pages/JoinUs';
 
 function App() {
   return (
@@ -23,6 +24,7 @@ function App() {
       <Route path="/profile" element={<ProfilePage/>} />
       <Route path="/category" element={<CategoriesGrid/>} />
       <Route path="/category/:name" element={<CategoryProductsPage/>} />
+      <Route path='/joinUs' element={<JoinUs/>} />
     </Routes>
     </>
   );

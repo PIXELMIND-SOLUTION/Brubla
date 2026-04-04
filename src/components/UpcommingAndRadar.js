@@ -684,120 +684,120 @@ const RadarCard = ({ item, index }) => {
 };
 
 // ─────────────────────────────────────────────────────────────────────────────
-export function DesignsOnRadar() {
-  const [headerRef, headerVis] = useVisible(0.2);
-  const trackRef = useRef(null);
-  const [canLeft, setCanLeft] = useState(false);
-  const [canRight, setCanRight] = useState(true);
+// export function DesignsOnRadar() {
+//   const [headerRef, headerVis] = useVisible(0.2);
+//   const trackRef = useRef(null);
+//   const [canLeft, setCanLeft] = useState(false);
+//   const [canRight, setCanRight] = useState(true);
 
-  const updateScroll = useCallback(() => {
-    const el = trackRef.current;
-    if (!el) return;
-    setCanLeft(el.scrollLeft > 10);
-    setCanRight(el.scrollLeft < el.scrollWidth - el.clientWidth - 10);
-  }, []);
+//   const updateScroll = useCallback(() => {
+//     const el = trackRef.current;
+//     if (!el) return;
+//     setCanLeft(el.scrollLeft > 10);
+//     setCanRight(el.scrollLeft < el.scrollWidth - el.clientWidth - 10);
+//   }, []);
 
-  useEffect(() => {
-    const el = trackRef.current;
-    if (!el) return;
-    el.addEventListener("scroll", updateScroll, { passive: true });
-    updateScroll();
-    return () => el.removeEventListener("scroll", updateScroll);
-  }, [updateScroll]);
+//   useEffect(() => {
+//     const el = trackRef.current;
+//     if (!el) return;
+//     el.addEventListener("scroll", updateScroll, { passive: true });
+//     updateScroll();
+//     return () => el.removeEventListener("scroll", updateScroll);
+//   }, [updateScroll]);
 
-  const scrollBy = (dir) => {
-    trackRef.current?.scrollBy({ left: dir === "right" ? 480 : -480, behavior: "smooth" });
-  };
+//   const scrollBy = (dir) => {
+//     trackRef.current?.scrollBy({ left: dir === "right" ? 480 : -480, behavior: "smooth" });
+//   };
 
-  return (
-    <section className="w-full py-12 md:py-16" style={{ background: "#FEFCF8" }} aria-label="Designs on Your Radar">
-      <style>{`.radar-track::-webkit-scrollbar{display:none}`}</style>
+//   return (
+//     <section className="w-full py-12 md:py-16" style={{ background: "#FEFCF8" }} aria-label="Designs on Your Radar">
+//       <style>{`.radar-track::-webkit-scrollbar{display:none}`}</style>
 
-      <div className="max-w-7xl mx-auto">
-        {/* Header */}
-        <div ref={headerRef} className="px-4 md:px-6 lg:px-10 xl:px-14">
-          <div
-            className="flex items-end justify-between mb-6 md:mb-8"
-            style={{
-              opacity: headerVis ? 1 : 0,
-              transform: headerVis ? "translateY(0)" : "translateY(16px)",
-              transition: "opacity 0.55s ease, transform 0.55s ease",
-            }}
-          >
-            <div>
-              <p className="text-[10px] font-black uppercase tracking-[0.24em] mb-1" style={{ color: "#6F4E37" }}>
-                Trending Now
-              </p>
-              <h2 className="font-black leading-none"
-                style={{
-                  fontSize: "clamp(24px,4vw,42px)", color: "#0C0C0C",
-                  fontFamily: "Georgia,'Times New Roman',serif", letterSpacing: "-0.02em"
-                }}>
-                Designs on Your Radar
-              </h2>
-              <p className="text-xs font-medium mt-1.5" style={{ color: "#8A8070" }}>
-                What everyone's looking at right now
-              </p>
-              <div className="flex items-center gap-2 mt-2.5">
-                <div className="h-[3px] w-10"
-                  style={{ background: "linear-gradient(90deg,#6F4E37,#6F4E37)" }} />
-                <div className="h-[3px] w-4" style={{ background: "rgba(12,12,12,0.3)" }} />
-                <div className="h-[3px] w-2" style={{ background: "rgba(12,12,12,0.14)" }} />
-              </div>
-            </div>
-            <div className="flex items-center gap-2">
-              <ScrollBtn dir="left" onClick={() => scrollBy("left")} show={canLeft} />
-              <ScrollBtn dir="right" onClick={() => scrollBy("right")} show={canRight} />
-              <button
-                className="hidden sm:flex items-center gap-1.5 ml-1 text-xs font-black tracking-wide group transition-all"
-                style={{ color: "#0C0C0C" }}
-              >
-                See All
-                <span className="flex items-center justify-center transition-all duration-200 group-hover:scale-110"
-                  style={{ width: "26px", height: "26px", background: "#0C0C0C", color: "#C9A96E" }}>
-                  <ArrowRight c="w-3 h-3" />
-                </span>
-              </button>
-            </div>
-          </div>
-        </div>
+//       <div className="max-w-7xl mx-auto">
+//         {/* Header */}
+//         <div ref={headerRef} className="px-4 md:px-6 lg:px-10 xl:px-14">
+//           <div
+//             className="flex items-end justify-between mb-6 md:mb-8"
+//             style={{
+//               opacity: headerVis ? 1 : 0,
+//               transform: headerVis ? "translateY(0)" : "translateY(16px)",
+//               transition: "opacity 0.55s ease, transform 0.55s ease",
+//             }}
+//           >
+//             <div>
+//               <p className="text-[10px] font-black uppercase tracking-[0.24em] mb-1" style={{ color: "#6F4E37" }}>
+//                 Trending Now
+//               </p>
+//               <h2 className="font-black leading-none"
+//                 style={{
+//                   fontSize: "clamp(24px,4vw,42px)", color: "#0C0C0C",
+//                   fontFamily: "Georgia,'Times New Roman',serif", letterSpacing: "-0.02em"
+//                 }}>
+//                 Designs on Your Radar
+//               </h2>
+//               <p className="text-xs font-medium mt-1.5" style={{ color: "#8A8070" }}>
+//                 What everyone's looking at right now
+//               </p>
+//               <div className="flex items-center gap-2 mt-2.5">
+//                 <div className="h-[3px] w-10"
+//                   style={{ background: "linear-gradient(90deg,#6F4E37,#6F4E37)" }} />
+//                 <div className="h-[3px] w-4" style={{ background: "rgba(12,12,12,0.3)" }} />
+//                 <div className="h-[3px] w-2" style={{ background: "rgba(12,12,12,0.14)" }} />
+//               </div>
+//             </div>
+//             <div className="flex items-center gap-2">
+//               <ScrollBtn dir="left" onClick={() => scrollBy("left")} show={canLeft} />
+//               <ScrollBtn dir="right" onClick={() => scrollBy("right")} show={canRight} />
+//               <button
+//                 className="hidden sm:flex items-center gap-1.5 ml-1 text-xs font-black tracking-wide group transition-all"
+//                 style={{ color: "#0C0C0C" }}
+//               >
+//                 See All
+//                 <span className="flex items-center justify-center transition-all duration-200 group-hover:scale-110"
+//                   style={{ width: "26px", height: "26px", background: "#0C0C0C", color: "#C9A96E" }}>
+//                   <ArrowRight c="w-3 h-3" />
+//                 </span>
+//               </button>
+//             </div>
+//           </div>
+//         </div>
 
-        {/* Cards */}
-        <div
-          ref={trackRef}
-          className="radar-track flex gap-4 overflow-x-auto"
-          style={{
-            paddingLeft: "clamp(16px,4vw,56px)",
-            paddingRight: "clamp(16px,4vw,56px)",
-            paddingBottom: "16px",
-            scrollbarWidth: "none",
-            WebkitOverflowScrolling: "touch",
-            scrollSnapType: "x mandatory",
-          }}
-        >
-          {RADAR_PRODUCTS.map((p, i) => (
-            <div key={p.id} style={{ scrollSnapAlign: "start", flexShrink: 0 }}>
-              <RadarCard item={p} index={i} />
-            </div>
-          ))}
-          <div style={{ minWidth: "4px", flexShrink: 0 }} />
-        </div>
+//         {/* Cards */}
+//         <div
+//           ref={trackRef}
+//           className="radar-track flex gap-4 overflow-x-auto"
+//           style={{
+//             paddingLeft: "clamp(16px,4vw,56px)",
+//             paddingRight: "clamp(16px,4vw,56px)",
+//             paddingBottom: "16px",
+//             scrollbarWidth: "none",
+//             WebkitOverflowScrolling: "touch",
+//             scrollSnapType: "x mandatory",
+//           }}
+//         >
+//           {RADAR_PRODUCTS.map((p, i) => (
+//             <div key={p.id} style={{ scrollSnapAlign: "start", flexShrink: 0 }}>
+//               <RadarCard item={p} index={i} />
+//             </div>
+//           ))}
+//           <div style={{ minWidth: "4px", flexShrink: 0 }} />
+//         </div>
 
-        {/* Mobile View All */}
-        <div className="sm:hidden flex justify-center mt-5 px-4">
-          <button
-            className="w-full max-w-sm flex items-center justify-center gap-2 py-3.5 text-sm tracking-wide active:scale-98"
-            style={{
-              background: "#6F4E37", color: "#fff",
-              border: "1.5px solid rgba(201,169,110,0.2)",
-              boxShadow: "0 6px 20px rgba(12,12,12,0.18)",
-            }}
-          >
-            See All Trending Designs
-            <ArrowRight c="w-4 h-4" />
-          </button>
-        </div>
-      </div>
-    </section>
-  );
-}
+//         {/* Mobile View All */}
+//         <div className="sm:hidden flex justify-center mt-5 px-4">
+//           <button
+//             className="w-full max-w-sm flex items-center justify-center gap-2 py-3.5 text-sm tracking-wide active:scale-98"
+//             style={{
+//               background: "#6F4E37", color: "#fff",
+//               border: "1.5px solid rgba(201,169,110,0.2)",
+//               boxShadow: "0 6px 20px rgba(12,12,12,0.18)",
+//             }}
+//           >
+//             See All Trending Designs
+//             <ArrowRight c="w-4 h-4" />
+//           </button>
+//         </div>
+//       </div>
+//     </section>
+//   );
+// }
