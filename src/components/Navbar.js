@@ -16,45 +16,176 @@ import { IoClose } from "react-icons/io5";
 // ─────────────────────────────────────────────────────────────────────────────
 // ICON PRIMITIVES
 // ─────────────────────────────────────────────────────────────────────────────
-const Ic = ({ d, className = "w-5 h-5", fill = "none", sw = 2, children }) => (
-    <svg xmlns="http://www.w3.org/2000/svg" className={className} fill={fill}
-        viewBox="0 0 24 24" stroke="currentColor" strokeWidth={sw}
-        strokeLinecap="round" strokeLinejoin="round">
-        {d ? <path d={d} /> : children}
+const Ic = ({ children, className = "w-5 h-5", strokeWidth = 1.8 }) => (
+    <svg
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke="currentColor"
+        strokeWidth={strokeWidth}
+        className={className}
+        strokeLinecap="round"
+        strokeLinejoin="round"
+    >
+        {children}
     </svg>
 );
 
-const SearchIcon = ({ c }) => <Ic className={c || "w-5 h-5"} d="M21 21l-4.35-4.35M11 19a8 8 0 100-16 8 8 0 000 16z" />;
-const CartIcon = ({ c }) => <Ic className={c || "w-5 h-5"}><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z" /><line x1="3" y1="6" x2="21" y2="6" /><path d="M16 10a4 4 0 01-8 0" /></Ic>;
-const ProfileIcon = ({ c }) => <Ic className={c || "w-5 h-5"}><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2" /><circle cx="12" cy="7" r="4" /></Ic>;
-const CloseIcon = ({ c }) => <Ic className={c || "w-4 h-4"} d="M6 18L18 6M6 6l12 12" />;
-const ChevDown = ({ c }) => <Ic className={c || "w-3.5 h-3.5"} d="M19 9l-7 7-7-7" sw={2.5} />;
-const ChevRight = ({ c }) => <Ic className={c || "w-4 h-4"} d="M9 5l7 7-7 7" />;
-const CheckIcon = ({ c }) => <Ic className={c || "w-3.5 h-3.5"} d="M5 13l4 4L19 7" sw={2.5} />;
-const ZapIcon = ({ c }) => <Ic className={c || "w-3 h-3"} fill="currentColor" d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" sw={0} />;
-const PinIcon = ({ c }) => <Ic className={c || "w-4 h-4"}><path d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" /><path d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" /></Ic>;
-const GpsIcon = ({ c }) => <Ic className={c || "w-4 h-4"}><circle cx="12" cy="12" r="3" /><path d="M12 2v3M12 19v3M2 12h3M19 12h3" /></Ic>;
-const ArrowLeftIcon = ({ c }) => <Ic className={c || "w-5 h-5"} d="M19 12H5M12 19l-7-7 7-7" />;
-const TrendingIcon = ({ c }) => <Ic className={c || "w-4 h-4"}><polyline points="22 7 13.5 15.5 8.5 10.5 2 17" /><polyline points="16 7 22 7 22 13" /></Ic>;
-const ClockIcon = ({ c }) => <Ic className={c || "w-4 h-4"}><circle cx="12" cy="12" r="10" /><polyline points="12 6 12 12 16 14" /></Ic>;
-const MenuIcon = ({ c }) => <Ic className={c || "w-5 h-5"} d="M4 6h16M4 12h16M4 18h16" />;
-const HomeIcon = ({ c }) => <Ic className={c || "w-5 h-5"}><path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" /></Ic>;
-const HeartIcon = ({ c }) => (
-    <Ic className={c || "w-5 h-5"}>
-        <path d="M4.318 6.318a4.5 4.5 0 016.364 0L12 7.636l1.318-1.318a4.5 4.5 0 116.364 6.364L12 21.364 4.318 12.682a4.5 4.5 0 010-6.364z" />
-    </Ic>
-);
-const ScissorsIcon = ({ c }) => <Ic className={c || "w-5 h-5"}><circle cx="6" cy="6" r="3" /><circle cx="6" cy="18" r="3" /><path d="M20 4L8.12 15.88M14.47 14.48L20 20M8.12 8.12L12 12" /></Ic>;
-const BrushIcon = ({ c }) => <Ic className={c || "w-5 h-5"}><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L3 14.67l.06.06a4 4 0 005.6 5.6l.06.06 10.06-10.06a5.5 5.5 0 000-7.78z" /><path d="M7.5 21a2.5 2.5 0 01-3-3" /></Ic>;
-const GemIcon = ({ c }) => (
-    <Ic className={c || "w-6 h-6"} fill="none" stroke="currentColor" strokeWidth="2">
-        <path d="M6 3h12l4 6-10 13L2 9z" />
-        <path d="M2 9h20M6 3l4 6m4 0l4-6m-8 0v6" />
-    </Ic>
-);
-const TagIcon = ({ c }) => <Ic className={c || "w-5 h-5"}><path d="M20.59 13.41l-7.17 7.17a2 2 0 01-2.83 0L2 12V2h10l8.59 8.59a2 2 0 010 2.82z" /><line x1="7" y1="7" x2="7.01" y2="7" /></Ic>;
-const SparkleIcon = ({ c }) => <Ic className={c || "w-4 h-4"} fill="currentColor" sw={0} d="M12 2l2.4 7.4H22l-6.2 4.5 2.4 7.4L12 17l-6.2 4.3 2.4-7.4L2 9.4h7.6z" />;
+/* ───────── BASIC ICONS ───────── */
 
+export const SearchIcon = ({ c }) => (
+    <Ic className={c}>
+        <circle cx="11" cy="11" r="7" />
+        <line x1="21" y1="21" x2="16.65" y2="16.65" />
+    </Ic>
+);
+
+export const CartIcon = ({ c }) => (
+    <Ic className={c}>
+        <circle cx="9" cy="20" r="1.5" />
+        <circle cx="17" cy="20" r="1.5" />
+        <path d="M3 3h2l2.4 12.5a2 2 0 002 1.5h7.6a2 2 0 002-1.5L21 7H6" />
+    </Ic>
+);
+
+export const ProfileIcon = ({ c }) => (
+    <Ic className={c}>
+        <circle cx="12" cy="8" r="4" />
+        <path d="M4 20c0-4 4-6 8-6s8 2 8 6" />
+    </Ic>
+);
+
+export const CloseIcon = ({ c }) => (
+    <Ic className={c}>
+        <line x1="6" y1="6" x2="18" y2="18" />
+        <line x1="6" y1="18" x2="18" y2="6" />
+    </Ic>
+);
+
+/* ───────── ARROWS ───────── */
+
+export const ChevDown = ({ c }) => (
+    <Ic className={c}>
+        <polyline points="6 9 12 15 18 9" />
+    </Ic>
+);
+
+export const ChevRight = ({ c }) => (
+    <Ic className={c}>
+        <polyline points="9 6 15 12 9 18" />
+    </Ic>
+);
+
+export const ArrowLeftIcon = ({ c }) => (
+    <Ic className={c}>
+        <line x1="19" y1="12" x2="5" y2="12" />
+        <polyline points="12 19 5 12 12 5" />
+    </Ic>
+);
+
+/* ───────── STATUS ICONS ───────── */
+
+export const CheckIcon = ({ c }) => (
+    <Ic className={c}>
+        <polyline points="5 13 9 17 19 7" />
+    </Ic>
+);
+
+export const TrendingIcon = ({ c }) => (
+    <Ic className={c}>
+        <polyline points="3 17 9 11 13 15 21 7" />
+        <polyline points="21 7 21 13 15 13" />
+    </Ic>
+);
+
+export const ClockIcon = ({ c }) => (
+    <Ic className={c}>
+        <circle cx="12" cy="12" r="9" />
+        <polyline points="12 7 12 12 16 14" />
+    </Ic>
+);
+
+/* ───────── NAVIGATION ───────── */
+
+export const MenuIcon = ({ c }) => (
+    <Ic className={c}>
+        <line x1="4" y1="6" x2="20" y2="6" />
+        <line x1="4" y1="12" x2="20" y2="12" />
+        <line x1="4" y1="18" x2="20" y2="18" />
+    </Ic>
+);
+
+export const HomeIcon = ({ c }) => (
+    <Ic className={c}>
+        <path d="M3 10.5l9-7 9 7" />
+        <path d="M5 10v10h5v-6h4v6h5V10" />
+    </Ic>
+);
+
+/* ───────── LIFESTYLE ICONS ───────── */
+
+export const HeartIcon = ({ c }) => (
+    <Ic className={c}>
+        <path d="M20.8 7.6a5.5 5.5 0 00-7.8 0L12 8.6l-1-1a5.5 5.5 0 10-7.8 7.8L12 21l8.8-5.6a5.5 5.5 0 000-7.8z" />
+    </Ic>
+);
+
+export const ScissorsIcon = ({ c }) => (
+    <Ic className={c}>
+        <circle cx="6" cy="6" r="2.5" />
+        <circle cx="6" cy="18" r="2.5" />
+        <line x1="20" y1="4" x2="8.5" y2="15.5" />
+        <line x1="14" y1="14" x2="20" y2="20" />
+    </Ic>
+);
+
+export const BrushIcon = ({ c }) => (
+    <Ic className={c}>
+        <path d="M20 4L4 20" />
+        <path d="M14 6l4 4" />
+        <path d="M7 21a3 3 0 01-3-3" />
+    </Ic>
+);
+
+export const GemIcon = ({ c }) => (
+    <Ic className={c}>
+        <path d="M6 3h12l4 6-10 13L2 9z" />
+        <path d="M2 9h20" />
+    </Ic>
+);
+
+export const TagIcon = ({ c }) => (
+    <Ic className={c}>
+        <path d="M20 13l-7 7-10-10V3h7l10 10z" />
+        <circle cx="7.5" cy="7.5" r="1.5" />
+    </Ic>
+);
+
+export const SparkleIcon = ({ c }) => (
+    <Ic className={c}>
+        <path d="M12 2l2 5 5 2-5 2-2 5-2-5-5-2 5-2z" />
+    </Ic>
+);
+
+export const PinIcon = ({ c }) => (
+    <Ic className={c}>
+        <path d="M12 21s7-6 7-11a7 7 0 10-14 0c0 5 7 11 7 11z" />
+        <circle cx="12" cy="10" r="2" />
+    </Ic>
+);
+
+export const GpsIcon = ({ c }) => (
+    <Ic className={c}>
+        <circle cx="12" cy="12" r="3" />
+        <circle cx="12" cy="12" r="9" />
+    </Ic>
+);
+
+export const ZapIcon = ({ c }) => (
+    <Ic className={c}>
+        <path d="M13 2L3 14h7l-1 8 10-12h-7z" />
+    </Ic>
+);
 // ─────────────────────────────────────────────────────────────────────────────
 // FLOATING JOIN US BUTTON — bottom-right, fixed
 // ─────────────────────────────────────────────────────────────────────────────
