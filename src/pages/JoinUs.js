@@ -536,13 +536,7 @@ export default function JoinUs() {
                                 ))}
                             </div>
 
-                            {/* Bottom note */}
-                            <p className="text-center text-xs mt-10" style={{ color: "#7a6a5a" }}>
-                                Already a partner?{" "}
-                                <span className="font-semibold underline cursor-pointer" style={{ color: "#6F4E37" }}>
-                                    Sign in to your dashboard →
-                                </span>
-                            </p>
+                            
                         </div>
                     )}
 
