@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import Navbar from "./Navbar";
+import { useNavigate } from "react-router-dom";
 
 // ─────────────────────────────────────────────────────────────────────────────
 // STYLES
@@ -15,6 +16,10 @@ const Styles = () => (
     @keyframes pulseGold{ 0%,100%{box-shadow:0 0 0 0 rgba(201,169,110,0.4)} 60%{box-shadow:0 0 0 8px rgba(201,169,110,0)} }
     @keyframes slideIn  { from{opacity:0;transform:translateX(-12px)} to{opacity:1;transform:translateX(0)} }
     @keyframes scaleIn  { from{opacity:0;transform:scale(0.93)} to{opacity:1;transform:scale(1)} }
+    @keyframes float {
+      0%,100%{transform:translateY(0px)}
+      50%{transform:translateY(-8px)}
+    }
 
     .gold-shimmer {
       background: linear-gradient(90deg,#C9A96E,#E8C97A,#C9A96E);
@@ -27,6 +32,13 @@ const Styles = () => (
     .order-card::-webkit-scrollbar,
     .activity-track::-webkit-scrollbar { display: none; }
     input:focus { outline: none; }
+    
+    /* Responsive touch improvements */
+    @media (max-width: 640px) {
+      button, .menu-item, .cursor-pointer { 
+        -webkit-tap-highlight-color: transparent; 
+      }
+    }
   `}</style>
 );
 
@@ -59,6 +71,7 @@ const Check = ({ c }) => <Ic c={c || "w-4 h-4"} d="M5 13l4 4L19 7" sw={2.5} />;
 const Scissors = ({ c }) => <Ic c={c || "w-5 h-5"} ch={<><circle cx="6" cy="6" r="3" /><circle cx="6" cy="18" r="3" /><path d="M20 4L8.12 15.88M14.47 14.48L20 20M8.12 8.12L12 12" /></>} />;
 const Sparkles = ({ c }) => <Ic c={c || "w-5 h-5"} ch={<><path d="M12 2l2.4 7.4H22l-6.2 4.5 2.4 7.4L12 17l-6.2 4.3 2.4-7.4L2 9.4h7.6L12 2z" /></>} />;
 const Settings = ({ c }) => <Ic c={c || "w-5 h-5"} ch={<><circle cx="12" cy="12" r="3" /><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z" /></>} />;
+const MapPin = ({ c }) => <Ic c={c || "w-5 h-5"} ch={<><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 1118 0z" /><circle cx="12" cy="10" r="3" /></>} />;
 
 // ─────────────────────────────────────────────────────────────────────────────
 // DATA
@@ -76,13 +89,6 @@ const USER = {
   address: "Banjara Hills, Hyderabad",
 };
 
-const STATS = [
-  { value: "28", label: "Orders", color: "#C9A96E" },
-  { value: "₹3.2L", label: "Spent", color: "#E8C97A" },
-  { value: "4820", label: "NM Points", color: "#6fcf97" },
-  { value: "12", label: "Wishlisted", color: "#e85d4a" },
-];
-
 const ORDERS = [
   { id: "NM-2089", name: "Silk Organza Lehenga", status: "Delivered", statusCol: "#6fcf97", date: "12 Jan 2025", price: "₹12,999", img: "https://images.unsplash.com/photo-1509631179647-0177331693ae?w=120&h=150&fit=crop&q=80" },
   { id: "NM-2071", name: "Zardozi Anarkali", status: "Shipped", statusCol: "#C9A96E", date: "08 Jan 2025", price: "₹9,299", img: "https://images.unsplash.com/photo-1503341504253-dff4815485f1?w=120&h=150&fit=crop&q=80" },
@@ -90,42 +96,21 @@ const ORDERS = [
   { id: "NM-2030", name: "Banarasi Saree", status: "Delivered", statusCol: "#6fcf97", date: "15 Dec 2024", price: "₹8,499", img: "https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=120&h=150&fit=crop&q=80" },
 ];
 
-const WISHLIST = [
-  { name: "Mirror Work Lehenga", price: "₹7,499", img: "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=160&h=200&fit=crop&q=80" },
-  { name: "Velvet Blazer Dress", price: "₹5,999", img: "https://images.unsplash.com/photo-1485230895905-ec40ba36b9bc?w=160&h=200&fit=crop&q=80" },
-  { name: "Premium Edit Gown", price: "₹15,999", img: "https://images.unsplash.com/photo-1496747611176-843222e1e57c?w=160&h=200&fit=crop&q=80" },
-];
-
 const MENU_GROUPS = [
   {
     label: "Account",
     items: [
-      { icon: User, label: "Personal Details", sub: "Name, email, phone" },
-      { icon: Location, label: "Saved Addresses", sub: "2 addresses saved" },
-      { icon: Settings, label: "Preferences", sub: "Size, style, notifications" },
-    ],
-  },
-  {
-    label: "Shopping",
-    items: [
-      { icon: Order, label: "My Orders", sub: "28 orders placed" },
-      { icon: Heart, label: "Wishlist", sub: "12 items saved" },
-      { icon: Scissors, label: "Tailor Requests", sub: "1 active request" },
-      { icon: Sparkles, label: "Style Profile", sub: "Complete your style DNA" },
-    ],
-  },
-  {
-    label: "Rewards",
-    items: [
-      { icon: Gift, label: "NM Points & Offers", sub: "4820 pts · ₹482 value", badge: "NEW" },
-      { icon: Gem, label: "Gold Membership", sub: "Exclusive benefits active", badge: "GOLD" },
+      { icon: User, label: "Personal Details", sub: "Name, email, phone", link: "/profile/personal-details" },
+      { icon: Location, label: "Saved Addresses", sub: "2 addresses saved", link: "/profile/saved-addresses" },
+      { icon: Order, label: "My Orders", sub: "28 orders placed", link: "/profile/my-orders" },
+      { icon: Bell, label: "Notifications", sub: "", link: "/profile/notifications" },
     ],
   },
   {
     label: "Support",
     items: [
-      { icon: Bell, label: "Notifications", sub: "Manage alerts" },
-      { icon: Shield, label: "Privacy & Security", sub: "Password, 2FA" },
+      { icon: Shield, label: "Privacy Policy", sub: "" },
+      { icon: Shield, label: "Terms of Service", sub: "" },
       { icon: Help, label: "Help & Support", sub: "FAQs, chat with us" },
     ],
   },
@@ -155,6 +140,7 @@ const useVis = (delay = 0) => {
 // ─────────────────────────────────────────────────────────────────────────────
 const ProfileHero = () => {
   const [vis, setVis] = useState(false);
+  const navigate = useNavigate();
   useEffect(() => { const t = setTimeout(() => setVis(true), 80); return () => clearTimeout(t); }, []);
 
   return (
@@ -164,8 +150,8 @@ const ProfileHero = () => {
       <div className="absolute inset-0 pointer-events-none"
         style={{ background: "radial-gradient(ellipse 65% 45% at 50% 0%,rgba(201,169,110,0.12) 0%,transparent 65%)" }} />
 
-      {/* Rotating ring decoration */}
-      <div className="absolute top-0 right-0 w-64 h-64 pointer-events-none hidden md:block"
+      {/* Rotating ring decoration - hidden on mobile */}
+      <div className="absolute top-0 right-0 w-48 sm:w-64 h-48 sm:h-64 pointer-events-none hidden md:block"
         style={{ opacity: 0.06, animation: "shimmer 20s linear infinite", transform: "translate(30%,-30%)" }}>
         <svg viewBox="0 0 200 200" className="w-full h-full">
           {[85, 65, 45].map((r, i) => (
@@ -179,8 +165,8 @@ const ProfileHero = () => {
       <div className="h-px w-full"
         style={{ background: "linear-gradient(90deg,transparent,#C9A96E,transparent)" }} />
 
-      <div className="px-4 md:px-8 lg:px-14 pt-10 pb-8 max-w-5xl mx-auto">
-        <div className="flex flex-col sm:flex-row items-center sm:items-end gap-6">
+      <div className="px-4 sm:px-6 md:px-8 lg:px-14 pt-8 sm:pt-10 pb-6 sm:pb-8 max-w-5xl mx-auto">
+        <div className="flex flex-col sm:flex-row items-center sm:items-end gap-5 sm:gap-6">
 
           {/* Avatar with camera button */}
           <div className="relative flex-shrink-0"
@@ -199,11 +185,11 @@ const ProfileHero = () => {
               }} />
             <img src={USER.avatar} alt={USER.name}
               className="relative rounded-full object-cover"
-              style={{ width: "96px", height: "96px", border: "3px solid #0C0C0C" }} />
+              style={{ width: "clamp(72px, 15vw, 96px)", height: "clamp(72px, 15vw, 96px)", border: "3px solid #0C0C0C" }} />
             {/* Camera edit button */}
-            <button className="absolute bottom-0 right-0 flex items-center justify-center rounded-full transition-all hover:scale-110 active:scale-95"
+            <button onClick={() => navigate('/profile/personal-details')} className="absolute bottom-0 right-0 flex items-center justify-center rounded-full transition-all hover:scale-110 active:scale-95"
               style={{
-                width: "28px", height: "28px",
+                width: "clamp(24px, 5vw, 28px)", height: "clamp(24px, 5vw, 28px)",
                 background: "linear-gradient(135deg,#C9A96E,#a8843f)",
                 border: "2px solid #0C0C0C"
               }}>
@@ -214,54 +200,41 @@ const ProfileHero = () => {
           {/* Name + info */}
           <div className="flex-1 text-center sm:text-left"
             style={{ opacity: vis ? 1 : 0, animation: vis ? "fadeUp 0.6s ease 0.18s both" : "none" }}>
-            <div className="flex items-center justify-center sm:justify-start gap-2 mb-1">
-              <span className="text-[10px] font-black uppercase tracking-[0.18em] px-2.5 py-1 rounded-full fs"
+            <div className="flex flex-wrap items-center justify-center sm:justify-start gap-2 mb-1">
+              <span className="text-[9px] sm:text-[10px] font-black uppercase tracking-[0.18em] px-2.5 py-1 rounded-full fs"
                 style={{ background: "linear-gradient(135deg,#C9A96E,#a8843f)", color: "#0C0C0C" }}>
                 {USER.tier}
               </span>
-              <span className="text-[10px] fs" style={{ color: "rgba(245,240,232,0.35)" }}>{USER.joined}</span>
+              <span className="text-[9px] sm:text-[10px] fs" style={{ color: "rgba(245,240,232,0.35)" }}>{USER.joined}</span>
             </div>
             <h1 className="fd font-black leading-tight text-white mb-0.5"
-              style={{ fontSize: "clamp(22px,4vw,34px)", letterSpacing: "-0.02em" }}>
+              style={{ fontSize: "clamp(20px, 5vw, 34px)", letterSpacing: "-0.02em" }}>
               {USER.name}
             </h1>
-            <p className="text-xs fs" style={{ color: "#C9A96E" }}>{USER.handle}</p>
-            <p className="text-[11px] mt-0.5 fs" style={{ color: "rgba(245,240,232,0.40)" }}>
+            <p className="text-[11px] sm:text-xs fs" style={{ color: "#C9A96E" }}>{USER.handle}</p>
+            <p className="text-[10px] sm:text-[11px] mt-0.5 fs break-words px-2 sm:px-0" style={{ color: "rgba(245,240,232,0.40)" }}>
               {USER.email} · {USER.address}
             </p>
           </div>
 
           {/* Edit profile button */}
-          <button className="flex items-center gap-2 px-5 py-2.5 rounded-xl font-bold text-xs fs
-                             transition-all hover:scale-105 active:scale-95 flex-shrink-0"
+          <button className="flex items-center justify-center gap-2 px-4 sm:px-5 py-2 sm:py-2.5 rounded-xl font-bold text-[11px] sm:text-xs fs
+                             transition-all hover:scale-105 active:scale-95 flex-shrink-0 w-full sm:w-auto"
             style={{
               background: "rgba(255,255,255,0.06)",
               color: "rgba(245,240,232,0.80)",
               border: "1px solid rgba(255,255,255,0.12)",
               opacity: vis ? 1 : 0,
               animation: vis ? "fadeUp 0.6s ease 0.30s both" : "none",
-            }}>
+            }}
+            onClick={() => navigate('/profile/personal-details')}
+          >
             <Edit c="w-3.5 h-3.5" />
             Edit Profile
           </button>
         </div>
 
-        {/* Stats row */}
-        <div className="grid grid-cols-4 gap-3 mt-7"
-          style={{ opacity: vis ? 1 : 0, animation: vis ? "fadeUp 0.6s ease 0.42s both" : "none" }}>
-          {STATS.map((s, i) => (
-            <div key={i} className="flex flex-col items-center py-3.5 rounded-2xl"
-              style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(201,169,110,0.10)" }}>
-              <span className="fd font-black leading-none" style={{ fontSize: "clamp(18px,3vw,24px)", color: s.color }}>
-                {s.value}
-              </span>
-              <span className="text-[9px] font-semibold uppercase tracking-[0.1em] mt-1 fs"
-                style={{ color: "rgba(245,240,232,0.38)" }}>
-                {s.label}
-              </span>
-            </div>
-          ))}
-        </div>
+
       </div>
 
       {/* Gold bottom line */}
@@ -275,27 +248,27 @@ const ProfileHero = () => {
 // RECENT ORDERS
 // ─────────────────────────────────────────────────────────────────────────────
 const OrderCard = ({ o }) => (
-  <div className="flex items-center gap-3.5 p-3.5 rounded-2xl cursor-pointer transition-all duration-200 group"
+  <div className="flex items-center gap-2.5 sm:gap-3.5 p-2.5 sm:p-3.5 rounded-xl sm:rounded-2xl cursor-pointer transition-all duration-200 group"
     style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(201,169,110,0.10)" }}
     onMouseEnter={e => e.currentTarget.style.background = "rgba(201,169,110,0.06)"}
     onMouseLeave={e => e.currentTarget.style.background = "rgba(255,255,255,0.03)"}>
     {/* Product image */}
-    <div className="rounded-xl overflow-hidden flex-shrink-0" style={{ width: "52px", height: "64px" }}>
+    <div className="rounded-lg sm:rounded-xl overflow-hidden flex-shrink-0" style={{ width: "48px", height: "60px" }}>
       <img src={o.img} alt={o.name} className="w-full h-full object-cover object-top" loading="lazy" draggable={false} />
     </div>
     {/* Info */}
     <div className="flex-1 min-w-0">
-      <p className="text-xs font-bold text-white fs truncate">{o.name}</p>
-      <p className="text-[10px] fs mt-0.5" style={{ color: "rgba(245,240,232,0.38)" }}>{o.id} · {o.date}</p>
-      <div className="flex items-center gap-1.5 mt-1.5">
+      <p className="text-[11px] sm:text-xs font-bold text-white fs truncate">{o.name}</p>
+      <p className="text-[9px] sm:text-[10px] fs mt-0.5" style={{ color: "rgba(245,240,232,0.38)" }}>{o.id} · {o.date}</p>
+      <div className="flex items-center gap-1.5 mt-1 sm:mt-1.5">
         <div className="w-1.5 h-1.5 rounded-full" style={{ background: o.statusCol }} />
-        <span className="text-[10px] font-bold fs" style={{ color: o.statusCol }}>{o.status}</span>
+        <span className="text-[9px] sm:text-[10px] font-bold fs" style={{ color: o.statusCol }}>{o.status}</span>
       </div>
     </div>
     {/* Price + arrow */}
-    <div className="flex flex-col items-end gap-1.5 flex-shrink-0">
-      <span className="fd font-black text-sm text-white">{o.price}</span>
-      <ChevRight c="w-3.5 h-3.5 transition-transform duration-200 group-hover:translate-x-1"
+    <div className="flex flex-col items-end gap-1 flex-shrink-0">
+      <span className="fd font-black text-sm sm:text-base text-white">{o.price}</span>
+      <ChevRight c="w-3 h-3 sm:w-3.5 sm:h-3.5 transition-transform duration-200 group-hover:translate-x-1"
         style={{ color: "rgba(245,240,232,0.30)" }} />
     </div>
   </div>
@@ -307,8 +280,8 @@ const OrderCard = ({ o }) => (
 const WishCard = ({ item }) => {
   const [w, setW] = useState(true);
   return (
-    <div className="relative flex-shrink-0 rounded-2xl overflow-hidden cursor-pointer group"
-      style={{ width: "130px" }}>
+    <div className="relative flex-shrink-0 rounded-xl sm:rounded-2xl overflow-hidden cursor-pointer group"
+      style={{ width: "clamp(110px, 28vw, 130px)" }}>
       <div className="relative" style={{ aspectRatio: "4/5" }}>
         <img src={item.img} alt={item.name}
           className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-107"
@@ -316,17 +289,17 @@ const WishCard = ({ item }) => {
         <div className="absolute inset-0"
           style={{ background: "linear-gradient(180deg,transparent 55%,rgba(12,12,12,0.78) 100%)" }} />
         <button onClick={() => setW(ww => !ww)}
-          className="absolute top-2 right-2 w-7 h-7 flex items-center justify-center rounded-full transition-all"
+          className="absolute top-2 right-2 w-6 h-6 flex items-center justify-center rounded-full transition-all"
           style={{
             background: "rgba(12,12,12,0.55)", backdropFilter: "blur(6px)",
             color: w ? "#e85d4a" : "rgba(245,240,232,0.6)"
           }}>
-          <Heart c="w-3.5 h-3.5" f={w} />
+          <Heart c="w-3 h-3" f={w} />
         </button>
       </div>
-      <div className="px-2.5 py-2" style={{ background: "#141410" }}>
-        <p className="text-[10px] font-bold text-white fd truncate">{item.name}</p>
-        <p className="text-[11px] font-black fs" style={{ color: "#C9A96E" }}>{item.price}</p>
+      <div className="px-2 py-1.5 sm:py-2" style={{ background: "#141410" }}>
+        <p className="text-[9px] sm:text-[10px] font-bold text-white fd truncate">{item.name}</p>
+        <p className="text-[10px] sm:text-[11px] font-black fs" style={{ color: "#C9A96E" }}>{item.price}</p>
       </div>
     </div>
   );
@@ -338,7 +311,7 @@ const WishCard = ({ item }) => {
 const PointsCard = () => {
   const [ref, vis] = useVis(100);
   return (
-    <div ref={ref} className="rounded-2xl overflow-hidden relative"
+    <div ref={ref} className="rounded-xl sm:rounded-2xl overflow-hidden relative"
       style={{
         background: "linear-gradient(135deg,#1a1812 0%,#0C0C0C 100%)",
         border: "1px solid rgba(201,169,110,0.25)",
@@ -346,37 +319,36 @@ const PointsCard = () => {
         animation: vis ? "scaleIn 0.55s ease both" : "none",
       }}>
       {/* Decorative rings */}
-      <div className="absolute -right-6 -top-6 w-32 h-32 rounded-full pointer-events-none"
+      <div className="absolute -right-6 -top-6 w-28 sm:w-32 h-28 sm:h-32 rounded-full pointer-events-none"
         style={{ border: "1px solid rgba(201,169,110,0.08)" }} />
-      <div className="absolute -right-2 -top-2 w-20 h-20 rounded-full pointer-events-none"
+      <div className="absolute -right-2 -top-2 w-16 sm:w-20 h-16 sm:h-20 rounded-full pointer-events-none"
         style={{ border: "1px solid rgba(201,169,110,0.12)" }} />
 
-      <div className="p-5 relative z-10">
-        <div className="flex items-start justify-between mb-4">
+      {/* <div className="p-4 sm:p-5 relative z-10">
+        <div className="flex items-start justify-between mb-3 sm:mb-4">
           <div>
-            <p className="text-[9px] font-black uppercase tracking-[0.22em] mb-1 fs" style={{ color: "#C9A96E" }}>
+            <p className="text-[8px] sm:text-[9px] font-black uppercase tracking-[0.22em] mb-1 fs" style={{ color: "#C9A96E" }}>
               NM Loyalty
             </p>
-            <h3 className="fd font-black text-white text-xl leading-tight">Gold Member</h3>
+            <h3 className="fd font-black text-white text-lg sm:text-xl leading-tight">Gold Member</h3>
           </div>
-          <div className="p-2.5 rounded-xl" style={{ background: "rgba(201,169,110,0.12)" }}>
-            <Gem c="w-5 h-5 text-[#C9A96E]" />
+          <div className="p-2 rounded-lg sm:rounded-xl" style={{ background: "rgba(201,169,110,0.12)" }}>
+            <Gem c="w-4 h-4 sm:w-5 sm:h-5 text-[#C9A96E]" />
           </div>
         </div>
 
-        {/* Points */}
-        <div className="flex items-baseline gap-2 mb-3">
-          <span className="fd font-black gold-shimmer" style={{ fontSize: "36px" }}>4,820</span>
-          <span className="text-xs fs" style={{ color: "rgba(245,240,232,0.45)" }}>points</span>
+        <div className="flex items-baseline gap-2 mb-2 sm:mb-3">
+          <span className="fd font-black gold-shimmer" style={{ fontSize: "clamp(28px, 6vw, 36px)" }}>4,820</span>
+          <span className="text-[10px] sm:text-xs fs" style={{ color: "rgba(245,240,232,0.45)" }}>points</span>
         </div>
 
-        {/* Progress to next tier */}
+
         <div className="mb-2">
           <div className="flex items-center justify-between mb-1.5">
-            <span className="text-[10px] fs" style={{ color: "rgba(245,240,232,0.40)" }}>
+            <span className="text-[9px] sm:text-[10px] fs" style={{ color: "rgba(245,240,232,0.40)" }}>
               1,180 pts to Platinum
             </span>
-            <span className="text-[10px] font-bold fs" style={{ color: "#C9A96E" }}>80%</span>
+            <span className="text-[9px] sm:text-[10px] font-bold fs" style={{ color: "#C9A96E" }}>80%</span>
           </div>
           <div className="h-1.5 rounded-full overflow-hidden" style={{ background: "rgba(255,255,255,0.08)" }}>
             <div className="h-full rounded-full"
@@ -384,12 +356,12 @@ const PointsCard = () => {
           </div>
         </div>
 
-        <p className="text-[10px] fs" style={{ color: "rgba(245,240,232,0.35)" }}>
+        <p className="text-[9px] sm:text-[10px] fs" style={{ color: "rgba(245,240,232,0.35)" }}>
           ≈ ₹482 redeemable value
         </p>
 
-        {/* Redeem button */}
-        <button className="w-full mt-4 py-2.5 rounded-xl font-black text-xs fs tracking-wide
+     
+        <button className="w-full mt-3 sm:mt-4 py-2 sm:py-2.5 rounded-lg sm:rounded-xl font-black text-[10px] sm:text-xs fs tracking-wide
                            transition-all hover:scale-[1.02] active:scale-[0.98]"
           style={{
             background: "linear-gradient(135deg,#C9A96E,#a8843f)", color: "#0C0C0C",
@@ -397,7 +369,7 @@ const PointsCard = () => {
           }}>
           Redeem Points
         </button>
-      </div>
+      </div> */}
     </div>
   );
 };
@@ -407,36 +379,39 @@ const PointsCard = () => {
 // ─────────────────────────────────────────────────────────────────────────────
 const MenuGroup = ({ group, delay }) => {
   const [ref, vis] = useVis(delay);
+  const navigate = useNavigate();
   return (
     <div ref={ref} style={{ opacity: vis ? 1 : 0, animation: vis ? `slideIn 0.5s ease both` : "none" }}>
-      <p className="text-[9px] font-black uppercase tracking-[0.22em] mb-2 px-1 fs"
+      <p className="text-[8px] sm:text-[9px] font-black uppercase tracking-[0.22em] mb-2 px-1 fs"
         style={{ color: "rgba(245,240,232,0.30)" }}>
         {group.label}
       </p>
-      <div className="rounded-2xl overflow-hidden divide-y"
+      <div className="rounded-xl sm:rounded-2xl overflow-hidden divide-y"
         style={{
           border: "1px solid rgba(201,169,110,0.10)",
           divideColor: "rgba(255,255,255,0.05)"
-        }}>
+        }}        
+      >
         {group.items.map((item, i) => (
           <button key={i}
-            className="menu-item w-full flex items-center gap-3.5 px-4 py-3.5 text-left transition-all duration-200"
+            className="menu-item w-full flex items-center gap-3 sm:gap-3.5 px-3 sm:px-4 py-3 sm:py-3.5 text-left transition-all duration-200"
             style={{ background: "rgba(255,255,255,0.025)" }}
             onMouseEnter={e => e.currentTarget.style.background = "rgba(201,169,110,0.06)"}
-            onMouseLeave={e => e.currentTarget.style.background = "rgba(255,255,255,0.025)"}>
+            onMouseLeave={e => e.currentTarget.style.background = "rgba(255,255,255,0.025)"}
+            onClick={() => navigate(item.link)}>
             {/* Icon bubble */}
-            <div className="w-9 h-9 flex items-center justify-center rounded-xl flex-shrink-0 transition-all duration-200"
+            <div className="w-8 h-8 sm:w-9 sm:h-9 flex items-center justify-center rounded-lg sm:rounded-xl flex-shrink-0 transition-all duration-200"
               style={{ background: "rgba(201,169,110,0.08)", color: "#C9A96E" }}>
-              <item.icon c="w-4 h-4" />
+              <item.icon c="w-3.5 h-3.5 sm:w-4 sm:h-4" />
             </div>
             {/* Text */}
             <div className="flex-1 min-w-0">
-              <p className="text-sm font-bold text-white fs">{item.label}</p>
-              <p className="text-[10px] fs truncate" style={{ color: "rgba(245,240,232,0.38)" }}>{item.sub}</p>
+              <p className="text-xs sm:text-sm font-bold text-white fs">{item.label}</p>
+              <p className="text-[9px] sm:text-[10px] fs truncate" style={{ color: "rgba(245,240,232,0.38)" }}>{item.sub}</p>
             </div>
             {/* Badge */}
             {item.badge && (
-              <span className="text-[8px] font-black px-2 py-0.5 rounded-full fs flex-shrink-0"
+              <span className="text-[7px] sm:text-[8px] font-black px-1.5 sm:px-2 py-0.5 rounded-full fs flex-shrink-0"
                 style={{
                   background: item.badge === "GOLD"
                     ? "linear-gradient(135deg,#C9A96E,#a8843f)"
@@ -449,7 +424,7 @@ const MenuGroup = ({ group, delay }) => {
             {/* Arrow */}
             <div className="menu-arrow transition-transform duration-200 flex-shrink-0"
               style={{ color: "rgba(245,240,232,0.22)" }}>
-              <ChevRight c="w-4 h-4" />
+              <ChevRight c="w-3.5 h-3.5 sm:w-4 sm:h-4" />
             </div>
           </button>
         ))}
@@ -462,21 +437,21 @@ const MenuGroup = ({ group, delay }) => {
 // SECTION HEADER
 // ─────────────────────────────────────────────────────────────────────────────
 const SectionHead = ({ eyebrow, title, cta, onCta }) => (
-  <div className="flex items-end justify-between mb-4">
+  <div className="flex items-end justify-between mb-3 sm:mb-4">
     <div>
-      <p className="text-[9px] font-black uppercase tracking-[0.2em] mb-0.5 fs" style={{ color: "#C9A96E" }}>
+      <p className="text-[8px] sm:text-[9px] font-black uppercase tracking-[0.2em] mb-0.5 fs" style={{ color: "#C9A96E" }}>
         {eyebrow}
       </p>
-      <h2 className="fd font-black leading-none text-white" style={{ fontSize: "clamp(18px,3vw,24px)", letterSpacing: "-0.02em" }}>
+      <h2 className="fd font-black leading-none text-white" style={{ fontSize: "clamp(16px, 4vw, 24px)", letterSpacing: "-0.02em" }}>
         {title}
       </h2>
     </div>
     {cta && (
-      <button onClick={onCta} className="text-xs font-bold fs transition-colors flex items-center gap-1"
+      <button onClick={onCta} className="text-[10px] sm:text-xs font-bold fs transition-colors flex items-center gap-1"
         style={{ color: "#C9A96E" }}
         onMouseEnter={e => e.currentTarget.style.color = "#E8C97A"}
         onMouseLeave={e => e.currentTarget.style.color = "#C9A96E"}>
-        {cta} <ChevRight c="w-3 h-3" />
+        {cta} <ChevRight c="w-2.5 h-2.5 sm:w-3 sm:h-3" />
       </button>
     )}
   </div>
@@ -488,29 +463,29 @@ const SectionHead = ({ eyebrow, title, cta, onCta }) => (
 const QuickLinks = () => {
   const [ref, vis] = useVis(50);
   const items = [
-    { Icon: Sparkles, label: "Style Profile", sub: "Complete your DNA", col: "#E8C97A" },
-    { Icon: Scissors, label: "Tailor Request", sub: "1 active", col: "#C9A96E" },
-    { Icon: Truck, label: "Track Orders", sub: "1 in transit", col: "#6fcf97" },
+    { Icon: User, label: "My Profile", sub: "Complete your DNA", col: "#E8C97A" },
+    { Icon: MapPin, label: "Addresses", sub: "1 active", col: "#acff9c" },
+    { Icon: Truck, label: "My Orders", sub: "", col: "#6fcf97" },
   ];
   return (
-    <div ref={ref} className="grid grid-cols-3 gap-3"
+    <div ref={ref} className="grid grid-cols-3 gap-2 sm:gap-3"
       style={{ opacity: vis ? 1 : 0, animation: vis ? "fadeUp 0.55s ease both" : "none" }}>
       {items.map(({ Icon, label, sub, col }, i) => (
         <button key={i}
-          className="flex flex-col items-center gap-2 py-4 px-2 rounded-2xl transition-all duration-200 cursor-pointer active:scale-95"
+          className="flex flex-col items-center gap-1.5 sm:gap-2 py-3 sm:py-4 px-1 sm:px-2 rounded-xl sm:rounded-2xl transition-all duration-200 cursor-pointer active:scale-95"
           style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(201,169,110,0.10)" }}
           onMouseEnter={e => e.currentTarget.style.background = "rgba(201,169,110,0.07)"}
           onMouseLeave={e => e.currentTarget.style.background = "rgba(255,255,255,0.03)"}>
-          <div className="w-10 h-10 rounded-xl flex items-center justify-center"
+          <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl flex items-center justify-center"
             style={{
               background: `rgba(${col === "#E8C97A" ? "232,201,122" : col === "#6fcf97" ? "111,207,151" : "201,169,110"},0.12)`,
               color: col
             }}>
-            <Icon c="w-5 h-5" />
+            <Icon c="w-4 h-4 sm:w-5 sm:h-5" />
           </div>
           <div className="text-center">
-            <p className="text-[11px] font-bold text-white fs leading-tight">{label}</p>
-            <p className="text-[9px] fs mt-0.5" style={{ color: "rgba(245,240,232,0.35)" }}>{sub}</p>
+            <p className="text-[10px] sm:text-[11px] font-bold text-white fs leading-tight">{label}</p>
+            <p className="text-[8px] sm:text-[9px] fs mt-0.5" style={{ color: "rgba(245,240,232,0.35)" }}>{sub}</p>
           </div>
         </button>
       ))}
@@ -525,23 +500,25 @@ export default function ProfilePage() {
   const [ordersRef, ordersVis] = useVis(80);
   const [wishRef, wishVis] = useVis(100);
 
+  const navigate = useNavigate();
+
   return (
     <>
       <Navbar />
-      <div className="min-h-screen fs pb-24 lg:pb-12" style={{ background: "#0C0C0C", color: "#F5F0E8" }}>
+      <div className="min-h-screen fs pb-20 sm:pb-24 lg:pb-12" style={{ background: "#0C0C0C", color: "#F5F0E8" }}>
         <Styles />
 
         {/* ── HERO ── */}
         <ProfileHero />
 
         {/* ── BODY ── */}
-        <div className="max-w-5xl mx-auto px-4 md:px-8 lg:px-14 pt-8">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 md:px-8 lg:px-14 pt-6 sm:pt-8">
 
           {/* Two-column layout on lg+ */}
-          <div className="flex flex-col lg:flex-row gap-6 lg:gap-8">
+          <div className="flex flex-col lg:flex-row gap-5 sm:gap-6 lg:gap-8">
 
             {/* ── LEFT COLUMN ── */}
-            <div className="flex-1 min-w-0 flex flex-col gap-6">
+            <div className="flex-1 min-w-0 flex flex-col gap-5 sm:gap-6">
 
               {/* Quick links */}
               <div>
@@ -553,35 +530,15 @@ export default function ProfilePage() {
               <div ref={ordersRef}
                 style={{ opacity: ordersVis ? 1 : 0, animation: ordersVis ? "fadeUp 0.55s ease both" : "none" }}>
                 <SectionHead eyebrow="Shopping History" title="Recent Orders" cta="View All" />
-                <div className="flex flex-col gap-2.5">
+                <div className="flex flex-col gap-2 sm:gap-2.5">
                   {ORDERS.map(o => <OrderCard key={o.id} o={o} />)}
-                </div>
-              </div>
-
-              {/* Wishlist */}
-              <div ref={wishRef}
-                style={{ opacity: wishVis ? 1 : 0, animation: wishVis ? "fadeUp 0.55s ease both" : "none" }}>
-                <SectionHead eyebrow="Saved Items" title="Wishlist" cta="View All" />
-                <div className="flex gap-3 overflow-x-auto pb-2 activity-track" style={{ scrollbarWidth: "none" }}>
-                  {WISHLIST.map((item, i) => <WishCard key={i} item={item} />)}
-                  {/* View more card */}
-                  <div className="flex-shrink-0 rounded-2xl flex flex-col items-center justify-center gap-2 cursor-pointer transition-all hover:scale-105 active:scale-95"
-                    style={{
-                      width: "130px", aspectRatio: "4/5", background: "rgba(255,255,255,0.04)",
-                      border: "1px solid rgba(201,169,110,0.12)"
-                    }}>
-                    <span className="fd font-black text-2xl" style={{ color: "#C9A96E" }}>+9</span>
-                    <span className="text-[10px] fs text-center" style={{ color: "rgba(245,240,232,0.35)" }}>
-                      More items
-                    </span>
-                  </div>
                 </div>
               </div>
 
             </div>
 
             {/* ── RIGHT COLUMN ── */}
-            <div className="lg:w-80 flex flex-col gap-6 flex-shrink-0">
+            <div className="lg:w-80 flex flex-col gap-5 sm:gap-6 flex-shrink-0">
 
               {/* Points card */}
               <PointsCard />
@@ -592,21 +549,21 @@ export default function ProfilePage() {
               ))}
 
               {/* Logout */}
-              <button className="flex items-center justify-center gap-2.5 w-full py-3.5 rounded-2xl
-                               font-bold text-sm fs transition-all hover:scale-[1.01] active:scale-[0.99]"
+              <button className="flex items-center justify-center gap-2 w-full py-3 rounded-xl sm:rounded-2xl
+                               font-bold text-xs sm:text-sm fs transition-all hover:scale-[1.01] active:scale-[0.99]"
                 style={{
                   background: "rgba(232,93,74,0.08)", color: "rgba(232,93,74,0.75)",
                   border: "1px solid rgba(232,93,74,0.15)"
                 }}
                 onMouseEnter={e => { e.currentTarget.style.background = "rgba(232,93,74,0.14)"; e.currentTarget.style.color = "#e85d4a"; }}
                 onMouseLeave={e => { e.currentTarget.style.background = "rgba(232,93,74,0.08)"; e.currentTarget.style.color = "rgba(232,93,74,0.75)"; }}>
-                <Logout c="w-4 h-4" />
+                <Logout c="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                 Sign Out
               </button>
 
               {/* App version */}
-              <p className="text-center text-[10px] fs pb-2" style={{ color: "rgba(245,240,232,0.18)" }}>
-                NewMe App v3.2.1 · Terms · Privacy
+              <p className="text-center text-[8px] sm:text-[10px] fs pb-2" style={{ color: "rgba(245,240,232,0.18)" }}>
+                Brubla · Terms · Privacy
               </p>
             </div>
           </div>

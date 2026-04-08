@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { FaDownload, FaQuestionCircle, FaAndroid, FaApple } from "react-icons/fa";
 import { IoClose } from "react-icons/io5";
 
@@ -715,15 +715,17 @@ const DesktopNav = () => {
 // CART BUTTON
 // ─────────────────────────────────────────────────────────────────────────────
 const CartBtn = ({ count }) => (
-    <button className="relative p-2 rounded-full transition-colors hover:bg-[#f9f5f0]" style={{ color: "#333" }} aria-label="Cart">
-        <CartIcon />
-        {count > 0 && (
-            <span className="absolute -top-0.5 -right-0.5 text-[9px] font-black w-4 h-4 rounded-full flex items-center justify-center leading-none shadow-sm"
-                style={{ background: "#000", color: "#fff" }}>
-                {count}
-            </span>
-        )}
-    </button>
+    <Link to="/mycart" className="relative p-2 rounded-full transition-colors hover:bg-[#f9f5f0]" aria-label="View cart">
+        <button className="relative p-2 rounded-full transition-colors hover:bg-[#f9f5f0]" style={{ color: "#333" }} aria-label="Cart">
+            <CartIcon />
+            {count > 0 && (
+                <span className="absolute -top-0.5 -right-0.5 text-[9px] font-black w-4 h-4 rounded-full flex items-center justify-center leading-none shadow-sm"
+                    style={{ background: "#000", color: "#fff" }}>
+                    {count}
+                </span>
+            )}
+        </button>
+    </Link>
 );
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -889,7 +891,7 @@ const Sidebar = ({ open, onClose, navigate }) => {
 // ─────────────────────────────────────────────────────────────────────────────
 // MAIN EXPORT
 // ─────────────────────────────────────────────────────────────────────────────
-export default function Navbar() {
+const Navbar = () => {
     const [notifVisible, setNotifVisible] = useState(true);
     const [scrolled, setScrolled] = useState(false);
     const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -909,6 +911,20 @@ export default function Navbar() {
     const openSidebar = useCallback(() => setSidebarOpen(true), []);
     const closeSidebar = useCallback(() => setSidebarOpen(false), []);
 
+    const location = useLocation();
+
+    // Routes where button should be hidden
+    const hideRoutes = [
+        "/login",
+        "/register",
+        "/mycart",
+        "/product-details",
+    ];
+
+    const shouldHide = hideRoutes.some((route) =>
+        location.pathname.startsWith(route)
+    );
+
     return (
         <>
             {/* ── SEARCH OVERLAY ─────────────────────────────────────────────────── */}
@@ -918,7 +934,7 @@ export default function Navbar() {
             <Sidebar open={sidebarOpen} onClose={closeSidebar} navigate={navigate} />
 
             {/* ── FLOATING JOIN US BUTTON ────────────────────────────────────────── */}
-            <FloatingJoinBtn />
+            {!shouldHide && <FloatingJoinBtn />}
 
             {/* ── STICKY TOP HEADER ──────────────────────────────────────────────── */}
             <header className="sticky top-0 z-30">
@@ -1010,3 +1026,5 @@ export default function Navbar() {
         </>
     );
 }
+
+export default Navbar;

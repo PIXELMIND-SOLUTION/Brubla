@@ -6,588 +6,589 @@ import {
     MessageCircle, MapPin, Calendar, CheckCircle
 } from "lucide-react";
 import Navbar from "../components/Navbar";
+import SizeGuideModal from "../views/SizeGuide";
 
 const COFFEE = "#6F4E37";
 
 const allProducts = [
-  {
-    id: 1,
-    name: "Oversized Denim Jacket",
-    price: 89.99,
-    originalPrice: 129.99,
-    rating: 4.5,
-    reviewCount: 234,
-    image: "https://images.unsplash.com/photo-1576871337622-98d48d1cf531?w=600&q=80",
-    category: "Women's-Fashion",
-    subcategory: "Jackets",
-    tags: ["trending", "bestseller"],
-    colors: ["blue", "black"],
-    inStock: true,
-    description: "Stylish oversized denim jacket perfect for casual wear. Made from high-quality cotton denim with a relaxed fit. Features include button-front closure, chest pockets, and adjustable cuffs.",
-    sizes: ["XS", "S", "M", "L", "XL"],
-    images: [
-      "https://images.unsplash.com/photo-1576871337622-98d48d1cf531?w=800",
-      "https://images.unsplash.com/photo-1576995853123-5a10305d93c0?w=800",
-      "https://images.unsplash.com/photo-1564257631407-4deb1f99d992?w=800"
-    ],
-    designer: {
-      name: "Elena Martinez",
-      brand: "Urban Chic",
-      avatar: "https://randomuser.me/api/portraits/women/68.jpg",
-      bio: "Award-winning fashion designer with 10+ years of experience in sustainable fashion.",
-      location: "New York, USA",
-      email: "elena@urbanchic.com",
-      followers: "45.2K",
-      products: 28,
-      rating: 4.9,
-      joined: "2018",
-      verified: true
+    {
+        id: 1,
+        name: "Oversized Denim Jacket",
+        price: 89.99,
+        originalPrice: 129.99,
+        rating: 4.5,
+        reviewCount: 234,
+        image: "https://images.unsplash.com/photo-1576871337622-98d48d1cf531?w=600&q=80",
+        category: "Women's-Fashion",
+        subcategory: "Jackets",
+        tags: ["trending", "bestseller"],
+        colors: ["blue", "black"],
+        inStock: true,
+        description: "Stylish oversized denim jacket perfect for casual wear. Made from high-quality cotton denim with a relaxed fit. Features include button-front closure, chest pockets, and adjustable cuffs.",
+        sizes: ["XS", "S", "M", "L", "XL"],
+        images: [
+            "https://images.unsplash.com/photo-1576871337622-98d48d1cf531?w=800",
+            "https://images.unsplash.com/photo-1576995853123-5a10305d93c0?w=800",
+            "https://images.unsplash.com/photo-1564257631407-4deb1f99d992?w=800"
+        ],
+        designer: {
+            name: "Elena Martinez",
+            brand: "Urban Chic",
+            avatar: "https://randomuser.me/api/portraits/women/68.jpg",
+            bio: "Award-winning fashion designer with 10+ years of experience in sustainable fashion.",
+            location: "New York, USA",
+            email: "elena@urbanchic.com",
+            followers: "45.2K",
+            products: 28,
+            rating: 4.9,
+            joined: "2018",
+            verified: true
+        }
+    },
+    {
+        id: 2,
+        name: "Minimalist Leather Backpack",
+        price: 79.99,
+        originalPrice: null,
+        rating: 4.8,
+        reviewCount: 567,
+        image: "https://images.unsplash.com/photo-1548036328-c9fa89d128fa?w=600&q=80",
+        category: "Women's-Fashion",
+        subcategory: "Bags",
+        tags: ["new"],
+        colors: ["brown", "black"],
+        inStock: true,
+        description: "Elegant leather backpack perfect for daily use. Genuine leather with multiple compartments for laptop, tablet, and daily essentials. Adjustable straps and durable hardware.",
+        sizes: ["One Size"],
+        images: [
+            "https://images.unsplash.com/photo-1548036328-c9fa89d128fa?w=800",
+            "https://images.unsplash.com/photo-1594223274512-ad4803739b7c?w=800",
+            "https://images.unsplash.com/photo-1590874103328-eac38a683ce7?w=800"
+        ],
+        designer: {
+            name: "Marcus Chen",
+            brand: "LeatherCraft",
+            avatar: "https://randomuser.me/api/portraits/men/45.jpg",
+            bio: "Artisan leather crafter specializing in minimalist designs using sustainable materials.",
+            location: "Portland, Oregon",
+            email: "marcus@leathercraft.com",
+            followers: "28.7K",
+            products: 15,
+            rating: 4.8,
+            joined: "2019",
+            verified: true
+        }
+    },
+    {
+        id: 3,
+        name: "Cashmere Wool Sweater",
+        price: 129.99,
+        originalPrice: 199.99,
+        rating: 4.7,
+        reviewCount: 189,
+        image: "https://images.unsplash.com/photo-1576566588028-4147f3842f27?w=600&q=80",
+        category: "Men's-Style",
+        subcategory: "Sweaters",
+        tags: ["bestseller"],
+        colors: ["gray", "navy"],
+        inStock: true,
+        description: "Luxurious cashmere wool sweater for ultimate comfort and warmth. Premium quality material sourced from Mongolia. Features ribbed cuffs and hem for a perfect fit.",
+        sizes: ["S", "M", "L", "XL"],
+        images: [
+            "https://images.unsplash.com/photo-1576566588028-4147f3842f27?w=800",
+            "https://images.unsplash.com/photo-1611312449408-fcece27cdbb7?w=800",
+            "https://images.unsplash.com/photo-1611312449412-6cefac5dc3e4?w=800"
+        ],
+        designer: {
+            name: "Sarah Johnson",
+            brand: "Luxe Knits",
+            avatar: "https://randomuser.me/api/portraits/women/32.jpg",
+            bio: "Luxury knitwear designer creating timeless pieces from the finest materials.",
+            location: "London, UK",
+            email: "sarah@luxeknits.com",
+            followers: "67.3K",
+            products: 42,
+            rating: 4.9,
+            joined: "2016",
+            verified: true
+        }
+    },
+    {
+        id: 4,
+        name: "Classic White Sneakers",
+        price: 69.99,
+        originalPrice: null,
+        rating: 4.6,
+        reviewCount: 892,
+        image: "https://images.unsplash.com/photo-1549298916-b41d501d3772?w=600&q=80",
+        category: "Sneakers",
+        subcategory: "Casual",
+        tags: ["trending", "bestseller"],
+        colors: ["white", "black"],
+        inStock: true,
+        description: "Classic white sneakers that go with everything. Comfortable and durable design with memory foam insole and breathable mesh lining. Perfect for daily wear.",
+        sizes: ["6", "7", "8", "9", "10", "11"],
+        images: [
+            "https://images.unsplash.com/photo-1549298916-b41d501d3772?w=800",
+            "https://images.unsplash.com/photo-1608231387042-66d1773070a5?w=800",
+            "https://images.unsplash.com/photo-1606107557195-0e29a4b5b4aa?w=800"
+        ],
+        designer: {
+            name: "Alex Rivera",
+            brand: "Urban Stride",
+            avatar: "https://randomuser.me/api/portraits/men/92.jpg",
+            bio: "Footwear designer focused on comfort and streetwear aesthetics.",
+            location: "Los Angeles, CA",
+            email: "alex@urbanstride.com",
+            followers: "34.1K",
+            products: 23,
+            rating: 4.7,
+            joined: "2020",
+            verified: false
+        }
+    },
+    {
+        id: 5,
+        name: "Sterling Silver Necklace",
+        price: 149.99,
+        originalPrice: 199.99,
+        rating: 4.9,
+        reviewCount: 423,
+        image: "https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=600&q=80",
+        category: "Jewelry",
+        subcategory: "Necklaces",
+        tags: ["luxury"],
+        colors: ["silver"],
+        inStock: true,
+        description: "Elegant sterling silver necklace with beautiful pendant design. Hypoallergenic and tarnish-resistant. Comes in a luxury gift box. Perfect for special occasions.",
+        sizes: ["One Size"],
+        images: [
+            "https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=800",
+            "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?w=800",
+            "https://images.unsplash.com/photo-1617038260897-41a1f14a8ca0?w=800"
+        ],
+        designer: {
+            name: "Isabella Rossi",
+            brand: "Rossi Jewels",
+            avatar: "https://randomuser.me/api/portraits/women/44.jpg",
+            bio: "Master jeweler creating handmade pieces inspired by nature and architecture.",
+            location: "Florence, Italy",
+            email: "isabella@rossijewels.com",
+            followers: "89.5K",
+            products: 56,
+            rating: 4.9,
+            joined: "2015",
+            verified: true
+        }
+    },
+    {
+        id: 6,
+        name: "Ceramic Table Lamp",
+        price: 59.99,
+        originalPrice: null,
+        rating: 4.4,
+        reviewCount: 178,
+        image: "https://images.unsplash.com/photo-1507473885765-e6b057fbbf33?w=600&q=80",
+        category: "Home-Decor",
+        subcategory: "Lighting",
+        tags: ["popular"],
+        colors: ["white", "beige"],
+        inStock: false,
+        description: "Modern ceramic table lamp for ambient lighting. Perfect for living room or bedroom. Features a soft glow and elegant design that complements any decor.",
+        sizes: ["One Size"],
+        images: [
+            "https://images.unsplash.com/photo-1507473885765-e6b057fbbf33?w=800",
+            "https://images.unsplash.com/photo-1513506003901-1e6a229e2d15?w=800",
+            "https://images.unsplash.com/photo-1533093818119-ac1fa47a6d59?w=800"
+        ],
+        designer: {
+            name: "Emma Watson",
+            brand: "Ceramic Dreams",
+            avatar: "https://randomuser.me/api/portraits/women/28.jpg",
+            bio: "Pottery artist creating unique ceramic pieces for modern homes.",
+            location: "Copenhagen, Denmark",
+            email: "emma@ceramicdreams.com",
+            followers: "23.4K",
+            products: 34,
+            rating: 4.6,
+            joined: "2021",
+            verified: false
+        }
+    },
+    {
+        id: 7,
+        name: "Hydrating Face Serum",
+        price: 45.99,
+        originalPrice: 64.99,
+        rating: 4.7,
+        reviewCount: 1123,
+        image: "https://images.unsplash.com/photo-1571877227200-a0d98ea607e9?w=600&q=80",
+        category: "Beauty",
+        subcategory: "Skincare",
+        tags: ["new"],
+        colors: [],
+        inStock: true,
+        description: "Deeply hydrating face serum with hyaluronic acid. Reduces fine lines and improves skin texture. Suitable for all skin types. Dermatologist tested.",
+        sizes: ["50ml"],
+        images: [
+            "https://images.unsplash.com/photo-1571877227200-a0d98ea607e9?w=800",
+            "https://images.unsplash.com/photo-1556228720-195a672e8a03?w=800",
+            "https://images.unsplash.com/photo-1620916566398-39f1143ab7be?w=800"
+        ],
+        designer: {
+            name: "Dr. Jennifer Lee",
+            brand: "PureSkin Labs",
+            avatar: "https://randomuser.me/api/portraits/women/56.jpg",
+            bio: "Dermatologist and skincare formulator with PhD in cosmetic chemistry.",
+            location: "Seoul, South Korea",
+            email: "jennifer@pureskin.com",
+            followers: "156K",
+            products: 18,
+            rating: 4.9,
+            joined: "2017",
+            verified: true
+        }
+    },
+    {
+        id: 8,
+        name: "Wireless Noise Cancelling Headphones",
+        price: 199.99,
+        originalPrice: 299.99,
+        rating: 4.8,
+        reviewCount: 2341,
+        image: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=600&q=80",
+        category: "Electronics",
+        subcategory: "Audio",
+        tags: ["tech", "bestseller"],
+        colors: ["black", "white"],
+        inStock: true,
+        description: "Premium wireless headphones with active noise cancellation. 30-hour battery life and superior sound quality. Comfortable ear cushions for extended wear.",
+        sizes: ["One Size"],
+        images: [
+            "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=800",
+            "https://images.unsplash.com/photo-1484704849700-f032a568e944?w=800",
+            "https://images.unsplash.com/photo-1583394838336-acd977736f90?w=800"
+        ],
+        designer: {
+            name: "Thomas Anderson",
+            brand: "AudioTech",
+            avatar: "https://randomuser.me/api/portraits/men/15.jpg",
+            bio: "Audio engineer and product designer with 15 years of experience.",
+            location: "Berlin, Germany",
+            email: "thomas@audiotech.com",
+            followers: "78.9K",
+            products: 12,
+            rating: 4.8,
+            joined: "2018",
+            verified: true
+        }
+    },
+    {
+        id: 9,
+        name: "Yoga Mat Premium",
+        price: 49.99,
+        originalPrice: null,
+        rating: 4.5,
+        reviewCount: 756,
+        image: "https://images.unsplash.com/photo-1592432678016-e910b452f9a2?w=600&q=80",
+        category: "Sports-and-Fitness",
+        subcategory: "Yoga",
+        tags: ["active"],
+        colors: ["purple", "green"],
+        inStock: true,
+        description: "Eco-friendly premium yoga mat with excellent grip. Perfect for all types of yoga practice. Non-slip surface and extra cushioning for joint protection.",
+        sizes: ["One Size"],
+        images: [
+            "https://images.unsplash.com/photo-1592432678016-e910b452f9a2?w=800",
+            "https://images.unsplash.com/photo-1601925260368-ae2f83cf8b7f?w=800",
+            "https://images.unsplash.com/photo-1571736777860-dacc4a7ab6c8?w=800"
+        ],
+        designer: {
+            name: "Michael Chang",
+            brand: "ZenActive",
+            avatar: "https://randomuser.me/api/portraits/men/62.jpg",
+            bio: "Fitness enthusiast and product designer creating eco-friendly workout gear.",
+            location: "San Francisco, CA",
+            email: "michael@zenactive.com",
+            followers: "42.1K",
+            products: 9,
+            rating: 4.7,
+            joined: "2019",
+            verified: false
+        }
+    },
+    {
+        id: 10,
+        name: "Wooden Building Blocks Set",
+        price: 34.99,
+        originalPrice: 49.99,
+        rating: 4.9,
+        reviewCount: 445,
+        image: "https://images.unsplash.com/photo-1587654780291-39c9404d746b?w=600&q=80",
+        category: "Kids-and-Toys",
+        subcategory: "Educational",
+        tags: ["fun"],
+        colors: [],
+        inStock: true,
+        description: "Educational wooden building blocks set for creative play. Safe non-toxic materials. Includes 100 pieces in various shapes and colors. Develops motor skills.",
+        sizes: ["100 pieces"],
+        images: [
+            "https://images.unsplash.com/photo-1587654780291-39c9404d746b?w=800",
+            "https://images.unsplash.com/photo-1596461404969-9ae70f2830c1?w=800",
+            "https://images.unsplash.com/photo-1596461404969-9ae70f2830c1?w=800"
+        ],
+        designer: {
+            name: "Lisa Wong",
+            brand: "Little Genius",
+            avatar: "https://randomuser.me/api/portraits/women/89.jpg",
+            bio: "Child development expert creating educational toys for young minds.",
+            location: "Toronto, Canada",
+            email: "lisa@littlegenius.com",
+            followers: "56.8K",
+            products: 31,
+            rating: 4.9,
+            joined: "2017",
+            verified: true
+        }
+    },
+    {
+        id: 11,
+        name: "Hardcover Coffee Table Book",
+        price: 39.99,
+        originalPrice: 59.99,
+        rating: 4.6,
+        reviewCount: 312,
+        image: "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=600&q=80",
+        category: "Books-and-Art",
+        subcategory: "Books",
+        tags: ["culture"],
+        colors: [],
+        inStock: true,
+        description: "Beautiful coffee table book featuring stunning photography from around the world. Perfect for art and design enthusiasts. 200+ pages of high-quality images.",
+        sizes: ["One Size"],
+        images: [
+            "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=800",
+            "https://images.unsplash.com/photo-1495446815901-a7297e633e8d?w=800",
+            "https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?w=800"
+        ],
+        designer: {
+            name: "David Miller",
+            brand: "ArtHouse Publishing",
+            avatar: "https://randomuser.me/api/portraits/men/33.jpg",
+            bio: "Publisher and curator specializing in art and photography books.",
+            location: "London, UK",
+            email: "david@arthouse.com",
+            followers: "34.2K",
+            products: 47,
+            rating: 4.7,
+            joined: "2014",
+            verified: true
+        }
+    },
+    {
+        id: 12,
+        name: "Ribbed Knit Beanie",
+        price: 24.99,
+        originalPrice: null,
+        rating: 4.3,
+        reviewCount: 189,
+        image: "https://images.unsplash.com/photo-1576871337632-b9aef4c17ab9?w=600&q=80",
+        category: "Men's-Style",
+        subcategory: "Accessories",
+        tags: ["new"],
+        colors: ["black", "gray", "navy"],
+        inStock: true,
+        description: "Warm ribbed knit beanie for cold weather. Soft acrylic blend material. One size fits most with stretchable design.",
+        sizes: ["One Size"],
+        images: [
+            "https://images.unsplash.com/photo-1576871337632-b9aef4c17ab9?w=800",
+            "https://images.unsplash.com/photo-1584277261846-c6a1672ed73c?w=800",
+            "https://images.unsplash.com/photo-1584277261846-c6a1672ed73c?w=800"
+        ],
+        designer: {
+            name: "Nina Patel",
+            brand: "Cozy Knits",
+            avatar: "https://randomuser.me/api/portraits/women/23.jpg",
+            bio: "Accessory designer creating stylish and functional winter wear.",
+            location: "Chicago, IL",
+            email: "nina@cozyknits.com",
+            followers: "18.9K",
+            products: 19,
+            rating: 4.6,
+            joined: "2021",
+            verified: false
+        }
+    },
+    {
+        id: 13,
+        name: "Automatic Dress Watch",
+        price: 349.99,
+        originalPrice: 499.99,
+        rating: 4.8,
+        reviewCount: 210,
+        image: "https://images.unsplash.com/photo-1523170335258-f5ed11844a49?w=600&q=80",
+        category: "Watches",
+        subcategory: "Dress",
+        tags: ["luxury"],
+        colors: ["silver", "gold"],
+        inStock: true,
+        description: "Elegant automatic dress watch with sapphire crystal. Japanese movement and genuine leather strap. Water-resistant up to 50m.",
+        sizes: ["One Size"],
+        images: [
+            "https://images.unsplash.com/photo-1523170335258-f5ed11844a49?w=800",
+            "https://images.unsplash.com/photo-1524805444758-089113d48a6d?w=800",
+            "https://images.unsplash.com/photo-1508057198894-247b23fe5ade?w=800"
+        ],
+        designer: {
+            name: "Hans Schmidt",
+            brand: "Precision Timepieces",
+            avatar: "https://randomuser.me/api/portraits/men/77.jpg",
+            bio: "Master watchmaker with 20+ years of experience in luxury timepieces.",
+            location: "Zurich, Switzerland",
+            email: "hans@precisiontime.com",
+            followers: "112K",
+            products: 8,
+            rating: 4.9,
+            joined: "2012",
+            verified: true
+        }
+    },
+    {
+        id: 14,
+        name: "Leather Tote Bag",
+        price: 95.99,
+        originalPrice: 129.99,
+        rating: 4.6,
+        reviewCount: 387,
+        image: "https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=600&q=80",
+        category: "Bags-and-Accessories",
+        subcategory: "Totes",
+        tags: ["trending"],
+        colors: ["tan", "black"],
+        inStock: true,
+        description: "Spacious leather tote bag perfect for work or travel. Durable construction with reinforced handles. Multiple interior pockets for organization.",
+        sizes: ["One Size"],
+        images: [
+            "https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=800",
+            "https://images.unsplash.com/photo-1591561954555-6074281d6f8c?w=800",
+            "https://images.unsplash.com/photo-1591561954555-6074281d6f8c?w=800"
+        ],
+        designer: {
+            name: "Olivia Bennett",
+            brand: "Urban Leather Co.",
+            avatar: "https://randomuser.me/api/portraits/women/47.jpg",
+            bio: "Bag designer focusing on functional yet stylish everyday accessories.",
+            location: "Melbourne, Australia",
+            email: "olivia@urbanleather.com",
+            followers: "51.3K",
+            products: 26,
+            rating: 4.8,
+            joined: "2018",
+            verified: true
+        }
+    },
+    {
+        id: 15,
+        name: "Gaming Mechanical Keyboard",
+        price: 129.99,
+        originalPrice: 179.99,
+        rating: 4.7,
+        reviewCount: 943,
+        image: "https://images.unsplash.com/photo-1593305841991-05c297ba4575?w=600&q=80",
+        category: "Gaming",
+        subcategory: "Peripherals",
+        tags: ["hot"],
+        colors: ["black", "white"],
+        inStock: true,
+        description: "RGB mechanical gaming keyboard with customizable switches. Anti-ghosting and durable keycaps. Programmable macros and software support.",
+        sizes: ["One Size"],
+        images: [
+            "https://images.unsplash.com/photo-1593305841991-05c297ba4575?w=800",
+            "https://images.unsplash.com/photo-1618384887929-16ec33d652e6?w=800",
+            "https://images.unsplash.com/photo-1595225476474-87563907a212?w=800"
+        ],
+        designer: {
+            name: "Ryan Chen",
+            brand: "GameMaster",
+            avatar: "https://randomuser.me/api/portraits/men/52.jpg",
+            bio: "Gaming peripheral designer and professional esports player.",
+            location: "Seoul, South Korea",
+            email: "ryan@gamemaster.com",
+            followers: "234K",
+            products: 14,
+            rating: 4.8,
+            joined: "2019",
+            verified: true
+        }
+    },
+    {
+        id: 16,
+        name: "Mid-Century Accent Chair",
+        price: 299.99,
+        originalPrice: 399.99,
+        rating: 4.5,
+        reviewCount: 156,
+        image: "https://images.unsplash.com/photo-1505691938895-1758d7feb511?w=600&q=80",
+        category: "Furniture",
+        subcategory: "Chairs",
+        tags: ["popular"],
+        colors: ["walnut", "white"],
+        inStock: true,
+        description: "Stylish mid-century modern accent chair. Solid wood frame with comfortable upholstery. Perfect for living room or reading nook.",
+        sizes: ["One Size"],
+        images: [
+            "https://images.unsplash.com/photo-1505691938895-1758d7feb511?w=800",
+            "https://images.unsplash.com/photo-1598300042247-d088f8ab3a91?w=800",
+            "https://images.unsplash.com/photo-1598300042247-d088f8ab3a91?w=800"
+        ],
+        designer: {
+            name: "Robert Taylor",
+            brand: "Modern Heritage",
+            avatar: "https://randomuser.me/api/portraits/men/28.jpg",
+            bio: "Furniture designer blending mid-century aesthetics with modern comfort.",
+            location: "Copenhagen, Denmark",
+            email: "robert@modernheritage.com",
+            followers: "67.8K",
+            products: 21,
+            rating: 4.7,
+            joined: "2016",
+            verified: true
+        }
+    },
+    {
+        id: 17,
+        name: "Cast Iron Dutch Oven",
+        price: 79.99,
+        originalPrice: 119.99,
+        rating: 4.9,
+        reviewCount: 2108,
+        image: "https://images.unsplash.com/photo-1493666438817-866a91353ca9?w=600&q=80",
+        category: "Kitchen",
+        subcategory: "Cookware",
+        tags: ["bestseller"],
+        colors: ["red", "black", "cream"],
+        inStock: true,
+        description: "Premium cast iron Dutch oven for perfect cooking. Even heat distribution and durable enamel coating. Oven-safe up to 500°F.",
+        sizes: ["5.5 Qt"],
+        images: [
+            "https://images.unsplash.com/photo-1493666438817-866a91353ca9?w=800",
+            "https://images.unsplash.com/photo-1584981691326-82ab5a86a4b3?w=800",
+            "https://images.unsplash.com/photo-1584981691326-82ab5a86a4b3?w=800"
+        ],
+        designer: {
+            name: "Maria Garcia",
+            brand: "Chef's Collection",
+            avatar: "https://randomuser.me/api/portraits/women/61.jpg",
+            bio: "Professional chef and cookware designer with Michelin star experience.",
+            location: "Barcelona, Spain",
+            email: "maria@chefscollection.com",
+            followers: "189K",
+            products: 33,
+            rating: 4.9,
+            joined: "2015",
+            verified: true
+        }
     }
-  },
-  {
-    id: 2,
-    name: "Minimalist Leather Backpack",
-    price: 79.99,
-    originalPrice: null,
-    rating: 4.8,
-    reviewCount: 567,
-    image: "https://images.unsplash.com/photo-1548036328-c9fa89d128fa?w=600&q=80",
-    category: "Women's-Fashion",
-    subcategory: "Bags",
-    tags: ["new"],
-    colors: ["brown", "black"],
-    inStock: true,
-    description: "Elegant leather backpack perfect for daily use. Genuine leather with multiple compartments for laptop, tablet, and daily essentials. Adjustable straps and durable hardware.",
-    sizes: ["One Size"],
-    images: [
-      "https://images.unsplash.com/photo-1548036328-c9fa89d128fa?w=800",
-      "https://images.unsplash.com/photo-1594223274512-ad4803739b7c?w=800",
-      "https://images.unsplash.com/photo-1590874103328-eac38a683ce7?w=800"
-    ],
-    designer: {
-      name: "Marcus Chen",
-      brand: "LeatherCraft",
-      avatar: "https://randomuser.me/api/portraits/men/45.jpg",
-      bio: "Artisan leather crafter specializing in minimalist designs using sustainable materials.",
-      location: "Portland, Oregon",
-      email: "marcus@leathercraft.com",
-      followers: "28.7K",
-      products: 15,
-      rating: 4.8,
-      joined: "2019",
-      verified: true
-    }
-  },
-  {
-    id: 3,
-    name: "Cashmere Wool Sweater",
-    price: 129.99,
-    originalPrice: 199.99,
-    rating: 4.7,
-    reviewCount: 189,
-    image: "https://images.unsplash.com/photo-1576566588028-4147f3842f27?w=600&q=80",
-    category: "Men's-Style",
-    subcategory: "Sweaters",
-    tags: ["bestseller"],
-    colors: ["gray", "navy"],
-    inStock: true,
-    description: "Luxurious cashmere wool sweater for ultimate comfort and warmth. Premium quality material sourced from Mongolia. Features ribbed cuffs and hem for a perfect fit.",
-    sizes: ["S", "M", "L", "XL"],
-    images: [
-      "https://images.unsplash.com/photo-1576566588028-4147f3842f27?w=800",
-      "https://images.unsplash.com/photo-1611312449408-fcece27cdbb7?w=800",
-      "https://images.unsplash.com/photo-1611312449412-6cefac5dc3e4?w=800"
-    ],
-    designer: {
-      name: "Sarah Johnson",
-      brand: "Luxe Knits",
-      avatar: "https://randomuser.me/api/portraits/women/32.jpg",
-      bio: "Luxury knitwear designer creating timeless pieces from the finest materials.",
-      location: "London, UK",
-      email: "sarah@luxeknits.com",
-      followers: "67.3K",
-      products: 42,
-      rating: 4.9,
-      joined: "2016",
-      verified: true
-    }
-  },
-  {
-    id: 4,
-    name: "Classic White Sneakers",
-    price: 69.99,
-    originalPrice: null,
-    rating: 4.6,
-    reviewCount: 892,
-    image: "https://images.unsplash.com/photo-1549298916-b41d501d3772?w=600&q=80",
-    category: "Sneakers",
-    subcategory: "Casual",
-    tags: ["trending", "bestseller"],
-    colors: ["white", "black"],
-    inStock: true,
-    description: "Classic white sneakers that go with everything. Comfortable and durable design with memory foam insole and breathable mesh lining. Perfect for daily wear.",
-    sizes: ["6", "7", "8", "9", "10", "11"],
-    images: [
-      "https://images.unsplash.com/photo-1549298916-b41d501d3772?w=800",
-      "https://images.unsplash.com/photo-1608231387042-66d1773070a5?w=800",
-      "https://images.unsplash.com/photo-1606107557195-0e29a4b5b4aa?w=800"
-    ],
-    designer: {
-      name: "Alex Rivera",
-      brand: "Urban Stride",
-      avatar: "https://randomuser.me/api/portraits/men/92.jpg",
-      bio: "Footwear designer focused on comfort and streetwear aesthetics.",
-      location: "Los Angeles, CA",
-      email: "alex@urbanstride.com",
-      followers: "34.1K",
-      products: 23,
-      rating: 4.7,
-      joined: "2020",
-      verified: false
-    }
-  },
-  {
-    id: 5,
-    name: "Sterling Silver Necklace",
-    price: 149.99,
-    originalPrice: 199.99,
-    rating: 4.9,
-    reviewCount: 423,
-    image: "https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=600&q=80",
-    category: "Jewelry",
-    subcategory: "Necklaces",
-    tags: ["luxury"],
-    colors: ["silver"],
-    inStock: true,
-    description: "Elegant sterling silver necklace with beautiful pendant design. Hypoallergenic and tarnish-resistant. Comes in a luxury gift box. Perfect for special occasions.",
-    sizes: ["One Size"],
-    images: [
-      "https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=800",
-      "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?w=800",
-      "https://images.unsplash.com/photo-1617038260897-41a1f14a8ca0?w=800"
-    ],
-    designer: {
-      name: "Isabella Rossi",
-      brand: "Rossi Jewels",
-      avatar: "https://randomuser.me/api/portraits/women/44.jpg",
-      bio: "Master jeweler creating handmade pieces inspired by nature and architecture.",
-      location: "Florence, Italy",
-      email: "isabella@rossijewels.com",
-      followers: "89.5K",
-      products: 56,
-      rating: 4.9,
-      joined: "2015",
-      verified: true
-    }
-  },
-  {
-    id: 6,
-    name: "Ceramic Table Lamp",
-    price: 59.99,
-    originalPrice: null,
-    rating: 4.4,
-    reviewCount: 178,
-    image: "https://images.unsplash.com/photo-1507473885765-e6b057fbbf33?w=600&q=80",
-    category: "Home-Decor",
-    subcategory: "Lighting",
-    tags: ["popular"],
-    colors: ["white", "beige"],
-    inStock: false,
-    description: "Modern ceramic table lamp for ambient lighting. Perfect for living room or bedroom. Features a soft glow and elegant design that complements any decor.",
-    sizes: ["One Size"],
-    images: [
-      "https://images.unsplash.com/photo-1507473885765-e6b057fbbf33?w=800",
-      "https://images.unsplash.com/photo-1513506003901-1e6a229e2d15?w=800",
-      "https://images.unsplash.com/photo-1533093818119-ac1fa47a6d59?w=800"
-    ],
-    designer: {
-      name: "Emma Watson",
-      brand: "Ceramic Dreams",
-      avatar: "https://randomuser.me/api/portraits/women/28.jpg",
-      bio: "Pottery artist creating unique ceramic pieces for modern homes.",
-      location: "Copenhagen, Denmark",
-      email: "emma@ceramicdreams.com",
-      followers: "23.4K",
-      products: 34,
-      rating: 4.6,
-      joined: "2021",
-      verified: false
-    }
-  },
-  {
-    id: 7,
-    name: "Hydrating Face Serum",
-    price: 45.99,
-    originalPrice: 64.99,
-    rating: 4.7,
-    reviewCount: 1123,
-    image: "https://images.unsplash.com/photo-1571877227200-a0d98ea607e9?w=600&q=80",
-    category: "Beauty",
-    subcategory: "Skincare",
-    tags: ["new"],
-    colors: [],
-    inStock: true,
-    description: "Deeply hydrating face serum with hyaluronic acid. Reduces fine lines and improves skin texture. Suitable for all skin types. Dermatologist tested.",
-    sizes: ["50ml"],
-    images: [
-      "https://images.unsplash.com/photo-1571877227200-a0d98ea607e9?w=800",
-      "https://images.unsplash.com/photo-1556228720-195a672e8a03?w=800",
-      "https://images.unsplash.com/photo-1620916566398-39f1143ab7be?w=800"
-    ],
-    designer: {
-      name: "Dr. Jennifer Lee",
-      brand: "PureSkin Labs",
-      avatar: "https://randomuser.me/api/portraits/women/56.jpg",
-      bio: "Dermatologist and skincare formulator with PhD in cosmetic chemistry.",
-      location: "Seoul, South Korea",
-      email: "jennifer@pureskin.com",
-      followers: "156K",
-      products: 18,
-      rating: 4.9,
-      joined: "2017",
-      verified: true
-    }
-  },
-  {
-    id: 8,
-    name: "Wireless Noise Cancelling Headphones",
-    price: 199.99,
-    originalPrice: 299.99,
-    rating: 4.8,
-    reviewCount: 2341,
-    image: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=600&q=80",
-    category: "Electronics",
-    subcategory: "Audio",
-    tags: ["tech", "bestseller"],
-    colors: ["black", "white"],
-    inStock: true,
-    description: "Premium wireless headphones with active noise cancellation. 30-hour battery life and superior sound quality. Comfortable ear cushions for extended wear.",
-    sizes: ["One Size"],
-    images: [
-      "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=800",
-      "https://images.unsplash.com/photo-1484704849700-f032a568e944?w=800",
-      "https://images.unsplash.com/photo-1583394838336-acd977736f90?w=800"
-    ],
-    designer: {
-      name: "Thomas Anderson",
-      brand: "AudioTech",
-      avatar: "https://randomuser.me/api/portraits/men/15.jpg",
-      bio: "Audio engineer and product designer with 15 years of experience.",
-      location: "Berlin, Germany",
-      email: "thomas@audiotech.com",
-      followers: "78.9K",
-      products: 12,
-      rating: 4.8,
-      joined: "2018",
-      verified: true
-    }
-  },
-  {
-    id: 9,
-    name: "Yoga Mat Premium",
-    price: 49.99,
-    originalPrice: null,
-    rating: 4.5,
-    reviewCount: 756,
-    image: "https://images.unsplash.com/photo-1592432678016-e910b452f9a2?w=600&q=80",
-    category: "Sports-and-Fitness",
-    subcategory: "Yoga",
-    tags: ["active"],
-    colors: ["purple", "green"],
-    inStock: true,
-    description: "Eco-friendly premium yoga mat with excellent grip. Perfect for all types of yoga practice. Non-slip surface and extra cushioning for joint protection.",
-    sizes: ["One Size"],
-    images: [
-      "https://images.unsplash.com/photo-1592432678016-e910b452f9a2?w=800",
-      "https://images.unsplash.com/photo-1601925260368-ae2f83cf8b7f?w=800",
-      "https://images.unsplash.com/photo-1571736777860-dacc4a7ab6c8?w=800"
-    ],
-    designer: {
-      name: "Michael Chang",
-      brand: "ZenActive",
-      avatar: "https://randomuser.me/api/portraits/men/62.jpg",
-      bio: "Fitness enthusiast and product designer creating eco-friendly workout gear.",
-      location: "San Francisco, CA",
-      email: "michael@zenactive.com",
-      followers: "42.1K",
-      products: 9,
-      rating: 4.7,
-      joined: "2019",
-      verified: false
-    }
-  },
-  {
-    id: 10,
-    name: "Wooden Building Blocks Set",
-    price: 34.99,
-    originalPrice: 49.99,
-    rating: 4.9,
-    reviewCount: 445,
-    image: "https://images.unsplash.com/photo-1587654780291-39c9404d746b?w=600&q=80",
-    category: "Kids-and-Toys",
-    subcategory: "Educational",
-    tags: ["fun"],
-    colors: [],
-    inStock: true,
-    description: "Educational wooden building blocks set for creative play. Safe non-toxic materials. Includes 100 pieces in various shapes and colors. Develops motor skills.",
-    sizes: ["100 pieces"],
-    images: [
-      "https://images.unsplash.com/photo-1587654780291-39c9404d746b?w=800",
-      "https://images.unsplash.com/photo-1596461404969-9ae70f2830c1?w=800",
-      "https://images.unsplash.com/photo-1596461404969-9ae70f2830c1?w=800"
-    ],
-    designer: {
-      name: "Lisa Wong",
-      brand: "Little Genius",
-      avatar: "https://randomuser.me/api/portraits/women/89.jpg",
-      bio: "Child development expert creating educational toys for young minds.",
-      location: "Toronto, Canada",
-      email: "lisa@littlegenius.com",
-      followers: "56.8K",
-      products: 31,
-      rating: 4.9,
-      joined: "2017",
-      verified: true
-    }
-  },
-  {
-    id: 11,
-    name: "Hardcover Coffee Table Book",
-    price: 39.99,
-    originalPrice: 59.99,
-    rating: 4.6,
-    reviewCount: 312,
-    image: "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=600&q=80",
-    category: "Books-and-Art",
-    subcategory: "Books",
-    tags: ["culture"],
-    colors: [],
-    inStock: true,
-    description: "Beautiful coffee table book featuring stunning photography from around the world. Perfect for art and design enthusiasts. 200+ pages of high-quality images.",
-    sizes: ["One Size"],
-    images: [
-      "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=800",
-      "https://images.unsplash.com/photo-1495446815901-a7297e633e8d?w=800",
-      "https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?w=800"
-    ],
-    designer: {
-      name: "David Miller",
-      brand: "ArtHouse Publishing",
-      avatar: "https://randomuser.me/api/portraits/men/33.jpg",
-      bio: "Publisher and curator specializing in art and photography books.",
-      location: "London, UK",
-      email: "david@arthouse.com",
-      followers: "34.2K",
-      products: 47,
-      rating: 4.7,
-      joined: "2014",
-      verified: true
-    }
-  },
-  {
-    id: 12,
-    name: "Ribbed Knit Beanie",
-    price: 24.99,
-    originalPrice: null,
-    rating: 4.3,
-    reviewCount: 189,
-    image: "https://images.unsplash.com/photo-1576871337632-b9aef4c17ab9?w=600&q=80",
-    category: "Men's-Style",
-    subcategory: "Accessories",
-    tags: ["new"],
-    colors: ["black", "gray", "navy"],
-    inStock: true,
-    description: "Warm ribbed knit beanie for cold weather. Soft acrylic blend material. One size fits most with stretchable design.",
-    sizes: ["One Size"],
-    images: [
-      "https://images.unsplash.com/photo-1576871337632-b9aef4c17ab9?w=800",
-      "https://images.unsplash.com/photo-1584277261846-c6a1672ed73c?w=800",
-      "https://images.unsplash.com/photo-1584277261846-c6a1672ed73c?w=800"
-    ],
-    designer: {
-      name: "Nina Patel",
-      brand: "Cozy Knits",
-      avatar: "https://randomuser.me/api/portraits/women/23.jpg",
-      bio: "Accessory designer creating stylish and functional winter wear.",
-      location: "Chicago, IL",
-      email: "nina@cozyknits.com",
-      followers: "18.9K",
-      products: 19,
-      rating: 4.6,
-      joined: "2021",
-      verified: false
-    }
-  },
-  {
-    id: 13,
-    name: "Automatic Dress Watch",
-    price: 349.99,
-    originalPrice: 499.99,
-    rating: 4.8,
-    reviewCount: 210,
-    image: "https://images.unsplash.com/photo-1523170335258-f5ed11844a49?w=600&q=80",
-    category: "Watches",
-    subcategory: "Dress",
-    tags: ["luxury"],
-    colors: ["silver", "gold"],
-    inStock: true,
-    description: "Elegant automatic dress watch with sapphire crystal. Japanese movement and genuine leather strap. Water-resistant up to 50m.",
-    sizes: ["One Size"],
-    images: [
-      "https://images.unsplash.com/photo-1523170335258-f5ed11844a49?w=800",
-      "https://images.unsplash.com/photo-1524805444758-089113d48a6d?w=800",
-      "https://images.unsplash.com/photo-1508057198894-247b23fe5ade?w=800"
-    ],
-    designer: {
-      name: "Hans Schmidt",
-      brand: "Precision Timepieces",
-      avatar: "https://randomuser.me/api/portraits/men/77.jpg",
-      bio: "Master watchmaker with 20+ years of experience in luxury timepieces.",
-      location: "Zurich, Switzerland",
-      email: "hans@precisiontime.com",
-      followers: "112K",
-      products: 8,
-      rating: 4.9,
-      joined: "2012",
-      verified: true
-    }
-  },
-  {
-    id: 14,
-    name: "Leather Tote Bag",
-    price: 95.99,
-    originalPrice: 129.99,
-    rating: 4.6,
-    reviewCount: 387,
-    image: "https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=600&q=80",
-    category: "Bags-and-Accessories",
-    subcategory: "Totes",
-    tags: ["trending"],
-    colors: ["tan", "black"],
-    inStock: true,
-    description: "Spacious leather tote bag perfect for work or travel. Durable construction with reinforced handles. Multiple interior pockets for organization.",
-    sizes: ["One Size"],
-    images: [
-      "https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=800",
-      "https://images.unsplash.com/photo-1591561954555-6074281d6f8c?w=800",
-      "https://images.unsplash.com/photo-1591561954555-6074281d6f8c?w=800"
-    ],
-    designer: {
-      name: "Olivia Bennett",
-      brand: "Urban Leather Co.",
-      avatar: "https://randomuser.me/api/portraits/women/47.jpg",
-      bio: "Bag designer focusing on functional yet stylish everyday accessories.",
-      location: "Melbourne, Australia",
-      email: "olivia@urbanleather.com",
-      followers: "51.3K",
-      products: 26,
-      rating: 4.8,
-      joined: "2018",
-      verified: true
-    }
-  },
-  {
-    id: 15,
-    name: "Gaming Mechanical Keyboard",
-    price: 129.99,
-    originalPrice: 179.99,
-    rating: 4.7,
-    reviewCount: 943,
-    image: "https://images.unsplash.com/photo-1593305841991-05c297ba4575?w=600&q=80",
-    category: "Gaming",
-    subcategory: "Peripherals",
-    tags: ["hot"],
-    colors: ["black", "white"],
-    inStock: true,
-    description: "RGB mechanical gaming keyboard with customizable switches. Anti-ghosting and durable keycaps. Programmable macros and software support.",
-    sizes: ["One Size"],
-    images: [
-      "https://images.unsplash.com/photo-1593305841991-05c297ba4575?w=800",
-      "https://images.unsplash.com/photo-1618384887929-16ec33d652e6?w=800",
-      "https://images.unsplash.com/photo-1595225476474-87563907a212?w=800"
-    ],
-    designer: {
-      name: "Ryan Chen",
-      brand: "GameMaster",
-      avatar: "https://randomuser.me/api/portraits/men/52.jpg",
-      bio: "Gaming peripheral designer and professional esports player.",
-      location: "Seoul, South Korea",
-      email: "ryan@gamemaster.com",
-      followers: "234K",
-      products: 14,
-      rating: 4.8,
-      joined: "2019",
-      verified: true
-    }
-  },
-  {
-    id: 16,
-    name: "Mid-Century Accent Chair",
-    price: 299.99,
-    originalPrice: 399.99,
-    rating: 4.5,
-    reviewCount: 156,
-    image: "https://images.unsplash.com/photo-1505691938895-1758d7feb511?w=600&q=80",
-    category: "Furniture",
-    subcategory: "Chairs",
-    tags: ["popular"],
-    colors: ["walnut", "white"],
-    inStock: true,
-    description: "Stylish mid-century modern accent chair. Solid wood frame with comfortable upholstery. Perfect for living room or reading nook.",
-    sizes: ["One Size"],
-    images: [
-      "https://images.unsplash.com/photo-1505691938895-1758d7feb511?w=800",
-      "https://images.unsplash.com/photo-1598300042247-d088f8ab3a91?w=800",
-      "https://images.unsplash.com/photo-1598300042247-d088f8ab3a91?w=800"
-    ],
-    designer: {
-      name: "Robert Taylor",
-      brand: "Modern Heritage",
-      avatar: "https://randomuser.me/api/portraits/men/28.jpg",
-      bio: "Furniture designer blending mid-century aesthetics with modern comfort.",
-      location: "Copenhagen, Denmark",
-      email: "robert@modernheritage.com",
-      followers: "67.8K",
-      products: 21,
-      rating: 4.7,
-      joined: "2016",
-      verified: true
-    }
-  },
-  {
-    id: 17,
-    name: "Cast Iron Dutch Oven",
-    price: 79.99,
-    originalPrice: 119.99,
-    rating: 4.9,
-    reviewCount: 2108,
-    image: "https://images.unsplash.com/photo-1493666438817-866a91353ca9?w=600&q=80",
-    category: "Kitchen",
-    subcategory: "Cookware",
-    tags: ["bestseller"],
-    colors: ["red", "black", "cream"],
-    inStock: true,
-    description: "Premium cast iron Dutch oven for perfect cooking. Even heat distribution and durable enamel coating. Oven-safe up to 500°F.",
-    sizes: ["5.5 Qt"],
-    images: [
-      "https://images.unsplash.com/photo-1493666438817-866a91353ca9?w=800",
-      "https://images.unsplash.com/photo-1584981691326-82ab5a86a4b3?w=800",
-      "https://images.unsplash.com/photo-1584981691326-82ab5a86a4b3?w=800"
-    ],
-    designer: {
-      name: "Maria Garcia",
-      brand: "Chef's Collection",
-      avatar: "https://randomuser.me/api/portraits/women/61.jpg",
-      bio: "Professional chef and cookware designer with Michelin star experience.",
-      location: "Barcelona, Spain",
-      email: "maria@chefscollection.com",
-      followers: "189K",
-      products: 33,
-      rating: 4.9,
-      joined: "2015",
-      verified: true
-    }
-  }
 ];
 
 const StarRating = ({ rating, size = "small" }) => {
@@ -599,8 +600,8 @@ const StarRating = ({ rating, size = "small" }) => {
                     key={i}
                     size={starSize}
                     className={`${i < Math.floor(rating)
-                            ? "text-yellow-400 fill-yellow-400"
-                            : "text-gray-600"
+                        ? "text-yellow-400 fill-yellow-400"
+                        : "text-gray-600"
                         }`}
                 />
             ))}
@@ -648,8 +649,8 @@ const DesignerCard = ({ designer }) => {
                 <button
                     onClick={() => setIsFollowing(!isFollowing)}
                     className={`px-4 py-1.5 rounded-lg text-sm font-medium transition-all ${isFollowing
-                            ? "bg-gray-800 text-white border border-gray-700"
-                            : "bg-white text-black hover:bg-gray-200"
+                        ? "bg-gray-800 text-white border border-gray-700"
+                        : "bg-white text-black hover:bg-gray-200"
                         }`}
                 >
                     {isFollowing ? "Following" : "Follow"}
@@ -708,6 +709,8 @@ export default function ProductDetails() {
     const [showFullDescription, setShowFullDescription] = useState(false);
     const [isWishlisted, setIsWishlisted] = useState(false);
     const [activeTab, setActiveTab] = useState("designer");
+
+    const [isSizeOpen, setIsSizeOpen] = useState(false);
 
     // Find product by ID
     const product = allProducts.find((p) => p.id === parseInt(id));
@@ -835,8 +838,8 @@ export default function ProductDetails() {
                                             alt={`${product.name} view ${i + 1}`}
                                             onClick={() => setSelectedImage(img)}
                                             className={`w-16 h-16 sm:w-20 sm:h-20 object-cover rounded-lg cursor-pointer transition-all ${selectedImage === img
-                                                    ? "border-2 border-white ring-2 ring-white"
-                                                    : "border border-gray-700 hover:border-gray-500"
+                                                ? "border-2 border-white ring-2 ring-white"
+                                                : "border border-gray-700 hover:border-gray-500"
                                                 }`}
                                         />
                                     ))}
@@ -888,8 +891,8 @@ export default function ProductDetails() {
                                                 key={color}
                                                 onClick={() => setSelectedColor(color)}
                                                 className={`px-4 py-2 rounded-lg border transition-all ${selectedColor === color
-                                                        ? "border-white bg-white text-black"
-                                                        : "border-gray-600 text-white hover:border-gray-400"
+                                                    ? "border-white bg-white text-black"
+                                                    : "border-gray-600 text-white hover:border-gray-400"
                                                     }`}
                                             >
                                                 {color.charAt(0).toUpperCase() + color.slice(1)}
@@ -904,7 +907,7 @@ export default function ProductDetails() {
                                 <div>
                                     <div className="flex justify-between items-center mb-3">
                                         <h3 className="font-semibold">Size</h3>
-                                        <button className="text-sm text-gray-400 hover:text-white">
+                                        <button onClick={() => setIsSizeOpen(true)} className="text-sm text-gray-400 hover:text-white">
                                             Size Guide
                                         </button>
                                     </div>
@@ -914,8 +917,8 @@ export default function ProductDetails() {
                                                 key={size}
                                                 onClick={() => setSelectedSize(size)}
                                                 className={`px-4 py-2 rounded-lg border transition-all ${selectedSize === size
-                                                        ? "border-white bg-white text-black"
-                                                        : "border-gray-600 text-white hover:border-gray-400"
+                                                    ? "border-white bg-white text-black"
+                                                    : "border-gray-600 text-white hover:border-gray-400"
                                                     }`}
                                             >
                                                 {size}
@@ -1027,8 +1030,8 @@ export default function ProductDetails() {
                                     key={tab}
                                     onClick={() => setActiveTab(tab)}
                                     className={`pb-3 px-1 text-sm font-medium transition-all whitespace-nowrap ${activeTab === tab
-                                            ? "text-white border-b-2 border-white"
-                                            : "text-gray-400 hover:text-gray-300"
+                                        ? "text-white border-b-2 border-white"
+                                        : "text-gray-400 hover:text-gray-300"
                                         }`}
                                 >
                                     {tab === "designer" && "Designer Info"}
@@ -1187,6 +1190,10 @@ export default function ProductDetails() {
                     )}
                 </div>
             </div>
+            <SizeGuideModal
+                isOpen={isSizeOpen}
+                onClose={() => setIsSizeOpen(false)}
+            />
         </>
     );
 }

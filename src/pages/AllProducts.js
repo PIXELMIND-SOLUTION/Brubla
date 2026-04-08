@@ -318,8 +318,8 @@ const StarRating = ({ rating, size = "small" }) => {
                     key={i}
                     size={starSize}
                     className={`${i < Math.floor(rating)
-                            ? "text-yellow-400 fill-yellow-400"
-                            : "text-gray-600"
+                        ? "text-yellow-400 fill-yellow-400"
+                        : "text-gray-600"
                         }`}
                 />
             ))}
@@ -621,8 +621,8 @@ const FilterSidebar = ({ filters, setFilters, categories, priceRange, setPriceRa
                                     }
                                 }}
                                 className={`px-2 py-1 rounded-full text-xs transition-all ${filters.tags.includes(tag)
-                                        ? "bg-white text-black"
-                                        : "bg-gray-800 text-gray-300 hover:bg-gray-700"
+                                    ? "bg-white text-black"
+                                    : "bg-gray-800 text-gray-300 hover:bg-gray-700"
                                     }`}
                             >
                                 #{tag}
@@ -738,18 +738,18 @@ export default function AllProducts() {
                                 <p className="text-sm sm:text-base md:text-lg text-gray-300 mb-4 sm:mb-6">
                                     Shop the latest trends with exclusive discounts and free shipping
                                 </p>
-                                <div className="flex flex-wrap gap-2 sm:gap-3">
-                                    <div className="flex items-center gap-1 sm:gap-2 bg-white/10 backdrop-blur-sm px-2 sm:px-3 py-1 rounded-full">
-                                        <Truck size={14} className="sm:size-16" />
-                                        <span className="text-xs sm:text-sm">Free Shipping</span>
+                                <div className="flex flex-wrap gap-2 sm:gap-3 md:gap-4">
+                                    <div className="flex items-center gap-1 sm:gap-2 bg-white/10 backdrop-blur-sm px-2 sm:px-3 md:px-4 py-1 sm:py-1.5 md:py-2 rounded-full">
+                                        <Truck size={14} className="sm:size-4 md:size-5" />
+                                        <span className="text-xs sm:text-sm md:text-base whitespace-nowrap">Free Shipping</span>
                                     </div>
-                                    <div className="flex items-center gap-1 sm:gap-2 bg-white/10 backdrop-blur-sm px-2 sm:px-3 py-1 rounded-full">
-                                        <Zap size={14} className="sm:size-16" />
-                                        <span className="text-xs sm:text-sm">Fast Delivery</span>
+                                    <div className="flex items-center gap-1 sm:gap-2 bg-white/10 backdrop-blur-sm px-2 sm:px-3 md:px-4 py-1 sm:py-1.5 md:py-2 rounded-full">
+                                        <Zap size={14} className="sm:size-4 md:size-5" />
+                                        <span className="text-xs sm:text-sm md:text-base whitespace-nowrap">Fast Delivery</span>
                                     </div>
-                                    <div className="flex items-center gap-1 sm:gap-2 bg-white/10 backdrop-blur-sm px-2 sm:px-3 py-1 rounded-full">
-                                        <Award size={14} className="sm:size-16" />
-                                        <span className="text-xs sm:text-sm">Premium Quality</span>
+                                    <div className="flex items-center gap-1 sm:gap-2 bg-white/10 backdrop-blur-sm px-2 sm:px-3 md:px-4 py-1 sm:py-1.5 md:py-2 rounded-full">
+                                        <Award size={14} className="sm:size-4 md:size-5" />
+                                        <span className="text-xs sm:text-sm md:text-base whitespace-nowrap">Premium Quality</span>
                                     </div>
                                 </div>
                             </div>

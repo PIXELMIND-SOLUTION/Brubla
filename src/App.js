@@ -13,6 +13,9 @@ import CategoryProductsPage from './pages/CategoryProductsPage';
 import JoinUs from './pages/JoinUs';
 import ProductDetails from './pages/ProductDetails';
 import AllProducts from './pages/AllProducts';
+import CartPage from './pages/CartPage';
+import PersonalDetails from './pages/PersonalDetails';
+import MyOrders from './pages/MyOrders';
 
 function App() {
   return (
@@ -29,6 +32,9 @@ function App() {
       <Route path="/category/:name" element={<CategoryProductsPage/>} />
       <Route path="/product/:id" element={<ProductDetails />} />
       <Route path='/joinUs' element={<JoinUs/>} />
+      <Route path='/mycart' element={<CartPage/>} />
+      <Route path="/profile/personal-details" element={<PersonalDetails/>} />
+      <Route path="/profile/my-orders" element={<MyOrders/>} />
     </Routes>
     </>
   );
