@@ -68,13 +68,13 @@ const CATEGORIES = [
 // ─────────────────────────────────────────────────────────────────────────────
 const ChevRight = ({ color = "#6F4E37", size = 13 }) => (
   <svg width={size} height={size} viewBox="0 0 24 24" fill="none"
-       stroke={color} strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round">
+    stroke={color} strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round">
     <path d="M9 18l6-6-6-6" />
   </svg>
 );
 const ChevLeft = ({ color = "#6F4E37", size = 13 }) => (
   <svg width={size} height={size} viewBox="0 0 24 24" fill="none"
-       stroke={color} strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round">
+    stroke={color} strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round">
     <path d="M15 18l-6-6 6-6" />
   </svg>
 );
@@ -108,8 +108,8 @@ const CategoryCard = ({ cat, index }) => {
         // responsive card width: fills on mobile, fixed on desktop
         width: "clamp(140px, 40vw, 200px)",
         aspectRatio: "3 / 4",
-        opacity:    visible ? 1 : 0,
-        transform:  visible ? "translateY(0) scale(1)" : "translateY(20px) scale(0.97)",
+        opacity: visible ? 1 : 0,
+        transform: visible ? "translateY(0) scale(1)" : "translateY(20px) scale(0.97)",
         transition: `opacity 0.5s ease ${index * 0.06}s, transform 0.5s ease ${index * 0.06}s,
                      box-shadow 0.3s ease`,
         boxShadow: hovered
@@ -126,7 +126,7 @@ const CategoryCard = ({ cat, index }) => {
         className="absolute inset-0 w-full h-full object-cover object-center"
         style={{
           transition: "transform 0.65s cubic-bezier(0.25,0.46,0.45,0.94)",
-          transform:  hovered ? "scale(1.09)" : "scale(1.0)",
+          transform: hovered ? "scale(1.09)" : "scale(1.0)",
         }}
         loading="lazy"
         draggable={false}
@@ -134,69 +134,69 @@ const CategoryCard = ({ cat, index }) => {
 
       {/* OVERLAY — rest */}
       <div className="absolute inset-0"
-           style={{
-             background: "linear-gradient(180deg,rgba(12,12,12,0) 40%,rgba(12,12,12,0.78) 100%)",
-             opacity: hovered ? 0 : 1,
-             transition: "opacity 0.4s ease",
-           }} />
+        style={{
+          background: "linear-gradient(180deg,rgba(12,12,12,0) 40%,rgba(12,12,12,0.78) 100%)",
+          opacity: hovered ? 0 : 1,
+          transition: "opacity 0.4s ease",
+        }} />
 
       {/* OVERLAY — hover */}
       <div className="absolute inset-0"
-           style={{
-             background: "linear-gradient(180deg,rgba(12,12,12,0.08) 0%,rgba(12,12,12,0.88) 100%)",
-             opacity: hovered ? 1 : 0,
-             transition: "opacity 0.4s ease",
-           }} />
+        style={{
+          background: "linear-gradient(180deg,rgba(12,12,12,0.08) 0%,rgba(12,12,12,0.88) 100%)",
+          opacity: hovered ? 1 : 0,
+          transition: "opacity 0.4s ease",
+        }} />
 
       {/* SALE badge */}
       {isSale && (
         <div className="absolute top-3 right-3 z-10 text-[9px] font-black tracking-[0.12em] uppercase px-2 py-0.5"
-             style={{ background: cat.accent, color: "#0C0C0C" }}>
+          style={{ background: cat.accent, color: "#0C0C0C" }}>
           HOT
         </div>
       )}
 
       {/* TOP ACCENT LINE on hover */}
       <div className="absolute top-0 left-0 right-0 h-[3px] z-10"
-           style={{
-             background: `linear-gradient(90deg,transparent,${cat.accent},transparent)`,
-             opacity: hovered ? 1 : 0,
-             transition: "opacity 0.35s ease",
-           }} />
+        style={{
+          background: `linear-gradient(90deg,transparent,${cat.accent},transparent)`,
+          opacity: hovered ? 1 : 0,
+          transition: "opacity 0.35s ease",
+        }} />
 
       {/* TEXT BLOCK */}
       <div className="absolute bottom-0 left-0 right-0 z-10 px-3.5 pb-3.5 pt-2"
-           style={{
-             transform:  hovered ? "translateY(0)" : "translateY(3px)",
-             transition: "transform 0.4s ease",
-           }}>
+        style={{
+          transform: hovered ? "translateY(0)" : "translateY(3px)",
+          transition: "transform 0.4s ease",
+        }}>
         <h3 className="font-black text-white leading-tight"
-            style={{
-              fontSize: "clamp(14px,3.5vw,18px)",
-              fontFamily: "Georgia,'Times New Roman',serif",
-              letterSpacing: "-0.01em",
-            }}>
+          style={{
+            fontSize: "clamp(14px,3.5vw,18px)",
+            fontFamily: "Georgia,'Times New Roman',serif",
+            letterSpacing: "-0.01em",
+          }}>
           {cat.label}
         </h3>
         <div className="flex items-center justify-between mt-0.5">
           <p className="text-[10px] font-semibold tracking-wide"
-             style={{
-               color: "#c9b7b7",
-               opacity: hovered ? 1 : 0.75,
-               transition: "opacity 0.3s ease",
-               letterSpacing: "0.05em",
-             }}>
+            style={{
+              color: "#c9b7b7",
+              opacity: hovered ? 1 : 0.75,
+              transition: "opacity 0.3s ease",
+              letterSpacing: "0.05em",
+            }}>
             {cat.sublabel}
           </p>
           {/* Arrow chip */}
           <div className="flex items-center justify-center"
-               style={{
-                 width: "26px", height: "26px",
-                 background: cat.accent,
-                 opacity:    hovered ? 1 : 0,
-                 transform:  hovered ? "scale(1) translateX(0)" : "scale(0.5) translateX(8px)",
-                 transition: "opacity 0.28s ease, transform 0.32s cubic-bezier(0.34,1.56,0.64,1)",
-               }}>
+            style={{
+              width: "26px", height: "26px",
+              background: cat.accent,
+              opacity: hovered ? 1 : 0,
+              transform: hovered ? "scale(1) translateX(0)" : "scale(0.5) translateX(8px)",
+              transition: "opacity 0.28s ease, transform 0.32s cubic-bezier(0.34,1.56,0.64,1)",
+            }}>
             <ChevRight color="#fff" size={11} />
           </div>
         </div>
@@ -218,8 +218,8 @@ const ScrollBtn = ({ dir, onClick, visible }) => (
       width: "38px", height: "38px",
       background: "#6F4E37",
       border: "1.5px solid rgba(201,169,110,0.3)",
-      opacity:   visible ? 1 : 0.25,
-      cursor:    visible ? "pointer" : "not-allowed",
+      opacity: visible ? 1 : 0.25,
+      cursor: visible ? "pointer" : "not-allowed",
       boxShadow: "0 4px 14px rgba(12, 12, 12, 0)",
       pointerEvents: visible ? "auto" : "none",
     }}
@@ -234,8 +234,8 @@ const ScrollBtn = ({ dir, onClick, visible }) => (
 // MAIN EXPORT
 // ─────────────────────────────────────────────────────────────────────────────
 export default function CategorySection() {
-  const trackRef  = useRef(null);
-  const [canLeft,  setCanLeft]  = useState(false);
+  const trackRef = useRef(null);
+  const [canLeft, setCanLeft] = useState(false);
   const [canRight, setCanRight] = useState(true);
   const [headerVis, setHeaderVis] = useState(false);
   const headerRef = useRef(null);
@@ -288,42 +288,42 @@ export default function CategorySection() {
           ref={headerRef}
           className="flex items-end justify-between px-4 md:px-6 lg:px-10 xl:px-14 mb-6 md:mb-8"
           style={{
-            opacity:    headerVis ? 1 : 0,
-            transform:  headerVis ? "translateY(0)" : "translateY(14px)",
+            opacity: headerVis ? 1 : 0,
+            transform: headerVis ? "translateY(0)" : "translateY(14px)",
             transition: "opacity 0.5s ease, transform 0.5s ease",
           }}
         >
           {/* Left: title */}
           <div>
             <p className="text-[10px] font-black uppercase tracking-[0.22em] mb-1"
-               style={{ color: "#6F4E37" }}>
+              style={{ color: "#6F4E37" }}>
               Shop by
             </p>
             <h2 className="font-black leading-none"
-                style={{
-                  fontSize: "clamp(24px,4vw,40px)",
-                  color: "#0C0C0C",
-                  fontFamily: "Georgia,'Times New Roman',serif",
-                  letterSpacing: "-0.02em",
-                }}>
+              style={{
+                fontSize: "clamp(24px,4vw,40px)",
+                color: "#0C0C0C",
+                fontFamily: "Georgia,'Times New Roman',serif",
+                letterSpacing: "-0.02em",
+              }}>
               Categories
             </h2>
             <div className="mt-2 h-[3px] w-10"
-                 style={{ background: "linear-gradient(90deg,#6F4E37,#6F4E37)" }} />
+              style={{ background: "linear-gradient(90deg,#6F4E37,#6F4E37)" }} />
           </div>
 
           {/* Right: scroll arrows + view all */}
           <div className="flex items-center gap-2">
-            <ScrollBtn dir="left"  onClick={() => scrollBy("left")}  visible={canLeft} />
+            <ScrollBtn dir="left" onClick={() => scrollBy("left")} visible={canLeft} />
             <ScrollBtn dir="right" onClick={() => scrollBy("right")} visible={canRight} />
             <button
               className="hidden sm:flex items-center gap-1.5 text-xs font-bold ml-2 transition-all duration-200 group"
               style={{ color: "#000" }}
-              onClick={()=>navigate('/category')}
+              onClick={() => navigate('/category')}
             >
               View All
               <span className="flex items-center justify-center transition-all duration-200 group-hover:scale-110"
-                    style={{ width: "26px", height: "26px", background: "#6F4E37" }}>
+                style={{ width: "26px", height: "26px", background: "#6F4E37" }}>
                 <ChevRight color="#fff" size={11} />
               </span>
             </button>
@@ -335,7 +335,7 @@ export default function CategorySection() {
           ref={trackRef}
           className="flex gap-3 md:gap-4 overflow-x-auto"
           style={{
-            paddingLeft:  "clamp(16px,4vw,56px)",
+            paddingLeft: "clamp(16px,4vw,56px)",
             paddingRight: "clamp(16px,4vw,56px)",
             paddingBottom: "12px",
             scrollbarWidth: "none",      // Firefox
@@ -371,6 +371,7 @@ export default function CategorySection() {
               color: "#fff",
               border: "1.5px solid rgba(201,169,110,0.2)",
             }}
+            onClick={() => navigate('/category')}
           >
             View All Categories
             <ChevRight color="#fff" size={11} />

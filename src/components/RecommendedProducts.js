@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect, useCallback } from "react";
+import { useNavigate } from "react-router-dom";
 
 // ─────────────────────────────────────────────────────────────────────────────
 // PRODUCT DATA
@@ -555,6 +556,8 @@ export default function RecommendedProducts() {
   const trackRef = useRef(null);
   const headerRef = useRef(null);
 
+  const navigate = useNavigate();
+
   // header entrance animation
   useEffect(() => {
     const el = headerRef.current;
@@ -647,6 +650,7 @@ export default function RecommendedProducts() {
                 className="hidden sm:flex items-center gap-1.5 ml-1 text-xs font-black tracking-wide
                            transition-all duration-200 group"
                 style={{ color: "#000" }}
+                onClick={() => navigate('/products')}
               >
                 View All
                 <span className="flex items-center justify-center transition-all duration-200 group-hover:scale-110"
@@ -693,6 +697,7 @@ export default function RecommendedProducts() {
               border: "1.5px solid rgba(201,169,110,0.2)",
               boxShadow: "0 6px 20px rgba(12,12,12,0.18)",
             }}
+            onClick={() => navigate('/products')}
           >
             View All Products
             <ChevronIcon dir="right" size={13} />
