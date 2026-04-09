@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect, useCallback } from "react";
+import { useNavigate } from "react-router-dom";
 
 // ─────────────────────────────────────────────────────────────────────────────
 // PRODUCT DATA FOR EACH COLLECTION
@@ -613,6 +614,8 @@ const ProductCard = ({ product, index }) => {
   const [visible, setVisible] = useState(false);
   const ref = useRef(null);
 
+  const navigate = useNavigate();
+
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
@@ -742,7 +745,7 @@ const ProductCard = ({ product, index }) => {
             transform: hovered ? "translateY(0)" : "translateY(100%)",
             borderRadius: "0 0 0px 0px",
           }}
-          onClick={(e) => e.preventDefault()}
+          onClick={() => navigate(`/product/${product.id}`)}
         >
           <EyeIcon size={13} />
           QUICK VIEW
@@ -870,12 +873,14 @@ const ScrollBtn = ({ dir, onClick, show }) => (
 // ─────────────────────────────────────────────────────────────────────────────
 // COLLECTION SECTION COMPONENT (Reusable)
 // ─────────────────────────────────────────────────────────────────────────────
-const CollectionSection = ({ title, subtitle, products, bgColor = "#fff" }) => {
+const CollectionSection = ({ id, title, subtitle, products, bgColor = "#fff" }) => {
   const [canLeft, setCanLeft] = useState(false);
   const [canRight, setCanRight] = useState(true);
   const [headerVis, setHdrVis] = useState(false);
   const trackRef = useRef(null);
   const headerRef = useRef(null);
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     const el = headerRef.current;
@@ -953,6 +958,7 @@ const CollectionSection = ({ title, subtitle, products, bgColor = "#fff" }) => {
               <button
                 className="hidden sm:flex items-center gap-1.5 ml-1 text-xs font-black tracking-wide transition-all duration-200 group"
                 style={{ color: "#000" }}
+                onClick={()=>navigate(`/collections/${id}`)}
               >
                 View All
                 <span className="flex items-center justify-center transition-all duration-200 group-hover:scale-110"
@@ -1012,30 +1018,35 @@ export default function AllCollections() {
   return (
     <div className="w-full">
       <CollectionSection
+        id="1"
         title="Global Collections"
         subtitle="WORLD-CLASS CRAFTMANSHIP"
         products={GLOBAL_COLLECTION}
         bgColor="#fff"
       />
       <CollectionSection
+        id="2"
         title="Luxury Collections"
         subtitle="BESPOKE ELEGANCE"
         products={LUXURY_COLLECTION}
         bgColor="#FEFCF8"
       />
       <CollectionSection
+        id="3"
         title="Originals by Brubla"
         subtitle="SIGNATURE STYLE"
         products={ORIGINALS_COLLECTION}
         bgColor="#fff"
       />
       <CollectionSection
+        id="4"
         title="Indian Roots"
         subtitle="TIMELESS TRADITIONS"
         products={INDIAN_ROOTS}
         bgColor="#FEFCF8"
       />
       <CollectionSection
+        id="5"
         title="Weddings & Celebrations"
         subtitle="YOUR SPECIAL DAY"
         products={WEDDING_COLLECTION}

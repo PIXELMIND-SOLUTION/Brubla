@@ -1,4 +1,7 @@
 import { useState, useRef, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+
+
 
 // ─────────────────────────────────────────────────────────────────────────────
 // COLLECTION DATA
@@ -89,6 +92,8 @@ const CollectionCard = ({ col, index, style = {} }) => {
   const [visible, setVisible] = useState(false);
   const ref = useRef(null);
 
+  const navigate = useNavigate();
+
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
@@ -117,6 +122,7 @@ const CollectionCard = ({ col, index, style = {} }) => {
       }}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
+      onClick={()=>navigate(`/collections/${col.id}`)}
     >
       {/* ── IMAGE ── */}
       <img
@@ -156,8 +162,7 @@ const CollectionCard = ({ col, index, style = {} }) => {
 
       {/* ── COUNT CHIP top-right ── */}
       <div
-        className="absolute top-4 right-4 z-10 text-[9px] font-black tracking-[0.12em] uppercase
-                   px-2.5 py-1"
+        className="absolute top-4 right-4 z-10 text-[9px] font-black tracking-[0.12em] uppercase px-2.5 py-1"
         style={{
           background: "rgba(12,12,12,0.55)",
           color: "#fff",
@@ -193,7 +198,6 @@ const CollectionCard = ({ col, index, style = {} }) => {
           transition: "transform 0.4s cubic-bezier(0.25,0.46,0.45,0.94)",
         }}
       >
-        {/* Title */}
         <div className="flex flex-col leading-none mb-1.5">
           <span
             className="font-black text-white"
@@ -220,7 +224,6 @@ const CollectionCard = ({ col, index, style = {} }) => {
           </span>
         </div>
 
-        {/* Desc — shows on hover */}
         <p
           className="text-white/65 font-medium leading-snug mb-3"
           style={{
@@ -235,13 +238,9 @@ const CollectionCard = ({ col, index, style = {} }) => {
           {col.desc}
         </p>
 
-        {/* CTA */}
         <div
           className="flex items-center gap-0"
-          style={{
-            opacity: hovered ? 1 : 0.85,
-            transition: "opacity 0.3s ease",
-          }}
+          style={{ opacity: hovered ? 1 : 0.85, transition: "opacity 0.3s ease" }}
         >
           <button
             className="flex items-center gap-2 font-black text-[11px] tracking-wide
@@ -269,6 +268,8 @@ const CollectionCard = ({ col, index, style = {} }) => {
 const SectionHeader = () => {
   const [vis, setVis] = useState(false);
   const ref = useRef(null);
+  const navigate = useNavigate();
+
   useEffect(() => {
     const obs = new IntersectionObserver(
       ([e]) => { if (e.isIntersecting) { setVis(true); obs.disconnect(); } },
@@ -311,13 +312,18 @@ const SectionHeader = () => {
           <div className="h-[3px] w-2" style={{ background: "rgba(111, 78, 55, 0.14)" }} />
         </div>
       </div>
+
+      {/* Desktop only — hidden on mobile */}
       <button
         className="hidden sm:flex items-center gap-1.5 text-xs font-black tracking-wide group transition-all"
         style={{ color: "#d1c2c2" }}
+        onClick={() => navigate('/collections')}
       >
         All Collections
-        <span className="flex items-center justify-center transition-all duration-200 group-hover:scale-110"
-          style={{ width: "26px", height: "26px", background: "#6F4E37", color: "#fff" }}>
+        <span
+          className="flex items-center justify-center transition-all duration-200 group-hover:scale-110"
+          style={{ width: "26px", height: "26px", background: "#6F4E37", color: "#fff" }}
+        >
           <ArrowIcon size={11} color="#fff" />
         </span>
       </button>
@@ -326,23 +332,59 @@ const SectionHeader = () => {
 };
 
 // ─────────────────────────────────────────────────────────────────────────────
+// MOBILE VIEW ALL BUTTON  (only visible below sm / 640px)
+// ─────────────────────────────────────────────────────────────────────────────
+const MobileViewAllButton = () => {
+  const [vis, setVis] = useState(false);
+  const ref = useRef(null);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const obs = new IntersectionObserver(
+      ([e]) => { if (e.isIntersecting) { setVis(true); obs.disconnect(); } },
+      { threshold: 0.3 }
+    );
+    obs.observe(el);
+    return () => obs.disconnect();
+  }, []);
+
+  return (
+    <div
+      ref={ref}
+      className="flex sm:hidden mt-5"
+      style={{
+        opacity: vis ? 1 : 0,
+        transform: vis ? "translateY(0)" : "translateY(12px)",
+        transition: "opacity 0.45s ease 0.2s, transform 0.45s ease 0.2s",
+      }}
+    >
+      <button
+        className="w-full flex items-center justify-between font-black text-[11px]
+                   tracking-[0.1em] uppercase active:scale-[0.98] transition-transform duration-150"
+        style={{
+          background: "transparent",
+          border: "1px solid rgba(111,78,55,0.55)",
+          color: "#d1c2c2",
+          padding: "13px 18px",
+        }}
+        onClick={() => navigate('/collections')}
+      >
+        <span>View All Collections</span>
+        <span
+          className="flex items-center justify-center"
+          style={{ width: 28, height: 28, background: "#6F4E37" }}
+        >
+          <ArrowIcon size={12} color="#fff" />
+        </span>
+      </button>
+    </div>
+  );
+};
+
+// ─────────────────────────────────────────────────────────────────────────────
 // MAIN EXPORT
-// Pinterest-style grid:
-//
-// DESKTOP (lg+):
-// ┌────────────┬──────────┬────────────┐
-// │            │  Luxury  │ Originals  │
-// │   Global   ├──────────┴────────────┤
-// │            │       Weddings        │
-// ├────────────┴───────────────────────┤
-// │  Indian Roots  (full width bottom) │  ← actually splits as 4th card tall right
-// └────────────────────────────────────┘
-//
-// Real layout:
-// Col 1: Global (tall, rows 1-2)
-// Col 2: Luxury (row 1) + Originals (row 2)  — left half of right area
-// Col 3: Indian Roots (tall, rows 1-2)        — right tall
-// Row 3: Weddings (spans full width)
 // ─────────────────────────────────────────────────────────────────────────────
 export default function CollectionGrid() {
   return (
@@ -378,7 +420,6 @@ export default function CollectionGrid() {
           .col-originals{ grid-column: 2; grid-row: 2; }
           .col-wedding  { grid-column: 1 / 3; grid-row: 3; }
         }
-        /* Mobile: single column stacked */
         @media (max-width: 639px) {
           .collection-grid {
             display: flex;
@@ -386,10 +427,10 @@ export default function CollectionGrid() {
             gap: 12px;
           }
           .col-global,
-          .col-indian { height: 320px; }
+          .col-indian   { height: 320px; }
           .col-luxury,
           .col-originals { height: 240px; }
-          .col-wedding { height: 200px; }
+          .col-wedding  { height: 200px; }
         }
       `}</style>
 
@@ -397,31 +438,25 @@ export default function CollectionGrid() {
         <SectionHeader />
 
         <div className="collection-grid">
-          {/* Global — tall left */}
           <div className="col-global">
             <CollectionCard col={COLLECTIONS[0]} index={0} style={{ width: "100%", height: "100%" }} />
           </div>
-
-          {/* Luxury — top centre */}
           <div className="col-luxury">
             <CollectionCard col={COLLECTIONS[1]} index={1} style={{ width: "100%", height: "100%" }} />
           </div>
-
-          {/* Originals — bottom centre */}
           <div className="col-originals">
             <CollectionCard col={COLLECTIONS[2]} index={2} style={{ width: "100%", height: "100%" }} />
           </div>
-
-          {/* Indian Roots — tall right */}
           <div className="col-indian">
             <CollectionCard col={COLLECTIONS[3]} index={3} style={{ width: "100%", height: "100%" }} />
           </div>
-
-          {/* Weddings — full-width bottom strip */}
           <div className="col-wedding">
             <CollectionCard col={COLLECTIONS[4]} index={4} style={{ width: "100%", height: "100%" }} />
           </div>
         </div>
+
+        {/* Mobile-only "View All Collections" — below the grid, hidden on sm+ */}
+        <MobileViewAllButton />
       </div>
     </section>
   );

@@ -61,18 +61,18 @@ const Styles = () => (
 // SAMPLE USER DATA
 // ─────────────────────────────────────────────────────────────────────────────
 const SAMPLE_USER_DATA = {
-  firstName: "Priya",
-  lastName: "Sharma",
-  email: "priya.sharma@email.com",
-  phone: "+91 98765 43210",
-  alternatePhone: "+91 87654 32109",
+  firstName: "Vijay",
+  lastName: "Nimmakeyala",
+  email: "vijay.nimmakeyala@email.com",
+  phone: "+91 6303092897",
+  alternatePhone: "+91 6303092897",
   dateOfBirth: "1995-06-15",
-  gender: "female",
+  gender: "male",
   nationality: "Indian",
   preferredLanguage: "English",
   newsletterEnabled: true,
   smsUpdates: true,
-  profilePicture: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=200&h=200&fit=crop&q=90&auto=format"
+  profilePicture: "https://www.pngall.com/wp-content/uploads/5/Profile-Male-PNG.png"
 };
 
 // ─────────────────────────────────────────────────────────────────────────────

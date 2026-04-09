@@ -16,6 +16,10 @@ import AllProducts from './pages/AllProducts';
 import CartPage from './pages/CartPage';
 import PersonalDetails from './pages/PersonalDetails';
 import MyOrders from './pages/MyOrders';
+import UserAddresses from './pages/UserAddresses';
+import UserNotifications from './pages/UserNotifications';
+import Collections from './pages/Collections';
+import SingleCollectionProducts from './pages/SingleCollectionProducts';
 
 function App() {
   return (
@@ -35,6 +39,10 @@ function App() {
       <Route path='/mycart' element={<CartPage/>} />
       <Route path="/profile/personal-details" element={<PersonalDetails/>} />
       <Route path="/profile/my-orders" element={<MyOrders/>} />
+      <Route path='/profile/saved-addresses' element={<UserAddresses/>} />
+      <Route path='/profile/notifications' element={<UserNotifications/>} />
+      <Route path="/collections" element={<Collections/>} />
+      <Route path="/collections/:id" element={<SingleCollectionProducts/>} />
     </Routes>
     </>
   );

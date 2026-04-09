@@ -633,7 +633,7 @@ export default function CartPage() {
       <Navbar />
 
       <div className="bg-black text-white min-h-screen">
-        <div className="max-w-7xl mx-auto px-3 sm:px-4 md:px-6 lg:px-8 py-4 sm:py-6 md:py-8">
+        <div className="max-w-5xl mx-auto px-3 sm:px-4 md:px-6 lg:px-8 py-4 sm:py-6 md:py-8">
           {/* Progress Steps - Horizontal Scroll on Mobile */}
           <div className="mb-6 sm:mb-8 overflow-x-auto pb-2">
             <div className="flex items-center justify-between min-w-[320px] sm:min-w-0 max-w-md mx-auto">

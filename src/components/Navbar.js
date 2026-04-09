@@ -937,7 +937,7 @@ const Navbar = () => {
             {!shouldHide && <FloatingJoinBtn />}
 
             {/* ── STICKY TOP HEADER ──────────────────────────────────────────────── */}
-            <header className="sticky top-0 z-30">
+            <header className="sticky top-0 z-[500]">
 
                 {/* Notification scroller */}
                 {notifVisible && <NotifBanner onClose={() => setNotifVisible(false)} />}

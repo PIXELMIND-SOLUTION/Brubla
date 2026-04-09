@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import Navbar from "./Navbar";
 import { useNavigate } from "react-router-dom";
+import SingleOrderModal from "../pages/SingleOrderModal";
 
 // ─────────────────────────────────────────────────────────────────────────────
 // STYLES
@@ -77,11 +78,11 @@ const MapPin = ({ c }) => <Ic c={c || "w-5 h-5"} ch={<><path d="M21 10c0 7-9 13-
 // DATA
 // ─────────────────────────────────────────────────────────────────────────────
 const USER = {
-  name: "Priya Sharma",
-  handle: "@priya.sharma",
-  email: "priya.sharma@email.com",
-  phone: "+91 98765 43210",
-  avatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=200&h=200&fit=crop&q=90&auto=format",
+  name: "Vijay Nimmakayala",
+  handle: "@vijay.nimmakeyala",
+  email: "vijay.nimmakeyala@email.com",
+  phone: "+91 6303092897",
+  avatar: "https://www.pngall.com/wp-content/uploads/5/Profile-Male-PNG.png",
   tier: "Gold Member",
   points: 4820,
   joined: "Member since Jan 2023",
@@ -90,10 +91,130 @@ const USER = {
 };
 
 const ORDERS = [
-  { id: "NM-2089", name: "Silk Organza Lehenga", status: "Delivered", statusCol: "#6fcf97", date: "12 Jan 2025", price: "₹12,999", img: "https://images.unsplash.com/photo-1509631179647-0177331693ae?w=120&h=150&fit=crop&q=80" },
-  { id: "NM-2071", name: "Zardozi Anarkali", status: "Shipped", statusCol: "#C9A96E", date: "08 Jan 2025", price: "₹9,299", img: "https://images.unsplash.com/photo-1503341504253-dff4815485f1?w=120&h=150&fit=crop&q=80" },
-  { id: "NM-2044", name: "Linen Co-ord Set", status: "Delivered", statusCol: "#6fcf97", date: "28 Dec 2024", price: "₹3,799", img: "https://images.unsplash.com/photo-1483985988355-763728e1935b?w=120&h=150&fit=crop&q=80" },
-  { id: "NM-2030", name: "Banarasi Saree", status: "Delivered", statusCol: "#6fcf97", date: "15 Dec 2024", price: "₹8,499", img: "https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=120&h=150&fit=crop&q=80" },
+  {
+    id: "1",
+    orderNumber: "NM-2089",
+    date: "2025-01-12",
+    status: "delivered",
+    statusColor: "#6fcf97",
+    total: 12999,
+    items: [
+      {
+        id: 1,
+        name: "Silk Organza Lehenga",
+        price: 12999,
+        quantity: 1,
+        image: "https://images.unsplash.com/photo-1509631179647-0177331693ae?w=120&h=150&fit=crop&q=80",
+        size: "M",
+        color: "Maroon"
+      }
+    ],
+    shippingAddress: {
+      name: "Priya Sharma",
+      address: "123 Main Street, Apt 4B",
+      city: "Hyderabad",
+      state: "Telangana",
+      pincode: "500034",
+      phone: "+91 98765 43210"
+    },
+    paymentMethod: "Credit Card",
+    deliveredDate: "2025-01-12",
+    estimatedDelivery: null,
+    trackingNumber: "IND123456789"
+  },
+  {
+    id: "2",
+    orderNumber: "NM-2071",
+    date: "2025-01-08",
+    status: "shipped",
+    statusColor: "#C9A96E",
+    total: 9299,
+    items: [
+      {
+        id: 2,
+        name: "Zardozi Anarkali",
+        price: 9299,
+        quantity: 1,
+        image: "https://images.unsplash.com/photo-1503341504253-dff4815485f1?w=120&h=150&fit=crop&q=80",
+        size: "L",
+        color: "Gold"
+      }
+    ],
+    shippingAddress: {
+      name: "Priya Sharma",
+      address: "123 Main Street, Apt 4B",
+      city: "Hyderabad",
+      state: "Telangana",
+      pincode: "500034",
+      phone: "+91 98765 43210"
+    },
+    paymentMethod: "UPI",
+    deliveredDate: null,
+    estimatedDelivery: "2025-01-22",
+    trackingNumber: "IND123456790"
+  },
+  {
+    id: "3",
+    orderNumber: "NM-2044",
+    date: "2024-12-28",
+    status: "delivered",
+    statusColor: "#6fcf97",
+    total: 3799,
+    items: [
+      {
+        id: 3,
+        name: "Linen Co-ord Set",
+        price: 3799,
+        quantity: 1,
+        image: "https://images.unsplash.com/photo-1483985988355-763728e1935b?w=120&h=150&fit=crop&q=80",
+        size: "S",
+        color: "Beige"
+      }
+    ],
+    shippingAddress: {
+      name: "Priya Sharma",
+      address: "123 Main Street, Apt 4B",
+      city: "Hyderabad",
+      state: "Telangana",
+      pincode: "500034",
+      phone: "+91 98765 43210"
+    },
+    paymentMethod: "Net Banking",
+    deliveredDate: "2024-12-28",
+    estimatedDelivery: null,
+    trackingNumber: "IND123456791"
+  },
+  {
+    id: "4",
+    orderNumber: "NM-2030",
+    date: "2024-12-15",
+    status: "delivered",
+    statusColor: "#6fcf97",
+    total: 8499,
+    items: [
+      {
+        id: 4,
+        name: "Banarasi Saree",
+        price: 8499,
+        quantity: 1,
+        image: "https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=120&h=150&fit=crop&q=80",
+        size: "XL",
+        color: "Red"
+      }
+    ],
+    shippingAddress: {
+      name: "Priya Sharma",
+      address: "123 Main Street, Apt 4B",
+      city: "Hyderabad",
+      state: "Telangana",
+      pincode: "500034",
+      phone: "+91 98765 43210"
+    },
+    paymentMethod: "Cash on Delivery",
+    deliveredDate: "2024-12-15",
+    estimatedDelivery: null,
+    trackingNumber: "IND123456792"
+  }
 ];
 
 const MENU_GROUPS = [
@@ -247,33 +368,79 @@ const ProfileHero = () => {
 // ─────────────────────────────────────────────────────────────────────────────
 // RECENT ORDERS
 // ─────────────────────────────────────────────────────────────────────────────
-const OrderCard = ({ o }) => (
-  <div className="flex items-center gap-2.5 sm:gap-3.5 p-2.5 sm:p-3.5 rounded-xl sm:rounded-2xl cursor-pointer transition-all duration-200 group"
-    style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(201,169,110,0.10)" }}
-    onMouseEnter={e => e.currentTarget.style.background = "rgba(201,169,110,0.06)"}
-    onMouseLeave={e => e.currentTarget.style.background = "rgba(255,255,255,0.03)"}>
-    {/* Product image */}
-    <div className="rounded-lg sm:rounded-xl overflow-hidden flex-shrink-0" style={{ width: "48px", height: "60px" }}>
-      <img src={o.img} alt={o.name} className="w-full h-full object-cover object-top" loading="lazy" draggable={false} />
-    </div>
-    {/* Info */}
-    <div className="flex-1 min-w-0">
-      <p className="text-[11px] sm:text-xs font-bold text-white fs truncate">{o.name}</p>
-      <p className="text-[9px] sm:text-[10px] fs mt-0.5" style={{ color: "rgba(245,240,232,0.38)" }}>{o.id} · {o.date}</p>
-      <div className="flex items-center gap-1.5 mt-1 sm:mt-1.5">
-        <div className="w-1.5 h-1.5 rounded-full" style={{ background: o.statusCol }} />
-        <span className="text-[9px] sm:text-[10px] font-bold fs" style={{ color: o.statusCol }}>{o.status}</span>
+const OrderCard = ({ o, onClick }) => {
+  const item = o.items?.[0]; // first product
+
+  return (
+    <div
+      onClick={onClick}
+      className="flex items-center gap-2.5 sm:gap-3.5 p-2.5 sm:p-3.5 rounded-xl sm:rounded-2xl cursor-pointer transition-all duration-200 group"
+      style={{
+        background: "rgba(255,255,255,0.03)",
+        border: "1px solid rgba(201,169,110,0.10)",
+      }}
+      onMouseEnter={(e) =>
+        (e.currentTarget.style.background = "rgba(201,169,110,0.06)")
+      }
+      onMouseLeave={(e) =>
+        (e.currentTarget.style.background = "rgba(255,255,255,0.03)")
+      }
+    >
+      {/* Product image */}
+      <div
+        className="rounded-lg sm:rounded-xl overflow-hidden flex-shrink-0"
+        style={{ width: "48px", height: "60px" }}
+      >
+        <img
+          src={item?.image}
+          alt={item?.name}
+          className="w-full h-full object-cover object-top"
+          loading="lazy"
+          draggable={false}
+        />
+      </div>
+
+      {/* Info */}
+      <div className="flex-1 min-w-0">
+        <p className="text-[11px] sm:text-xs font-bold text-white truncate">
+          {item?.name}
+        </p>
+
+        <p
+          className="text-[9px] sm:text-[10px] mt-0.5"
+          style={{ color: "rgba(245,240,232,0.38)" }}
+        >
+          {o.orderNumber} · {o.date}
+        </p>
+
+        <div className="flex items-center gap-1.5 mt-1 sm:mt-1.5">
+          <div
+            className="w-1.5 h-1.5 rounded-full"
+            style={{ background: o.statusColor }}
+          />
+          <span
+            className="text-[9px] sm:text-[10px] font-bold"
+            style={{ color: o.statusColor }}
+          >
+            {o.status}
+          </span>
+        </div>
+      </div>
+
+      {/* Price + arrow */}
+      <div className="flex flex-col items-end gap-1 flex-shrink-0">
+        <span className="font-black text-sm sm:text-base text-white">
+          ₹{o.total.toLocaleString()}
+        </span>
+
+        <ChevRight
+          c="w-3 h-3 sm:w-3.5 sm:h-3.5 transition-transform duration-200 group-hover:translate-x-1"
+          style={{ color: "rgba(245,240,232,0.30)" }}
+        />
       </div>
     </div>
-    {/* Price + arrow */}
-    <div className="flex flex-col items-end gap-1 flex-shrink-0">
-      <span className="fd font-black text-sm sm:text-base text-white">{o.price}</span>
-      <ChevRight c="w-3 h-3 sm:w-3.5 sm:h-3.5 transition-transform duration-200 group-hover:translate-x-1"
-        style={{ color: "rgba(245,240,232,0.30)" }} />
-    </div>
-  </div>
-);
-
+  );
+};
 // ─────────────────────────────────────────────────────────────────────────────
 // WISHLIST PREVIEW
 // ─────────────────────────────────────────────────────────────────────────────
@@ -390,7 +557,7 @@ const MenuGroup = ({ group, delay }) => {
         style={{
           border: "1px solid rgba(201,169,110,0.10)",
           divideColor: "rgba(255,255,255,0.05)"
-        }}        
+        }}
       >
         {group.items.map((item, i) => (
           <button key={i}
@@ -436,26 +603,30 @@ const MenuGroup = ({ group, delay }) => {
 // ─────────────────────────────────────────────────────────────────────────────
 // SECTION HEADER
 // ─────────────────────────────────────────────────────────────────────────────
-const SectionHead = ({ eyebrow, title, cta, onCta }) => (
-  <div className="flex items-end justify-between mb-3 sm:mb-4">
-    <div>
-      <p className="text-[8px] sm:text-[9px] font-black uppercase tracking-[0.2em] mb-0.5 fs" style={{ color: "#C9A96E" }}>
-        {eyebrow}
-      </p>
-      <h2 className="fd font-black leading-none text-white" style={{ fontSize: "clamp(16px, 4vw, 24px)", letterSpacing: "-0.02em" }}>
-        {title}
-      </h2>
+const SectionHead = ({ eyebrow, title, cta, onCta }) => {
+
+  const navigate = useNavigate();
+  return (
+    <div className="flex items-end justify-between mb-3 sm:mb-4">
+      <div>
+        <p className="text-[8px] sm:text-[9px] font-black uppercase tracking-[0.2em] mb-0.5 fs" style={{ color: "#C9A96E" }}>
+          {eyebrow}
+        </p>
+        <h2 className="fd font-black leading-none text-white" style={{ fontSize: "clamp(16px, 4vw, 24px)", letterSpacing: "-0.02em" }}>
+          {title}
+        </h2>
+      </div>
+      {cta && (
+        <button onClick={() => navigate(onCta)} className="text-[10px] sm:text-xs font-bold fs transition-colors flex items-center gap-1"
+          style={{ color: "#C9A96E" }}
+          onMouseEnter={e => e.currentTarget.style.color = "#E8C97A"}
+          onMouseLeave={e => e.currentTarget.style.color = "#C9A96E"}>
+          {cta} <ChevRight c="w-2.5 h-2.5 sm:w-3 sm:h-3" />
+        </button>
+      )}
     </div>
-    {cta && (
-      <button onClick={onCta} className="text-[10px] sm:text-xs font-bold fs transition-colors flex items-center gap-1"
-        style={{ color: "#C9A96E" }}
-        onMouseEnter={e => e.currentTarget.style.color = "#E8C97A"}
-        onMouseLeave={e => e.currentTarget.style.color = "#C9A96E"}>
-        {cta} <ChevRight c="w-2.5 h-2.5 sm:w-3 sm:h-3" />
-      </button>
-    )}
-  </div>
-);
+  );
+};
 
 // ─────────────────────────────────────────────────────────────────────────────
 // QUICK LINKS (style profile + tailor + express)
@@ -463,16 +634,15 @@ const SectionHead = ({ eyebrow, title, cta, onCta }) => (
 const QuickLinks = () => {
   const [ref, vis] = useVis(50);
   const items = [
-    { Icon: User, label: "My Profile", sub: "Complete your DNA", col: "#E8C97A" },
-    { Icon: MapPin, label: "Addresses", sub: "1 active", col: "#acff9c" },
-    { Icon: Truck, label: "My Orders", sub: "", col: "#6fcf97" },
+    { Icon: User, label: "My Profile", sub: "Complete your DNA", col: "#E8C97A", link: "/profile/personal-details" },
+    { Icon: MapPin, label: "Addresses", sub: "1 active", col: "#acff9c", link: "/profile/saved-addresses" },
+    { Icon: Truck, label: "My Orders", sub: "", col: "#6fcf97", link: "/profile/my-orders" },
   ];
   return (
     <div ref={ref} className="grid grid-cols-3 gap-2 sm:gap-3"
       style={{ opacity: vis ? 1 : 0, animation: vis ? "fadeUp 0.55s ease both" : "none" }}>
-      {items.map(({ Icon, label, sub, col }, i) => (
-        <button key={i}
-          className="flex flex-col items-center gap-1.5 sm:gap-2 py-3 sm:py-4 px-1 sm:px-2 rounded-xl sm:rounded-2xl transition-all duration-200 cursor-pointer active:scale-95"
+      {items.map(({ Icon, label, sub, col, link }, i) => (
+        <a key={i} href={link} className="flex flex-col items-center gap-1.5 sm:gap-2 py-3 sm:py-4 px-1 sm:px-2 rounded-xl sm:rounded-2xl transition-all duration-200 cursor-pointer active:scale-95"
           style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(201,169,110,0.10)" }}
           onMouseEnter={e => e.currentTarget.style.background = "rgba(201,169,110,0.07)"}
           onMouseLeave={e => e.currentTarget.style.background = "rgba(255,255,255,0.03)"}>
@@ -487,7 +657,7 @@ const QuickLinks = () => {
             <p className="text-[10px] sm:text-[11px] font-bold text-white fs leading-tight">{label}</p>
             <p className="text-[8px] sm:text-[9px] fs mt-0.5" style={{ color: "rgba(245,240,232,0.35)" }}>{sub}</p>
           </div>
-        </button>
+        </a>
       ))}
     </div>
   );
@@ -501,6 +671,7 @@ export default function ProfilePage() {
   const [wishRef, wishVis] = useVis(100);
 
   const navigate = useNavigate();
+  const [selectedOrder, setSelectedOrder] = useState(null);
 
   return (
     <>
@@ -529,9 +700,9 @@ export default function ProfilePage() {
               {/* Recent orders */}
               <div ref={ordersRef}
                 style={{ opacity: ordersVis ? 1 : 0, animation: ordersVis ? "fadeUp 0.55s ease both" : "none" }}>
-                <SectionHead eyebrow="Shopping History" title="Recent Orders" cta="View All" />
+                <SectionHead onCta="/profile/my-orders" eyebrow="Shopping History" title="Recent Orders" cta="View All" />
                 <div className="flex flex-col gap-2 sm:gap-2.5">
-                  {ORDERS.map(o => <OrderCard key={o.id} o={o} />)}
+                  {ORDERS.map(o => <OrderCard key={o.id} o={o} onClick={() => setSelectedOrder(o)} />)}
                 </div>
               </div>
 
@@ -568,6 +739,9 @@ export default function ProfilePage() {
             </div>
           </div>
         </div>
+
+        {/* Order Details Modal */}
+        <SingleOrderModal order={selectedOrder} onClose={() => setSelectedOrder(null)} />
       </div>
     </>
   );
