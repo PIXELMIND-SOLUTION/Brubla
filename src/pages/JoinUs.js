@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import Navbar from "../components/Navbar";
+import Header from "../components/Header";
 
 // ─────────────────────────────────────────────────────────────────────────────
 // ICON PRIMITIVES
@@ -450,7 +451,7 @@ export default function JoinUs() {
 
     return (
         <>
-            <Navbar />
+            <Header />
             <div className="min-h-screen relative" style={{ background: "#f9f5f0", fontFamily: "'DM Sans', sans-serif" }}>
                 <BgDecor />
 

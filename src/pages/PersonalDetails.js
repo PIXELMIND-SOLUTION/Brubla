@@ -7,6 +7,7 @@ import {
   Loader2, Smartphone, Award, Gift
 } from "lucide-react";
 import Navbar from "../components/Navbar";
+import Header from "../components/Header";
 
 const COFFEE = "#C9A96E";
 
@@ -319,7 +320,7 @@ export default function PersonalDetails() {
   if (loading) {
     return (
       <>
-        <Navbar />
+        <Header />
         <div className="min-h-screen bg-black text-white flex items-center justify-center">
           <div className="text-center">
             <Loader2 size={40} className="animate-spin mx-auto mb-4" style={{ color: COFFEE }} />
@@ -332,7 +333,7 @@ export default function PersonalDetails() {
 
   return (
     <>
-      <Navbar />
+      <Header />
       <div className="min-h-screen bg-black text-white">
         <Styles />
 

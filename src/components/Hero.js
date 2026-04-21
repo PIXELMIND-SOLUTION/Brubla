@@ -38,7 +38,6 @@ const MOBILE_BANNERS = DESKTOP_BANNERS;
 const getYouTubeEmbedUrl = (url, { autoplay = false, mute = false, controls = true } = {}) => {
   try {
     let videoId = "";
-
     if (url.includes("youtu.be")) {
       videoId = url.split("youtu.be/")[1]?.split("?")[0];
     } else if (url.includes("youtube.com/watch")) {
@@ -46,9 +45,7 @@ const getYouTubeEmbedUrl = (url, { autoplay = false, mute = false, controls = tr
     } else if (url.includes("youtube.com/embed")) {
       videoId = url.split("/embed/")[1]?.split("?")[0];
     }
-
     if (!videoId) return "";
-
     const params = new URLSearchParams({
       autoplay: autoplay ? "1" : "0",
       mute: mute ? "1" : "0",
@@ -57,25 +54,36 @@ const getYouTubeEmbedUrl = (url, { autoplay = false, mute = false, controls = tr
       modestbranding: "1",
       playsinline: "1",
     });
-
     return `https://www.youtube.com/embed/${videoId}?${params.toString()}`;
   } catch {
     return "";
   }
 };
 
+const getYouTubeThumbnail = (url) => {
+  try {
+    let videoId = "";
+    if (url.includes("youtu.be")) {
+      videoId = url.split("youtu.be/")[1]?.split("?")[0];
+    } else if (url.includes("youtube.com/watch")) {
+      videoId = new URL(url).searchParams.get("v");
+    }
+    return videoId ? `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg` : "";
+  } catch {
+    return "";
+  }
+};
+
 /* ─────────────────────────────────────────────
-   MODAL COMPONENT (FIXED)
+   MODAL COMPONENT
 ───────────────────────────────────────────── */
 
 const BannerModal = ({ banner, onClose }) => {
   const [showIframe, setShowIframe] = useState(false);
 
-  // Prevent body scroll when modal is open
   useEffect(() => {
     if (banner) {
       document.body.style.overflow = "hidden";
-      // Delay iframe loading to ensure modal is open
       setTimeout(() => setShowIframe(true), 100);
     }
     return () => {
@@ -84,13 +92,8 @@ const BannerModal = ({ banner, onClose }) => {
     };
   }, [banner]);
 
-  // Handle escape key press
   useEffect(() => {
-    const handleEscape = (e) => {
-      if (e.key === "Escape" && banner) {
-        onClose();
-      }
-    };
+    const handleEscape = (e) => { if (e.key === "Escape" && banner) onClose(); };
     document.addEventListener("keydown", handleEscape);
     return () => document.removeEventListener("keydown", handleEscape);
   }, [banner, onClose]);
@@ -100,23 +103,9 @@ const BannerModal = ({ banner, onClose }) => {
   const renderContent = () => {
     switch (banner.type) {
       case "image":
-        return (
-          <img
-            src={banner.src}
-            alt={banner.title}
-            className="w-full h-full object-contain"
-          />
-        );
+        return <img src={banner.src} alt={banner.title} className="w-full h-full object-contain" />;
       case "video":
-        return (
-          <video
-            key={banner.src}
-            src={banner.src}
-            controls
-            autoPlay
-            className="w-full h-full object-contain"
-          />
-        );
+        return <video key={banner.src} src={banner.src} controls autoPlay className="w-full h-full object-contain" />;
       case "youtube":
         return (
           <div className="relative w-full h-full bg-black flex items-center justify-center">
@@ -125,11 +114,7 @@ const BannerModal = ({ banner, onClose }) => {
                 key={banner.src}
                 src={getYouTubeEmbedUrl(banner.src, { autoplay: true, mute: false, controls: true })}
                 className="w-full h-full"
-                style={{
-                  aspectRatio: "16/9",
-                  maxWidth: "100%",
-                  maxHeight: "100%",
-                }}
+                style={{ aspectRatio: "16/9", maxWidth: "100%", maxHeight: "100%" }}
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                 allowFullScreen
                 title={banner.title}
@@ -143,31 +128,24 @@ const BannerModal = ({ banner, onClose }) => {
   };
 
   return (
-    <div
-      className="fixed inset-0 bg-black/95 z-50 flex items-center justify-center p-4"
-      onClick={onClose}
-    >
+    <div className="fixed inset-0 bg-black/95 z-[9999] flex items-center justify-center p-4" onClick={onClose}>
       <div
-        className="relative w-full max-w-5xl h-auto max-h-[90vh] bg-black rounded-xl overflow-hidden"
+        className="relative w-full max-w-5xl bg-black rounded-xl overflow-hidden"
+        style={{ maxHeight: "90vh" }}
         onClick={(e) => e.stopPropagation()}
       >
-        {/* Close button */}
         <button
           onClick={onClose}
-          className="absolute top-3 right-3 text-white text-2xl z-10 bg-black/50 rounded-full w-8 h-8 flex items-center justify-center hover:bg-black/70 transition"
+          className="absolute top-3 right-3 text-white text-xl z-10 bg-black/60 rounded-full w-9 h-9 flex items-center justify-center hover:bg-black/80 transition"
           aria-label="Close modal"
         >
           ✕
         </button>
-
-        {/* Modal title */}
         <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-4 z-10">
           <h3 className="text-white text-lg md:text-xl font-bold">{banner.title}</h3>
           <p className="text-white/70 text-sm">{banner.description}</p>
         </div>
-
-        {/* Media content */}
-        <div className="w-full h-full min-h-[300px] md:min-h-[400px] flex items-center justify-center">
+        <div className="w-full flex items-center justify-center" style={{ minHeight: "min(56vw, 70vh)" }}>
           {renderContent()}
         </div>
       </div>
@@ -176,11 +154,10 @@ const BannerModal = ({ banner, onClose }) => {
 };
 
 /* ─────────────────────────────────────────────
-   CAROUSEL COMPONENT
+   CAROUSEL COMPONENT — FULL SCREEN
 ───────────────────────────────────────────── */
 
-const Carousel = ({ banners, aspectRatio, className = "" }) => {
-  const navigate = useNavigate();
+const Carousel = ({ banners }) => {
   const [cur, setCur] = useState(0);
   const [selectedBanner, setSelectedBanner] = useState(null);
   const [isTransitioning, setIsTransitioning] = useState(false);
@@ -202,33 +179,38 @@ const Carousel = ({ banners, aspectRatio, className = "" }) => {
     setTimeout(() => setIsTransitioning(false), 700);
   }, [banners.length, isTransitioning]);
 
-  // Auto-play carousel
   useEffect(() => {
     const timer = setInterval(next, 5000);
     return () => clearInterval(timer);
   }, [next]);
 
+  useEffect(() => {
+    const currentBanner = banners[cur];
+    if (currentBanner?.type === "youtube") {
+      const t = setTimeout(() => setActiveYouTube(currentBanner.id), 500);
+      return () => clearTimeout(t);
+    } else {
+      setActiveYouTube(null);
+    }
+  }, [cur, banners]);
+
   const getButtonText = (banner) => {
     switch (banner.type) {
-      case "image":
-        return "View Image";
-      case "video":
-        return "Play Video";
-      case "youtube":
-        return "Watch Video";
-      default:
-        return "View";
+      case "image": return "View Image";
+      case "video": return "Play Video";
+      case "youtube": return "Watch Video";
+      default: return "View";
     }
   };
 
-  const renderCarouselMedia = (banner, isActive) => {
+  const renderMedia = (banner, isActive) => {
     switch (banner.type) {
       case "image":
         return (
           <img
             src={banner.src}
             alt={banner.title}
-            className="w-full h-full object-cover"
+            className="absolute inset-0 w-full h-full object-cover"
             loading="lazy"
           />
         );
@@ -240,31 +222,33 @@ const Carousel = ({ banners, aspectRatio, className = "" }) => {
             muted
             loop
             playsInline
-            className="w-full h-full object-cover"
+            className="absolute inset-0 w-full h-full object-cover"
           />
         );
       case "youtube":
         return (
-          <div className="relative w-full h-full overflow-hidden bg-black">
+          <div className="absolute inset-0 w-full h-full bg-black overflow-hidden">
             {isActive && activeYouTube === banner.id ? (
               <iframe
                 src={getYouTubeEmbedUrl(banner.src, { autoplay: true, mute: true, controls: false })}
-                className="absolute top-0 left-0 w-full h-full"
+                className="absolute"
                 style={{
-                  minWidth: "100%",
-                  minHeight: "100%",
-                  width: "auto",
-                  height: "auto",
-                  transform: "scale(1.05)",
+                  top: "50%", left: "50%",
+                  transform: "translate(-50%, -50%) scale(1.08)",
+                  width: "100vw",
+                  height: "56.25vw",       /* 16:9 ratio */
+                  minHeight: "100vh",
+                  minWidth: "177.78vh",    /* inverse 16:9 ratio */
+                  pointerEvents: "none",
                 }}
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                 title={banner.title}
               />
             ) : (
               <img
-                src={`https://img.youtube.com/vi/${getYouTubeEmbedUrl(banner.src, {}).split("/embed/")[1]?.split("?")[0]}/maxresdefault.jpg`}
+                src={getYouTubeThumbnail(banner.src)}
                 alt={banner.title}
-                className="w-full h-full object-cover"
+                className="absolute inset-0 w-full h-full object-cover"
               />
             )}
           </div>
@@ -274,23 +258,9 @@ const Carousel = ({ banners, aspectRatio, className = "" }) => {
     }
   };
 
-  // Load YouTube thumbnail and video on slide change
-  useEffect(() => {
-    const currentBanner = banners[cur];
-    if (currentBanner?.type === "youtube") {
-      setTimeout(() => {
-        setActiveYouTube(currentBanner.id);
-      }, 500);
-    } else {
-      setActiveYouTube(null);
-    }
-  }, [cur, banners]);
-
   return (
-    <div
-      className={`relative w-full overflow-hidden group ${className}`}
-      style={{ aspectRatio }}
-    >
+    /* Full viewport height, full width */
+    <div className="relative w-full h-screen overflow-hidden group bg-black">
       {banners.map((banner, index) => (
         <div
           key={banner.id}
@@ -298,72 +268,71 @@ const Carousel = ({ banners, aspectRatio, className = "" }) => {
           style={{
             opacity: index === cur ? 1 : 0,
             visibility: index === cur ? "visible" : "hidden",
-            transform: `scale(${index === cur ? 1 : 1.05})`,
+            transform: `scale(${index === cur ? 1 : 1.04})`,
           }}
         >
-          <div className="relative w-full h-full">
-            {/* Media */}
-            {renderCarouselMedia(banner, index === cur)}
+          {/* Media layer */}
+          {renderMedia(banner, index === cur)}
 
-            {/* Dark overlay for better text readability */}
-            <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
+          {/* Gradient overlay */}
+          <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-black/10 pointer-events-none" />
 
-            {/* Overlay Text - Bottom Left */}
-            <div className="absolute bottom-24 left-0 right-0 px-6 md:px-12 text-center md:text-left z-10">
-              <h2 className="text-white text-xl md:text-4xl lg:text-5xl font-bold mb-2 drop-shadow-lg">
-                {banner.title}
-              </h2>
-              <p className="text-white/90 text-sm md:text-base max-w-lg mx-auto md:mx-0 drop-shadow-md">
-                {banner.description}
-              </p>
-            </div>
+          {/* Text overlay — bottom left on desktop, bottom center on mobile */}
+          {/* <div className="absolute bottom-20 sm:bottom-24 md:bottom-28 left-0 right-0 px-6 sm:px-10 md:px-16 lg:px-24 text-center sm:text-left z-10 pointer-events-none">
+            <h2 className="text-white text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold mb-2 md:mb-3 drop-shadow-lg leading-tight">
+              {banner.title}
+            </h2>
+            <p className="text-white/85 text-sm sm:text-base md:text-lg max-w-xs sm:max-w-sm md:max-w-xl mx-auto sm:mx-0 drop-shadow-md">
+              {banner.description}
+            </p>
+          </div> */}
 
-            {/* Center Button */}
-            <div className="absolute inset-0 flex items-center justify-center z-10">
-              <button
-                onClick={() => setSelectedBanner(banner)}
-                style={{ backgroundColor: "#6F4E37" }}
-                className="px-6 md:px-8 py-2.5 md:py-3 rounded-full text-white font-semibold text-sm md:text-base hover:scale-105 hover:bg-gray-100 transition-all duration-300 shadow-lg flex items-center gap-2 group/btn"
+          {/* CTA button — centered */}
+          <div className="absolute bottom-16 sm:bottom-20 md:bottom-24 left-0 right-0 flex justify-center sm:justify-center px-6 sm:px-10 md:px-16 lg:px-24 z-10">
+            <button
+              onClick={() => setSelectedBanner(banner)}
+              className="text-white text-sm sm:text-base font-medium underline underline-offset-4 hover:opacity-80 transition flex items-center gap-2 group"
+            >
+              <span>{getButtonText(banner)}</span>
+
+              <svg
+                className="w-4 h-4 transition-transform group-hover:translate-x-1"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
               >
-                <span>{getButtonText(banner)}</span>
-                <svg
-                  className="w-4 h-4 transition-transform group-hover/btn:translate-x-1"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M9 5l7 7-7 7"
-                  />
-                </svg>
-              </button>
-            </div>
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M9 5l7 7-7 7"
+                />
+              </svg>
+            </button>
           </div>
         </div>
       ))}
 
-      {/* Navigation Arrows - Visible on hover */}
+      {/* Prev arrow */}
       <button
         onClick={prev}
-        className="absolute left-3 top-1/2 -translate-y-1/2 text-white text-2xl md:text-3xl z-20 bg-black/30 hover:bg-black/50 rounded-full w-8 h-8 md:w-10 md:h-10 flex items-center justify-center transition-all duration-200 opacity-0 group-hover:opacity-100 focus:opacity-100"
+        className="absolute left-3 sm:left-5 top-1/2 -translate-y-1/2 text-white text-2xl md:text-3xl z-20 bg-black/30 hover:bg-black/55 rounded-full w-9 h-9 md:w-11 md:h-11 flex items-center justify-center transition-all duration-200 opacity-0 group-hover:opacity-100 focus:opacity-100"
         aria-label="Previous slide"
       >
         ‹
       </button>
 
+      {/* Next arrow */}
       <button
         onClick={next}
-        className="absolute right-3 top-1/2 -translate-y-1/2 text-white text-2xl md:text-3xl z-20 bg-black/30 hover:bg-black/50 rounded-full w-8 h-8 md:w-10 md:h-10 flex items-center justify-center transition-all duration-200 opacity-0 group-hover:opacity-100 focus:opacity-100"
+        className="absolute right-3 sm:right-5 top-1/2 -translate-y-1/2 text-white text-2xl md:text-3xl z-20 bg-black/30 hover:bg-black/55 rounded-full w-9 h-9 md:w-11 md:h-11 flex items-center justify-center transition-all duration-200 opacity-0 group-hover:opacity-100 focus:opacity-100"
         aria-label="Next slide"
       >
         ›
       </button>
 
-      {/* Dots Indicator */}
-      <div className="absolute bottom-4 left-0 right-0 flex justify-center gap-2 z-20">
+      {/* Dots */}
+      <div className="absolute bottom-5 sm:bottom-7 left-0 right-0 flex justify-center gap-2 z-20">
         {banners.map((_, index) => (
           <button
             key={index}
@@ -375,44 +344,27 @@ const Carousel = ({ banners, aspectRatio, className = "" }) => {
                 setTimeout(() => setIsTransitioning(false), 700);
               }
             }}
-            className={`transition-all duration-300 ${index === cur
-                ? "w-8 bg-white"
-                : "w-2 bg-white/50 hover:bg-white/80"
-              } h-2 rounded-full`}
+            className={`transition-all duration-300 h-2 rounded-full ${index === cur ? "w-8 bg-white" : "w-2 bg-white/50 hover:bg-white/80"
+              }`}
             aria-label={`Go to slide ${index + 1}`}
           />
         ))}
       </div>
 
       {/* Modal */}
-      <BannerModal
-        banner={selectedBanner}
-        onClose={() => setSelectedBanner(null)}
-      />
+      <BannerModal banner={selectedBanner} onClose={() => setSelectedBanner(null)} />
     </div>
   );
 };
 
 /* ─────────────────────────────────────────────
-   MAIN HERO BANNER COMPONENT
+   MAIN EXPORT
 ───────────────────────────────────────────── */
 
 export default function HeroBanner() {
   return (
-    <section className="w-full bg-black">
-      {/* Mobile Carousel */}
-      <Carousel
-        banners={MOBILE_BANNERS}
-        aspectRatio="9/16"
-        className="block md:hidden"
-      />
-
-      {/* Desktop Carousel */}
-      <Carousel
-        banners={DESKTOP_BANNERS}
-        aspectRatio="21/7"
-        className="hidden md:block"
-      />
+    <section className="w-full">
+      <Carousel banners={DESKTOP_BANNERS} />
     </section>
   );
 }

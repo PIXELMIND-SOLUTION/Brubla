@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import Navbar from "./Navbar";
+import Header from "./Header";
 
 // ─────────────────────────────────────────────────────────────────────────────
 // STYLES
@@ -380,7 +381,7 @@ export default function SingleExclusiveProduct() {
 
     return (
         <>
-            <Navbar />
+            <Header />
             <div className="min-h-screen fs" style={{ background: "#0C0C0C", color: "#F5F0E8" }}>
                 <Styles />
 

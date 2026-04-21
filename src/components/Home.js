@@ -12,7 +12,7 @@ const Home = () => {
     return (
         <>
             <Navbar />
-            <main className="pb-[70px] lg:pb-0">
+            <main className="pb-[70px] pt-[40px] lg:pb-0">
                 <HeroBanneer />
                 <CategorySection />
                 <FlashBanner />

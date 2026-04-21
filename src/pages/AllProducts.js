@@ -7,6 +7,7 @@ import {
     Grid3x3, LayoutList, Check, Menu
 } from "lucide-react";
 import Navbar from "../components/Navbar";
+import Header from "../components/Header";
 
 const COFFEE = "#6F4E37";
 
@@ -719,7 +720,7 @@ export default function AllProducts() {
 
     return (
         <>
-            <Navbar />
+            <Header />
 
             <div className="bg-black text-white min-h-screen">
                 {/* Hero Banner - Responsive */}

@@ -2,6 +2,7 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
 import Navbar from "../components/Navbar";
+import Header from "../components/Header";
 
 const COFFEE = "#C9A96E";
 
@@ -1347,7 +1348,7 @@ export default function SingleCollectionProducts() {
   if (loading) {
     return (
       <>
-        <Navbar />
+        <Header />
         <div className="min-h-screen bg-black flex items-center justify-center">
           <div className="text-center px-4">
             <div className="w-10 h-10 rounded-full border-2 border-coffee border-t-transparent animate-spin mx-auto mb-3" />
@@ -1362,7 +1363,7 @@ export default function SingleCollectionProducts() {
 
   return (
     <>
-      <Navbar />
+      <Header />
       <div className="min-h-screen bg-black">
         <Styles />
 

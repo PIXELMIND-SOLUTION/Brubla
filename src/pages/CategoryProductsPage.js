@@ -3,6 +3,7 @@ import { ChevronDown, Heart, ShoppingBag, Star, SlidersHorizontal, X, LayoutGrid
 import Navbar from "../components/Navbar";
 import { Link, useNavigate } from "react-router-dom";
 import { FaEye } from "react-icons/fa";
+import Header from "../components/Header";
 
 // ─── Mock product data ─────────────────────────────────────────────────────────
 const allProducts = [
@@ -485,7 +486,7 @@ export default function CategoryProductsPage() {
 
   return (
     <>
-      <Navbar />
+      <Header />
       <div className="min-h-screen bg-[#0e0e0e]" style={{ fontFamily: "'Inter', sans-serif" }}>
 
         {/* ── Hero ── */}

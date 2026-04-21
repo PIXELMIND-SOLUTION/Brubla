@@ -64,7 +64,7 @@ const CATEGORIES = [
 ];
 
 // ─────────────────────────────────────────────────────────────────────────────
-// ARROW ICON
+// ARROW ICONS
 // ─────────────────────────────────────────────────────────────────────────────
 const ChevRight = ({ color = "#6F4E37", size = 13 }) => (
   <svg width={size} height={size} viewBox="0 0 24 24" fill="none"
@@ -72,6 +72,7 @@ const ChevRight = ({ color = "#6F4E37", size = 13 }) => (
     <path d="M9 18l6-6-6-6" />
   </svg>
 );
+
 const ChevLeft = ({ color = "#6F4E37", size = 13 }) => (
   <svg width={size} height={size} viewBox="0 0 24 24" fill="none"
     stroke={color} strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round">
@@ -80,7 +81,7 @@ const ChevLeft = ({ color = "#6F4E37", size = 13 }) => (
 );
 
 // ─────────────────────────────────────────────────────────────────────────────
-// SINGLE CARD
+// CATEGORY CARD COMPONENT
 // ─────────────────────────────────────────────────────────────────────────────
 const CategoryCard = ({ cat, index }) => {
   const [hovered, setHovered] = useState(false);
@@ -103,15 +104,13 @@ const CategoryCard = ({ cat, index }) => {
   return (
     <div
       ref={ref}
-      className="relative flex-shrink-0 overflow-hidden cursor-pointer"
+      className="relative flex-shrink-0 overflow-hidden cursor-pointer rounded-xl transition-all duration-300"
       style={{
-        // responsive card width: fills on mobile, fixed on desktop
-        width: "clamp(140px, 40vw, 200px)",
+        width: "160px",
         aspectRatio: "3 / 4",
         opacity: visible ? 1 : 0,
         transform: visible ? "translateY(0) scale(1)" : "translateY(20px) scale(0.97)",
-        transition: `opacity 0.5s ease ${index * 0.06}s, transform 0.5s ease ${index * 0.06}s,
-                     box-shadow 0.3s ease`,
+        transition: `opacity 0.5s ease ${index * 0.06}s, transform 0.5s ease ${index * 0.06}s`,
         boxShadow: hovered
           ? "0 18px 44px rgba(12,12,12,0.22), 0 4px 14px rgba(12,12,12,0.1)"
           : "0 3px 14px rgba(12,12,12,0.09)",
@@ -123,79 +122,79 @@ const CategoryCard = ({ cat, index }) => {
       <img
         src={cat.img}
         alt={cat.label}
-        className="absolute inset-0 w-full h-full object-cover object-center"
+        className="absolute inset-0 w-full h-full object-cover object-center transition-transform duration-700"
         style={{
-          transition: "transform 0.65s cubic-bezier(0.25,0.46,0.45,0.94)",
           transform: hovered ? "scale(1.09)" : "scale(1.0)",
         }}
         loading="lazy"
         draggable={false}
       />
 
-      {/* OVERLAY — rest */}
-      <div className="absolute inset-0"
+      {/* OVERLAY — default */}
+      <div 
+        className="absolute inset-0 transition-opacity duration-400"
         style={{
           background: "linear-gradient(180deg,rgba(12,12,12,0) 40%,rgba(12,12,12,0.78) 100%)",
           opacity: hovered ? 0 : 1,
-          transition: "opacity 0.4s ease",
-        }} />
+        }}
+      />
 
       {/* OVERLAY — hover */}
-      <div className="absolute inset-0"
+      <div 
+        className="absolute inset-0 transition-opacity duration-400"
         style={{
           background: "linear-gradient(180deg,rgba(12,12,12,0.08) 0%,rgba(12,12,12,0.88) 100%)",
           opacity: hovered ? 1 : 0,
-          transition: "opacity 0.4s ease",
-        }} />
+        }}
+      />
 
       {/* SALE badge */}
       {isSale && (
-        <div className="absolute top-3 right-3 z-10 text-[9px] font-black tracking-[0.12em] uppercase px-2 py-0.5"
+        <div className="absolute top-3 right-3 z-10 text-[9px] font-black tracking-[0.12em] uppercase px-2 py-0.5 rounded-sm"
           style={{ background: cat.accent, color: "#0C0C0C" }}>
           HOT
         </div>
       )}
 
       {/* TOP ACCENT LINE on hover */}
-      <div className="absolute top-0 left-0 right-0 h-[3px] z-10"
+      <div 
+        className="absolute top-0 left-0 right-0 h-[3px] z-10 transition-opacity duration-350"
         style={{
           background: `linear-gradient(90deg,transparent,${cat.accent},transparent)`,
           opacity: hovered ? 1 : 0,
-          transition: "opacity 0.35s ease",
-        }} />
+        }}
+      />
 
       {/* TEXT BLOCK */}
-      <div className="absolute bottom-0 left-0 right-0 z-10 px-3.5 pb-3.5 pt-2"
+      <div 
+        className="absolute bottom-0 left-0 right-0 z-10 px-3 pb-3 pt-2 transition-transform duration-400"
         style={{
           transform: hovered ? "translateY(0)" : "translateY(3px)",
-          transition: "transform 0.4s ease",
-        }}>
-        <h3 className="font-black text-white leading-tight"
-          style={{
-            fontSize: "clamp(14px,3.5vw,18px)",
-            fontFamily: "Georgia,'Times New Roman',serif",
-            letterSpacing: "-0.01em",
-          }}>
+        }}
+      >
+        <h3 className="font-black text-white leading-tight text-base md:text-lg tracking-tight"
+          style={{ fontFamily: "Georgia,'Times New Roman',serif" }}>
           {cat.label}
         </h3>
         <div className="flex items-center justify-between mt-0.5">
-          <p className="text-[10px] font-semibold tracking-wide"
+          <p 
+            className="text-[10px] font-semibold tracking-wide transition-opacity duration-300"
             style={{
               color: "#c9b7b7",
               opacity: hovered ? 1 : 0.75,
-              transition: "opacity 0.3s ease",
               letterSpacing: "0.05em",
             }}>
             {cat.sublabel}
           </p>
           {/* Arrow chip */}
-          <div className="flex items-center justify-center"
+          <div 
+            className="flex items-center justify-center transition-all duration-300 rounded-full"
             style={{
-              width: "26px", height: "26px",
+              width: "26px",
+              height: "26px",
               background: cat.accent,
               opacity: hovered ? 1 : 0,
               transform: hovered ? "scale(1) translateX(0)" : "scale(0.5) translateX(8px)",
-              transition: "opacity 0.28s ease, transform 0.32s cubic-bezier(0.34,1.56,0.64,1)",
             }}>
             <ChevRight color="#fff" size={11} />
           </div>
@@ -213,14 +212,14 @@ const ScrollBtn = ({ dir, onClick, visible }) => (
     onClick={onClick}
     aria-label={dir === "left" ? "Scroll left" : "Scroll right"}
     className="flex-shrink-0 flex items-center justify-center transition-all duration-200
-               hover:scale-110 active:scale-95"
+               hover:scale-110 active:scale-95 rounded-full"
     style={{
-      width: "38px", height: "38px",
+      width: "38px",
+      height: "38px",
       background: "#6F4E37",
       border: "1.5px solid rgba(201,169,110,0.3)",
       opacity: visible ? 1 : 0.25,
       cursor: visible ? "pointer" : "not-allowed",
-      boxShadow: "0 4px 14px rgba(12, 12, 12, 0)",
       pointerEvents: visible ? "auto" : "none",
     }}
   >
@@ -231,7 +230,8 @@ const ScrollBtn = ({ dir, onClick, visible }) => (
 );
 
 // ─────────────────────────────────────────────────────────────────────────────
-// MAIN EXPORT
+// MAIN EXPORT - Category Section
+// Shows 4 cards on md/lg devices, 2 cards on mobile with horizontal scroll
 // ─────────────────────────────────────────────────────────────────────────────
 export default function CategorySection() {
   const trackRef = useRef(null);
@@ -241,7 +241,8 @@ export default function CategorySection() {
   const headerRef = useRef(null);
 
   const navigate = useNavigate();
-  // header entrance
+
+  // Header entrance animation
   useEffect(() => {
     const el = headerRef.current;
     if (!el) return;
@@ -253,7 +254,7 @@ export default function CategorySection() {
     return () => obs.disconnect();
   }, []);
 
-  // track scroll state for button visibility
+  // Track scroll state for button visibility
   const updateScroll = () => {
     const el = trackRef.current;
     if (!el) return;
@@ -272,44 +273,36 @@ export default function CategorySection() {
   const scrollBy = (dir) => {
     const el = trackRef.current;
     if (!el) return;
-    el.scrollBy({ left: dir === "right" ? 360 : -360, behavior: "smooth" });
+    // Scroll 2 cards at a time for better UX
+    const scrollAmount = 340;
+    el.scrollBy({ left: dir === "right" ? scrollAmount : -scrollAmount, behavior: "smooth" });
   };
 
   return (
-    <section
-      className="w-full py-10 md:py-14"
-      style={{ background: "#fff" }}
-      aria-label="Shop by Category"
-    >
+    <section className="w-full py-10 md:py-14 bg-white" aria-label="Shop by Category">
       <div className="max-w-7xl mx-auto">
 
         {/* ── HEADER ── */}
         <div
           ref={headerRef}
-          className="flex items-end justify-between px-4 md:px-6 lg:px-10 xl:px-14 mb-6 md:mb-8"
+          className="flex items-end justify-between px-4 md:px-6 lg:px-10 xl:px-14 mb-6 md:mb-8 transition-all duration-500"
           style={{
             opacity: headerVis ? 1 : 0,
             transform: headerVis ? "translateY(0)" : "translateY(14px)",
-            transition: "opacity 0.5s ease, transform 0.5s ease",
           }}
         >
           {/* Left: title */}
           <div>
-            <p className="text-[10px] font-black uppercase tracking-[0.22em] mb-1"
-              style={{ color: "#6F4E37" }}>
+            <p className="text-[10px] font-black uppercase tracking-[0.22em] mb-1 text-[#6F4E37]">
               Shop by
             </p>
-            <h2 className="font-black leading-none"
-              style={{
-                fontSize: "clamp(24px,4vw,40px)",
-                color: "#0C0C0C",
-                fontFamily: "Georgia,'Times New Roman',serif",
-                letterSpacing: "-0.02em",
-              }}>
+            <h2 
+              className="font-black leading-none text-2xl md:text-3xl lg:text-4xl text-[#0C0C0C] tracking-tight"
+              style={{ fontFamily: "Georgia,'Times New Roman',serif" }}
+            >
               Categories
             </h2>
-            <div className="mt-2 h-[3px] w-10"
-              style={{ background: "linear-gradient(90deg,#6F4E37,#6F4E37)" }} />
+            <div className="mt-2 h-[3px] w-10 bg-gradient-to-r from-[#6F4E37] to-[#6F4E37]" />
           </div>
 
           {/* Right: scroll arrows + view all */}
@@ -317,13 +310,11 @@ export default function CategorySection() {
             <ScrollBtn dir="left" onClick={() => scrollBy("left")} visible={canLeft} />
             <ScrollBtn dir="right" onClick={() => scrollBy("right")} visible={canRight} />
             <button
-              className="hidden sm:flex items-center gap-1.5 text-xs font-bold ml-2 transition-all duration-200 group"
-              style={{ color: "#000" }}
+              className="hidden sm:flex items-center gap-1.5 text-xs font-bold ml-2 transition-all duration-200 group text-black"
               onClick={() => navigate('/category')}
             >
               View All
-              <span className="flex items-center justify-center transition-all duration-200 group-hover:scale-110"
-                style={{ width: "26px", height: "26px", background: "#6F4E37" }}>
+              <span className="flex items-center justify-center transition-all duration-200 group-hover:scale-110 w-[26px] h-[26px] bg-[#6F4E37] rounded-full">
                 <ChevRight color="#fff" size={11} />
               </span>
             </button>
@@ -331,45 +322,55 @@ export default function CategorySection() {
         </div>
 
         {/* ── HORIZONTAL SCROLL TRACK ── */}
+        {/* Shows 2 cards on mobile (sm), 4 cards on medium and up (md) */}
         <div
           ref={trackRef}
-          className="flex gap-3 md:gap-4 overflow-x-auto"
+          className="flex gap-3 md:gap-4 overflow-x-auto scroll-smooth"
           style={{
-            paddingLeft: "clamp(16px,4vw,56px)",
-            paddingRight: "clamp(16px,4vw,56px)",
+            paddingLeft: "16px",
+            paddingRight: "16px",
             paddingBottom: "12px",
-            scrollbarWidth: "none",      // Firefox
-            msOverflowStyle: "none",     // IE
+            scrollbarWidth: "none",
+            msOverflowStyle: "none",
             WebkitOverflowScrolling: "touch",
             scrollSnapType: "x mandatory",
           }}
         >
-          {/* hide scrollbar in webkit */}
+          {/* Hide scrollbar in webkit */}
           <style>{`
-            .cat-track::-webkit-scrollbar { display: none; }
+            .category-track::-webkit-scrollbar { display: none; }
           `}</style>
 
           {CATEGORIES.map((cat, i) => (
             <div
               key={cat.id}
               style={{ scrollSnapAlign: "start", flexShrink: 0 }}
+              className="cursor-pointer"
+              onClick={() => navigate(`/category/${cat.id}`)}
             >
               <CategoryCard cat={cat} index={i} />
             </div>
           ))}
 
-          {/* trailing spacer so last card doesn't hug edge */}
-          <div style={{ minWidth: "4px", flexShrink: 0 }} />
+          {/* Trailing spacer for better edge scrolling */}
+          <div className="min-w-[4px] flex-shrink-0" />
         </div>
 
-        {/* ── MOBILE "View All" below track ── */}
-        <div className="flex justify-center mt-5 sm:hidden">
+        {/* ── VISUAL HINT: Show how many cards are visible ── */}
+        <div className="hidden md:block text-center mt-4 text-[10px] text-gray-400">
+          ← Scroll to see 4 categories at a time →
+        </div>
+        <div className="block md:hidden text-center mt-4 text-[10px] text-gray-400">
+          ← Swipe to see 2 categories at a time →
+        </div>
+
+        {/* ── MOBILE "View All" button below track ── */}
+        <div className="flex justify-center mt-4 sm:hidden">
           <button
-            className="flex items-center gap-2 text-xs font-bold px-5 py-2.5 transition-all active:scale-95"
+            className="flex items-center gap-2 text-xs font-bold px-5 py-2.5 transition-all active:scale-95 rounded-full"
             style={{
               background: "#6F4E37",
               color: "#fff",
-              border: "1.5px solid rgba(201,169,110,0.2)",
             }}
             onClick={() => navigate('/category')}
           >

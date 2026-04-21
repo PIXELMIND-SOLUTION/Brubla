@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import Navbar from "./Navbar";
+import Header from "./Header";
 
 // ─────────────────────────────────────────────────────────────────────────────
 // CSS ANIMATIONS
@@ -585,7 +586,7 @@ export default function ExclusiveProductsPage() {
 
     return (
         <>
-            <Navbar />
+            <Header />
             <div className="min-h-screen font-body" style={{ background: "#0C0C0C" }}>
                 <Styles />
 

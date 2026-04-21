@@ -35,6 +35,7 @@ import {
   Award
 } from "lucide-react";
 import Navbar from "../components/Navbar";
+import Header from "../components/Header";
 
 const COFFEE = "#C9A96E";
 
@@ -681,7 +682,7 @@ export default function UserNotifications() {
   if (loading) {
     return (
       <>
-        <Navbar />
+        <Header />
         <div className="min-h-screen bg-black text-white flex items-center justify-center">
           <div className="text-center px-4">
             <Loader2 size={32} className="sm:w-10 sm:h-10 animate-spin mx-auto mb-4" style={{ color: COFFEE }} />
@@ -694,7 +695,7 @@ export default function UserNotifications() {
   
   return (
     <>
-      <Navbar />
+      <Header />
       <div className="min-h-screen bg-black text-white">
         <Styles />
         

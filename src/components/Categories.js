@@ -1,6 +1,7 @@
 import { useState } from "react";
 import Navbar from "./Navbar";
 import { useNavigate } from "react-router-dom";
+import Header from "./Header";
 
 const categories = [
     {
@@ -146,7 +147,7 @@ export default function CategoriesGrid() {
 
     return (
         <>
-            <Navbar />
+            <Header />
 
             <div className="min-h-screen bg-black px-4 sm:px-6 py-10">
                 {/* Header */}

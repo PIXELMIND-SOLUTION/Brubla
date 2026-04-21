@@ -2,6 +2,7 @@ import { useState, useRef, useEffect } from "react";
 import Navbar from "./Navbar";
 import { useNavigate } from "react-router-dom";
 import SingleOrderModal from "../pages/SingleOrderModal";
+import Header from "./Header";
 
 // ─────────────────────────────────────────────────────────────────────────────
 // STYLES
@@ -675,7 +676,7 @@ export default function ProfilePage() {
 
   return (
     <>
-      <Navbar />
+      <Header />
       <div className="min-h-screen fs pb-20 sm:pb-24 lg:pb-12" style={{ background: "#0C0C0C", color: "#F5F0E8" }}>
         <Styles />
 

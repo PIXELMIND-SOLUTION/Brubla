@@ -7,6 +7,7 @@ import {
 } from "lucide-react";
 import Navbar from "../components/Navbar";
 import SizeGuideModal from "../views/SizeGuide";
+import Header from "../components/Header";
 
 const COFFEE = "#6F4E37";
 
@@ -730,7 +731,7 @@ export default function ProductDetails() {
     if (!product) {
         return (
             <>
-                <Navbar />
+                <Header />
                 <div className="bg-black text-white min-h-screen flex items-center justify-center px-4">
                     <div className="text-center">
                         <h1 className="text-2xl sm:text-3xl font-bold mb-4">Product Not Found</h1>
@@ -776,7 +777,7 @@ export default function ProductDetails() {
 
     return (
         <>
-            <Navbar />
+            <Header />
 
             <div className="bg-black text-white min-h-screen">
                 {/* MAIN CONTAINER */}

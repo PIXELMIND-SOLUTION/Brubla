@@ -7,6 +7,7 @@ import {
   PlusCircle, Home, Building, Navigation
 } from "lucide-react";
 import Navbar from "../components/Navbar";
+import Header from "../components/Header";
 
 const COFFEE = "#6F4E37";
 
@@ -591,7 +592,7 @@ export default function CartPage() {
   if (orderPlaced && step === 4) {
     return (
       <>
-        <Navbar />
+        <Header />
         <div className="bg-black text-white min-h-screen flex items-center justify-center p-4">
           <div className="max-w-md w-full text-center">
             <div className="bg-gradient-to-b from-gray-900 to-black rounded-2xl p-6 sm:p-8 border border-gray-800">
@@ -630,7 +631,7 @@ export default function CartPage() {
 
   return (
     <>
-      <Navbar />
+      <Header />
 
       <div className="bg-black text-white min-h-screen">
         <div className="max-w-5xl mx-auto px-3 sm:px-4 md:px-6 lg:px-8 py-4 sm:py-6 md:py-8">
