@@ -459,7 +459,7 @@ export default function JoinUs() {
 
                     {/* ── TOP BAR ── */}
                     <div className="flex items-center justify-between px-5 md:px-10 pt-6 pb-4">
-                        <button onClick={() => navigate(-1)}
+                        <button onClick={() => navigate('/')}
                             className="flex items-center gap-2 px-4 py-2 rounded-full text-sm font-semibold transition-all hover:bg-white/80"
                             style={{ color: "#333" }}>
                             <ArrowLeft c="w-4 h-4" />

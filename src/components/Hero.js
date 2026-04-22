@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
+import banner from '../assets/banner.mp4';
 
 /* ─────────────────────────────────────────────
    BANNER DATA
@@ -9,14 +10,14 @@ const DESKTOP_BANNERS = [
   {
     id: 1,
     type: "image",
-    src: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=1400",
+    src: "https://i.pinimg.com/736x/e1/49/9b/e1499bd0a350285b6cfdc736ed047a07.jpg",
     title: "Summer Collection 2025",
     description: "Discover the finest handcrafted styles made for you.",
   },
   {
     id: 2,
     type: "video",
-    src: "https://www.w3schools.com/html/mov_bbb.mp4",
+    src: banner,
     title: "Behind the Craft",
     description: "Watch how our artisans bring every piece to life.",
   },
@@ -163,6 +164,8 @@ const Carousel = ({ banners }) => {
   const [isTransitioning, setIsTransitioning] = useState(false);
   const [activeYouTube, setActiveYouTube] = useState(null);
 
+  const navigate = useNavigate();
+
   const next = useCallback(() => {
     if (isTransitioning) return;
     setIsTransitioning(true);
@@ -246,7 +249,7 @@ const Carousel = ({ banners }) => {
               />
             ) : (
               <img
-                src={getYouTubeThumbnail(banner.src)}
+                src={banner}
                 alt={banner.title}
                 className="absolute inset-0 w-full h-full object-cover"
               />
@@ -290,10 +293,12 @@ const Carousel = ({ banners }) => {
           {/* CTA button — centered */}
           <div className="absolute bottom-16 sm:bottom-20 md:bottom-24 left-0 right-0 flex justify-center sm:justify-center px-6 sm:px-10 md:px-16 lg:px-24 z-10">
             <button
-              onClick={() => setSelectedBanner(banner)}
+              // onClick={() => setSelectedBanner(banner)}
+              onClick={() => navigate('/products')}
               className="text-white text-sm sm:text-base font-medium underline underline-offset-4 hover:opacity-80 transition flex items-center gap-2 group"
             >
-              <span>{getButtonText(banner)}</span>
+              {/* <span>{getButtonText(banner)}</span> */}
+              <span>Shop Now</span>
 
               <svg
                 className="w-4 h-4 transition-transform group-hover:translate-x-1"

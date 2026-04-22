@@ -385,20 +385,7 @@ export default function SingleExclusiveProduct() {
             <div className="min-h-screen fs" style={{ background: "#0C0C0C", color: "#F5F0E8" }}>
                 <Styles />
 
-                {/* ── BREADCRUMB ── */}
-                <div className="px-4 md:px-8 lg:px-14 pt-6 pb-2">
-                    <div className="flex items-center gap-1.5 text-[10px] font-semibold fs"
-                        style={{ color: "rgba(245,240,232,0.35)" }}>
-                        {["Home", "Exclusive", "Lehengas"].map((b, i, arr) => (
-                            <span key={b} className="flex items-center gap-1.5">
-                                <button className="hover:text-[#C9A96E] transition-colors">{b}</button>
-                                {i < arr.length - 1 && <span>/</span>}
-                            </span>
-                        ))}
-                        <span>/</span>
-                        <span style={{ color: "#C9A96E" }}>Silk Organza Lehenga</span>
-                    </div>
-                </div>
+              
 
                 {/* ── MAIN GRID ── */}
                 <div className="px-4 md:px-8 lg:px-14 py-6 grid grid-cols-1 lg:grid-cols-2 gap-10 xl:gap-16 max-w-7xl mx-auto">

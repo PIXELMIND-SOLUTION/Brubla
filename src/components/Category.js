@@ -7,58 +7,58 @@ import { useNavigate } from "react-router-dom";
 const CATEGORIES = [
   {
     id: 1,
-    label: "Men",
+    label: "Women's-Fashion",
     sublabel: "432 styles",
-    img: "https://images.unsplash.com/photo-1617137968427-85924c800a22?w=400&h=520&fit=crop&q=80&auto=format",
+    img: "https://images.unsplash.com/photo-1483985988355-763728e1935b?w=800&q=80",
     accent: "#000",
   },
   {
     id: 2,
-    label: "Women",
+    label: "Men's-Style",
     sublabel: "860 styles",
-    img: "https://images.unsplash.com/photo-1509631179647-0177331693ae?w=400&h=520&fit=crop&q=80&auto=format",
+    img: "https://images.unsplash.com/photo-1490578474895-699cd4e2cf59?w=600&q=80",
     accent: "#000",
   },
   {
     id: 3,
-    label: "Kids",
+    label: "Sneakers",
     sublabel: "210 styles",
-    img: "https://images.unsplash.com/photo-1503919545889-aef636e10ad4?w=400&h=520&fit=crop&q=80&auto=format",
+    img: "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=600&q=80",
     accent: "#000",
   },
   {
     id: 4,
-    label: "Home & Living",
+    label: "Jewelry",
     sublabel: "380 items",
-    img: "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=400&h=520&fit=crop&q=80&auto=format",
+    img: "https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=600&q=80",
     accent: "#000",
   },
   {
     id: 5,
-    label: "Beauty",
+    label: "Home-Decor",
     sublabel: "190 products",
-    img: "https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?w=400&h=520&fit=crop&q=80&auto=format",
+    img: "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=800&q=80",
     accent: "#000",
   },
   {
     id: 6,
-    label: "Accessories",
+    label: "Beauty",
     sublabel: "145 pieces",
-    img: "https://images.unsplash.com/photo-1523170335258-f5ed11844a49?w=400&h=520&fit=crop&q=80&auto=format",
+    img: "https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?w=600&q=80",
     accent: "#000",
   },
   {
     id: 7,
-    label: "Footwear",
+    label: "Electronics",
     sublabel: "260 pairs",
-    img: "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=400&h=520&fit=crop&q=80&auto=format",
+    img: "https://images.unsplash.com/photo-1468495244123-6c6c332eeece?w=600&q=80",
     accent: "#000",
   },
   {
     id: 8,
-    label: "Sale",
+    label: "Sports-and-Fitness",
     sublabel: "BUY 1 GET 1",
-    img: "https://images.unsplash.com/photo-1483985988355-763728e1935b?w=400&h=520&fit=crop&q=80&auto=format",
+    img: "https://images.unsplash.com/photo-1517836357463-d25dfeac3438?w=600&q=80",
     accent: "#000",
   },
 ];
@@ -346,7 +346,7 @@ export default function CategorySection() {
               key={cat.id}
               style={{ scrollSnapAlign: "start", flexShrink: 0 }}
               className="cursor-pointer"
-              onClick={() => navigate(`/category/${cat.id}`)}
+              onClick={() => navigate(`/category/${cat.label}`)}
             >
               <CategoryCard cat={cat} index={i} />
             </div>
@@ -356,13 +356,7 @@ export default function CategorySection() {
           <div className="min-w-[4px] flex-shrink-0" />
         </div>
 
-        {/* ── VISUAL HINT: Show how many cards are visible ── */}
-        <div className="hidden md:block text-center mt-4 text-[10px] text-gray-400">
-          ← Scroll to see 4 categories at a time →
-        </div>
-        <div className="block md:hidden text-center mt-4 text-[10px] text-gray-400">
-          ← Swipe to see 2 categories at a time →
-        </div>
+        
 
         {/* ── MOBILE "View All" button below track ── */}
         <div className="flex justify-center mt-4 sm:hidden">

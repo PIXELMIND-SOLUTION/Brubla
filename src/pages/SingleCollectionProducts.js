@@ -86,7 +86,7 @@ const COLLECTION_PRODUCTS = {
     bgImage: "https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=1600&q=80",
     products: [
       {
-        id: 101,
+        id: 1,
         name: "Italian Leather Jacket",
         brand: "Brubla Global",
         price: 12999,
@@ -102,7 +102,7 @@ const COLLECTION_PRODUCTS = {
         sizes: ["XS", "S", "M", "L", "XL"],
       },
       {
-        id: 102,
+        id: 2,
         name: "Parisian Linen Blazer",
         brand: "Brubla Global",
         price: 8999,
@@ -118,7 +118,7 @@ const COLLECTION_PRODUCTS = {
         sizes: ["S", "M", "L", "XL"],
       },
       {
-        id: 103,
+        id: 3,
         name: "Tokyo Streetwear Hoodie",
         brand: "Brubla Global",
         price: 3499,
@@ -134,7 +134,7 @@ const COLLECTION_PRODUCTS = {
         sizes: ["S", "M", "L", "XL", "XXL"],
       },
       {
-        id: 104,
+        id: 4,
         name: "New York Tailored Trousers",
         brand: "Brubla Global",
         price: 4999,
@@ -150,7 +150,7 @@ const COLLECTION_PRODUCTS = {
         sizes: ["28", "30", "32", "34", "36"],
       },
       {
-        id: 105,
+        id: 5,
         name: "London Checkered Coat",
         brand: "Brubla Global",
         price: 11999,
@@ -166,7 +166,7 @@ const COLLECTION_PRODUCTS = {
         sizes: ["S", "M", "L", "XL"],
       },
       {
-        id: 106,
+        id: 6,
         name: "Milan Silk Scarf",
         brand: "Brubla Global",
         price: 2499,
@@ -182,7 +182,7 @@ const COLLECTION_PRODUCTS = {
         sizes: ["One Size"],
       },
       {
-        id: 107,
+        id: 7,
         name: "Berlin Minimalist Bag",
         brand: "Brubla Global",
         price: 6999,
@@ -198,7 +198,7 @@ const COLLECTION_PRODUCTS = {
         sizes: ["One Size"],
       },
       {
-        id: 108,
+        id: 8,
         name: "Barcelona Linen Shirt",
         brand: "Brubla Global",
         price: 3999,
@@ -223,7 +223,7 @@ const COLLECTION_PRODUCTS = {
     bgImage: "https://images.unsplash.com/photo-1539109136881-3be0616acf4b?w=1600&q=80",
     products: [
       {
-        id: 201,
+        id: 1,
         name: "Hand-Embroidered Gown",
         brand: "Brubla Atelier",
         price: 45999,
@@ -239,7 +239,7 @@ const COLLECTION_PRODUCTS = {
         sizes: ["XS", "S", "M", "L"],
       },
       {
-        id: 202,
+        id: 2,
         name: "Cashmere Wrap Coat",
         brand: "Brubla Atelier",
         price: 32999,
@@ -255,7 +255,7 @@ const COLLECTION_PRODUCTS = {
         sizes: ["S", "M", "L", "XL"],
       },
       {
-        id: 203,
+        id: 3,
         name: "Diamond-Embellished Clutch",
         brand: "Brubla Atelier",
         price: 18999,
@@ -271,7 +271,7 @@ const COLLECTION_PRODUCTS = {
         sizes: ["One Size"],
       },
       {
-        id: 204,
+        id: 4,
         name: "Silk Evening Gown",
         brand: "Brubla Atelier",
         price: 39999,
@@ -287,7 +287,7 @@ const COLLECTION_PRODUCTS = {
         sizes: ["XS", "S", "M", "L"],
       },
       {
-        id: 205,
+        id: 5,
         name: "Pearl Necklace Set",
         brand: "Brubla Atelier",
         price: 24999,
@@ -303,7 +303,7 @@ const COLLECTION_PRODUCTS = {
         sizes: ["One Size"],
       },
       {
-        id: 206,
+        id: 6,
         name: "Velvet Tuxedo Blazer",
         brand: "Brubla Atelier",
         price: 27999,
@@ -328,7 +328,7 @@ const COLLECTION_PRODUCTS = {
     bgImage: "https://images.unsplash.com/photo-1445205170230-053b83016050?w=1600&q=80",
     products: [
       {
-        id: 301,
+        id: 1,
         name: "Signature Kurta Set",
         brand: "Originals by Brubla",
         price: 4999,
@@ -344,7 +344,7 @@ const COLLECTION_PRODUCTS = {
         sizes: ["S", "M", "L", "XL", "XXL"],
       },
       {
-        id: 302,
+        id: 2,
         name: "Handblock Print Saree",
         brand: "Originals by Brubla",
         price: 8999,
@@ -360,7 +360,7 @@ const COLLECTION_PRODUCTS = {
         sizes: ["Free Size"],
       },
       {
-        id: 303,
+        id: 3,
         name: "Brubla Classic Shirt",
         brand: "Originals by Brubla",
         price: 2499,
@@ -376,7 +376,7 @@ const COLLECTION_PRODUCTS = {
         sizes: ["XS", "S", "M", "L", "XL"],
       },
       {
-        id: 304,
+        id: 4,
         name: "Embroidered Waistcoat",
         brand: "Originals by Brubla",
         price: 5999,
@@ -392,7 +392,7 @@ const COLLECTION_PRODUCTS = {
         sizes: ["S", "M", "L", "XL"],
       },
       {
-        id: 305,
+        id: 5,
         name: "Dupatta Set",
         brand: "Originals by Brubla",
         price: 3499,
@@ -408,7 +408,7 @@ const COLLECTION_PRODUCTS = {
         sizes: ["Free Size"],
       },
       {
-        id: 306,
+        id: 6,
         name: "Brubla Bomber Jacket",
         brand: "Originals by Brubla",
         price: 4499,
@@ -433,7 +433,7 @@ const COLLECTION_PRODUCTS = {
     bgImage: "https://images.unsplash.com/photo-1535043883686-1eade1b1a0f8?w=1600&q=80",
     products: [
       {
-        id: 401,
+        id: 1,
         name: "Banarasi Silk Saree",
         brand: "Indian Roots",
         price: 15999,
@@ -449,7 +449,7 @@ const COLLECTION_PRODUCTS = {
         sizes: ["Free Size"],
       },
       {
-        id: 402,
+        id: 2,
         name: "Handwoven Khadi Kurta",
         brand: "Indian Roots",
         price: 3499,
@@ -465,7 +465,7 @@ const COLLECTION_PRODUCTS = {
         sizes: ["S", "M", "L", "XL", "XXL"],
       },
       {
-        id: 403,
+        id: 3,
         name: "Phulkari Dupatta",
         brand: "Indian Roots",
         price: 2499,
@@ -481,7 +481,7 @@ const COLLECTION_PRODUCTS = {
         sizes: ["One Size"],
       },
       {
-        id: 404,
+        id: 4,
         name: "Bandhani Lehenga",
         brand: "Indian Roots",
         price: 12999,
@@ -497,7 +497,7 @@ const COLLECTION_PRODUCTS = {
         sizes: ["S", "M", "L", "XL"],
       },
       {
-        id: 405,
+        id: 5,
         name: "Pashmina Shawl",
         brand: "Indian Roots",
         price: 8999,
@@ -513,7 +513,7 @@ const COLLECTION_PRODUCTS = {
         sizes: ["One Size"],
       },
       {
-        id: 406,
+        id: 6,
         name: "Jutti Footwear",
         brand: "Indian Roots",
         price: 1999,
@@ -538,7 +538,7 @@ const COLLECTION_PRODUCTS = {
     bgImage: "https://images.unsplash.com/photo-1519741497674-611481863552?w=1600&q=80",
     products: [
       {
-        id: 501,
+        id: 1,
         name: "Bridal Lehenga Set",
         brand: "Brubla Weddings",
         price: 45999,
@@ -554,7 +554,7 @@ const COLLECTION_PRODUCTS = {
         sizes: ["S", "M", "L", "XL"],
       },
       {
-        id: 502,
+        id: 2,
         name: "Groom Sherwani",
         brand: "Brubla Weddings",
         price: 34999,
@@ -570,7 +570,7 @@ const COLLECTION_PRODUCTS = {
         sizes: ["S", "M", "L", "XL", "XXL"],
       },
       {
-        id: 503,
+        id: 3,
         name: "Bridesmaid Saree",
         brand: "Brubla Weddings",
         price: 12999,
@@ -586,7 +586,7 @@ const COLLECTION_PRODUCTS = {
         sizes: ["Free Size"],
       },
       {
-        id: 504,
+        id: 4,
         name: "Celebration Gown",
         brand: "Brubla Weddings",
         price: 19999,
@@ -602,7 +602,7 @@ const COLLECTION_PRODUCTS = {
         sizes: ["XS", "S", "M", "L"],
       },
       {
-        id: 505,
+        id: 5,
         name: "Wedding Accessory Set",
         brand: "Brubla Weddings",
         price: 5999,
@@ -618,7 +618,7 @@ const COLLECTION_PRODUCTS = {
         sizes: ["One Size"],
       },
       {
-        id: 506,
+        id: 6,
         name: "Reception Blazer",
         brand: "Brubla Weddings",
         price: 15999,
@@ -643,7 +643,7 @@ const COLLECTION_PRODUCTS = {
     bgImage: "https://images.unsplash.com/photo-1441984904996-e0b6ba687e04?w=1600&q=80",
     products: [
       {
-        id: 601,
+        id: 1,
         name: "Oversized Graphic Tee",
         brand: "Street Edit",
         price: 1899,
@@ -659,7 +659,7 @@ const COLLECTION_PRODUCTS = {
         sizes: ["S", "M", "L", "XL", "XXL"],
       },
       {
-        id: 602,
+        id: 2,
         name: "Cargo Pants",
         brand: "Street Edit",
         price: 2999,
@@ -675,7 +675,7 @@ const COLLECTION_PRODUCTS = {
         sizes: ["28", "30", "32", "34", "36"],
       },
       {
-        id: 603,
+        id: 3,
         name: "Denim Jacket",
         brand: "Street Edit",
         price: 4499,
@@ -691,7 +691,7 @@ const COLLECTION_PRODUCTS = {
         sizes: ["S", "M", "L", "XL"],
       },
       {
-        id: 604,
+        id: 4,
         name: "Sneakers",
         brand: "Street Edit",
         price: 5999,
@@ -716,7 +716,7 @@ const COLLECTION_PRODUCTS = {
     bgImage: "https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?w=1600&q=80",
     products: [
       {
-        id: 701,
+        id: 1,
         name: "Organic Cotton Dress",
         brand: "Sustainable",
         price: 3999,
@@ -732,7 +732,7 @@ const COLLECTION_PRODUCTS = {
         sizes: ["XS", "S", "M", "L"],
       },
       {
-        id: 702,
+        id: 2,
         name: "Hemp Tote Bag",
         brand: "Sustainable",
         price: 1499,
@@ -757,7 +757,7 @@ const COLLECTION_PRODUCTS = {
     bgImage: "https://images.unsplash.com/photo-1602173574767-37d01966c6a3?w=1600&q=80",
     products: [
       {
-        id: 801,
+        id: 1,
         name: "Leather Handbag",
         brand: "Accessories Edit",
         price: 7999,
@@ -773,7 +773,7 @@ const COLLECTION_PRODUCTS = {
         sizes: ["One Size"],
       },
       {
-        id: 802,
+        id: 2,
         name: "Gold Plated Necklace",
         brand: "Accessories Edit",
         price: 2999,

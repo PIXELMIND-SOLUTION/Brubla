@@ -2,6 +2,7 @@ import { useState, useEffect, useRef, useCallback } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { FaDownload, FaQuestionCircle, FaAndroid, FaApple } from "react-icons/fa";
 import { IoClose } from "react-icons/io5";
+import { MdWorkspacePremium } from "react-icons/md";
 
 // ─────────────────────────────────────────────────────────────────────────────
 // ICON PRIMITIVES
@@ -93,22 +94,22 @@ const FloatingJoinBtn = () => {
 
     return (
         <div className="fixed bottom-6 right-5 z-50 flex flex-col items-end gap-2">
-            <div className="text-xs font-semibold px-3 py-1.5 rounded-full shadow-lg transition-all duration-200 whitespace-nowrap"
-                style={{ background: "#000", color: "#000", opacity: hovered ? 1 : 0, transform: hovered ? "translateY(0) scale(1)" : "translateY(6px) scale(0.95)", pointerEvents: "none", letterSpacing: "0.06em" }}>
+            <div className="text-xs font-semibold px-3 py-1.5 border border-[#000] rounded-full shadow-lg transition-all duration-200 whitespace-nowrap"
+                style={{ background: "#fff", color: "#000", opacity: hovered ? 1 : 0, transform: hovered ? "translateY(0) scale(1)" : "translateY(6px) scale(0.95)", pointerEvents: "none", letterSpacing: "0.06em" }}>
                 ✦ Become a Partner
             </div>
             <button onClick={() => navigate("/joinUs")} onMouseEnter={() => setHovered(true)} onMouseLeave={() => setHovered(false)}
                 aria-label="Join us"
                 className="relative flex items-center gap-2 rounded-full font-bold text-sm shadow-2xl transition-all duration-300 active:scale-95"
                 style={{
-                    background: hovered ? "linear-gradient(135deg,#000 0%,#1a1a1a 100%)" : "linear-gradient(135deg,#000 0%,#8B6347 50%,#000 100%)",
-                    color: hovered ? "#000" : "#fff",
+                    background: hovered ? "linear-gradient(135deg,#000 0%,#1a1a1a 100%)" : "linear-gradient(135deg,#000 0%,#000 50%,#000 100%)",
+                    color: hovered ? "#fff" : "#fff",
                     padding: "12px 20px",
-                    boxShadow: hovered ? "0 8px 32px rgba(0,0,0,0.45)" : "0 6px 24px rgba(111,78,55,0.45)",
+                    boxShadow: hovered ? "0 8px 32px rgba(0,0,0,0.45)" : "0 6px 24px rgba(0, 0, 0, 0.45)",
                     letterSpacing: "0.06em", minHeight: "48px", justifyContent: "center",
-                    border: hovered ? "1.5px solid rgba(111,78,55,0.4)" : "1.5px solid transparent",
+                    border: hovered ? "1.5px solid rgba(0, 0, 0, 0.4)" : "1.5px solid transparent",
                 }}>
-                {pulse && <span className="absolute inset-0 rounded-full animate-ping" style={{ background: "rgba(111,78,55,0.35)", animationDuration: "1.4s" }} />}
+                {pulse && <span className="absolute inset-0 rounded-full animate-ping" style={{ background: "rgba(0, 0, 0, 0.35)", animationDuration: "1.4s" }} />}
                 <SparkleIcon c="w-3.5 h-3.5 flex-shrink-0" />
                 <span className="whitespace-nowrap text-[13px] tracking-wide">Join Us</span>
                 <span className="transition-all duration-300 overflow-hidden flex-shrink-0" style={{ maxWidth: hovered ? "20px" : "0px", opacity: hovered ? 1 : 0 }}>→</span>
@@ -131,6 +132,7 @@ const NotifBanner = ({ onClose }) => {
     const [idx, setIdx] = useState(0);
     const [fade, setFade] = useState(false);
     const [showDownload, setShowDownload] = useState(false);
+    const navigate = useNavigate();
 
     useEffect(() => {
         const t = setInterval(() => {
@@ -156,7 +158,7 @@ const NotifBanner = ({ onClose }) => {
                 </div>
                 <div className="flex items-center gap-2 md:gap-3 ml-2 md:ml-3">
                     <button
-                        onClick={() => setShowDownload(true)}
+                        onClick={() => navigate('/exclusive')}
                         className="flex items-center gap-1 md:gap-2 text-[11px] md:text-xs font-medium hover:opacity-80"
                         style={{ color: "#fff" }}
                     >
@@ -455,7 +457,7 @@ const CollectionsPanel = ({
 
             <div className="px-4 md:px-8 lg:px-12 py-6">
                 {/* Header */}
-                <p className="text-[10px] font-black uppercase tracking-[0.2em] mb-5 text-[#7a6a5a]">
+                <p className="text-[10px] font-black uppercase tracking-[0.2em] mb-5 text-[#000]">
                     Collections
                 </p>
 
@@ -709,7 +711,7 @@ const Sidebar = ({ open, onClose, navigate }) => {
                     })}
                 </div>
                 <div className="px-5 py-4" style={{ borderTop: "1px solid rgba(111,78,55,0.12)" }}>
-                    <div className="flex items-center gap-3 p-3 rounded-xl" style={{ background: "#f9f5f0" }}>
+                    <div onClick={()=>navigate('/profile')} className="flex items-center gap-3 p-3 rounded-xl" style={{ background: "#f9f5f0" }}>
                         <div className="w-9 h-9 rounded-full flex items-center justify-center flex-shrink-0" style={{ background: "linear-gradient(135deg,#000,#1a1a1a)", border: "1px solid rgba(111,78,55,0.25)" }}>
                             <ProfileIcon c="w-4 h-4" style={{ color: "#000" }} />
                         </div>
@@ -843,7 +845,7 @@ const Header = () => {
                     {/* ── DESKTOP: 3-column balanced grid ── */}
                     <div className="hidden lg:grid items-center h-16 px-8" style={{ gridTemplateColumns: "1fr auto 1fr" }}>
 
-                        {/* LEFT — logo image + New in + Collections */}
+                        {/* LEFT — logo image + Exclusive + Collections */}
                         <div className="flex items-center gap-2">
                             {/* Logo image */}
                             <div onClick={() => navigate('/')} className="cursor-pointer flex-shrink-0">
@@ -854,14 +856,15 @@ const Header = () => {
                             <div className="w-px h-5 mx-1 flex-shrink-0"
                                 style={{ background: "rgba(111,78,55,0.2)" }} />
 
-                            {/* New in */}
+                            {/* Exclusive */}
                             <button
                                 className="flex items-center px-3 py-1.5 rounded-full text-xs font-semibold transition-all duration-150"
                                 style={{ color: textColor }}
                                 onMouseEnter={e => e.currentTarget.style.background = "rgba(0,0,0,0.06)"}
                                 onMouseLeave={e => e.currentTarget.style.background = "transparent"}
+                                onClick={()=>navigate('/exclusiveproducts')}
                             >
-                                New in
+                                Exclusive
                             </button>
 
                             {/* Collections */}
@@ -946,7 +949,7 @@ const Header = () => {
                     {/* ── TABLET: scrollable nav pills ── */}
                     <div className="hidden md:flex lg:hidden items-center gap-1.5 px-5 pb-2.5 overflow-x-auto" style={{ scrollbarWidth: "none" }}>
                         {[
-                            { label: "New in" },
+                            { label: "Exclusive" },
                             { label: "Collections" },
                             { label: "Men" },
                             { label: "Women" },
