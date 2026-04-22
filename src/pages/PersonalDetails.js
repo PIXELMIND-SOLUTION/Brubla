@@ -6,10 +6,7 @@ import {
   ChevronRight, Home, Briefcase, MessageCircle, Heart,
   Loader2, Smartphone, Award, Gift
 } from "lucide-react";
-import Navbar from "../components/Navbar";
 import Header from "../components/Header";
-
-const COFFEE = "#C9A96E";
 
 // ─────────────────────────────────────────────────────────────────────────────
 // STYLES - Tailwind only with keyframes
@@ -36,25 +33,10 @@ const Styles = () => (
       0% { background-position: -200% center; }
       100% { background-position: 200% center; }
     }
-    @keyframes pulseGold {
-      0%, 100% { box-shadow: 0 0 0 0 rgba(201,169,110,0.4); }
-      50% { box-shadow: 0 0 0 6px rgba(201,169,110,0); }
-    }
     
     .animate-fadeUp { animation: fadeUp 0.5s ease forwards; }
     .animate-slideInRight { animation: slideInRight 0.5s ease forwards; }
     .animate-scaleIn { animation: scaleIn 0.4s ease forwards; }
-    .gold-shimmer {
-      background: linear-gradient(90deg, #C9A96E, #E8C97A, #C9A96E);
-      background-size: 200% auto;
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-      animation: shimmer 3s linear infinite;
-    }
-    .pulse-gold {
-      animation: pulseGold 2s ease-in-out infinite;
-    }
   `}</style>
 );
 
@@ -77,33 +59,16 @@ const SAMPLE_USER_DATA = {
 };
 
 // ─────────────────────────────────────────────────────────────────────────────
-// STATS CARDS
-// ─────────────────────────────────────────────────────────────────────────────
-const StatCard = ({ icon: Icon, label, value, color }) => (
-  <div className="bg-gray-900/50 rounded-xl p-4 border border-gray-800 hover:border-gray-700 transition-all duration-300">
-    <div className="flex items-center gap-3">
-      <div className="w-10 h-10 rounded-lg flex items-center justify-center" style={{ backgroundColor: `${color}15` }}>
-        <Icon size={18} style={{ color }} />
-      </div>
-      <div>
-        <p className="text-xs text-gray-500 fs">{label}</p>
-        <p className="text-lg font-bold text-white fd">{value}</p>
-      </div>
-    </div>
-  </div>
-);
-
-// ─────────────────────────────────────────────────────────────────────────────
 // INFO FIELD (View Mode)
 // ─────────────────────────────────────────────────────────────────────────────
 const InfoField = ({ icon: Icon, label, value, verified }) => (
-  <div className="flex items-start gap-3 py-3 border-b border-gray-800/50 last:border-0">
-    <div className="w-9 h-9 rounded-lg bg-gray-800/50 flex items-center justify-center flex-shrink-0">
-      <Icon size={16} className="text-gray-400" />
+  <div className="flex items-start gap-3 py-3 border-b border-gray-100 last:border-0">
+    <div className="w-9 h-9 rounded-lg bg-gray-100 flex items-center justify-center flex-shrink-0">
+      <Icon size={16} className="text-gray-500" />
     </div>
     <div className="flex-1 min-w-0">
-      <p className="text-xs text-gray-500 fs uppercase tracking-wide">{label}</p>
-      <p className="text-sm sm:text-base font-medium text-white fs mt-0.5 break-words">{value || "Not provided"}</p>
+      <p className="text-xs text-gray-400 fs uppercase tracking-wide">{label}</p>
+      <p className="text-sm sm:text-base font-medium text-gray-900 fs mt-0.5 break-words">{value || "Not provided"}</p>
     </div>
     {verified && (
       <div className="flex-shrink-0">
@@ -121,17 +86,17 @@ const EditField = ({
   placeholder, required, options, onChange, error 
 }) => (
   <div className="space-y-1.5">
-    <label className="flex items-center gap-2 text-sm font-medium text-gray-300 fs">
-      <Icon size={14} className="text-gray-500" />
+    <label className="flex items-center gap-2 text-sm font-medium text-gray-700 fs">
+      <Icon size={14} className="text-gray-400" />
       {label}
-      {required && <span className="text-xs" style={{ color: COFFEE }}>*</span>}
+      {required && <span className="text-xs text-black">*</span>}
     </label>
     {options ? (
       <select
         name={name}
         value={value}
         onChange={onChange}
-        className="w-full px-4 py-2.5 bg-gray-900 border border-gray-700 rounded-lg text-white fs text-sm focus:border-coffee transition-all"
+        className="w-full px-4 py-2.5 bg-white border border-gray-300 rounded-lg text-gray-900 fs text-sm focus:border-black focus:ring-1 focus:ring-black transition-all"
         style={{ borderColor: error ? '#ef4444' : undefined }}
       >
         <option value="">Select {label}</option>
@@ -146,7 +111,7 @@ const EditField = ({
         onChange={onChange}
         placeholder={placeholder}
         rows={3}
-        className="w-full px-4 py-2.5 bg-gray-900 border border-gray-700 rounded-lg text-white fs text-sm focus:border-coffee transition-all resize-none"
+        className="w-full px-4 py-2.5 bg-white border border-gray-300 rounded-lg text-gray-900 fs text-sm focus:border-black focus:ring-1 focus:ring-black transition-all resize-none"
         style={{ borderColor: error ? '#ef4444' : undefined }}
       />
     ) : (
@@ -156,7 +121,7 @@ const EditField = ({
         value={value}
         onChange={onChange}
         placeholder={placeholder}
-        className="w-full px-4 py-2.5 bg-gray-900 border border-gray-700 rounded-lg text-white fs text-sm focus:border-coffee transition-all"
+        className="w-full px-4 py-2.5 bg-white border border-gray-300 rounded-lg text-gray-900 fs text-sm focus:border-black focus:ring-1 focus:ring-black transition-all"
         style={{ borderColor: error ? '#ef4444' : undefined }}
       />
     )}
@@ -179,12 +144,12 @@ const Toast = ({ message, type, onClose }) => {
 
   return (
     <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 animate-slideInRight">
-      <div className={`flex items-center gap-3 px-4 py-3 rounded-xl shadow-xl ${
-        type === "success" ? "bg-green-500/90" : "bg-red-500/90"
-      } backdrop-blur-sm`}>
-        {type === "success" ? <CheckCircle size={18} className="text-white" /> : <AlertCircle size={18} className="text-white" />}
-        <p className="text-white fs text-sm font-medium">{message}</p>
-        <button onClick={onClose} className="text-white/70 hover:text-white">
+      <div className={`flex items-center gap-3 px-4 py-3 rounded-xl shadow-lg ${
+        type === "success" ? "bg-black text-white" : "bg-red-500 text-white"
+      }`}>
+        {type === "success" ? <CheckCircle size={18} /> : <AlertCircle size={18} />}
+        <p className="text-sm font-medium">{message}</p>
+        <button onClick={onClose} className="opacity-70 hover:opacity-100">
           <X size={16} />
         </button>
       </div>
@@ -214,7 +179,6 @@ export default function PersonalDetails() {
   const fetchUserData = async () => {
     setLoading(true);
     try {
-      // Simulate API call
       await new Promise(resolve => setTimeout(resolve, 800));
       setFormData(SAMPLE_USER_DATA);
       setOriginalData(SAMPLE_USER_DATA);
@@ -227,15 +191,13 @@ export default function PersonalDetails() {
 
   // Handle input changes
   const handleChange = (e) => {
-    const { name, value, type } = e.target;
-    const checked = (e.target).checked;
+    const { name, value, type, checked } = e.target;
     
     setFormData(prev => ({
       ...prev,
       [name]: type === "checkbox" ? checked : value
     }));
     
-    // Clear error for this field
     if (errors[name]) {
       setErrors(prev => ({ ...prev, [name]: "" }));
     }
@@ -274,7 +236,6 @@ export default function PersonalDetails() {
     
     setSaving(true);
     try {
-      // Simulate API update
       await new Promise(resolve => setTimeout(resolve, 1500));
       setOriginalData(formData);
       setIsEditing(false);
@@ -321,10 +282,10 @@ export default function PersonalDetails() {
     return (
       <>
         <Header />
-        <div className="min-h-screen bg-black text-white flex items-center justify-center">
+        <div className="min-h-screen bg-gray-50 flex items-center justify-center">
           <div className="text-center">
-            <Loader2 size={40} className="animate-spin mx-auto mb-4" style={{ color: COFFEE }} />
-            <p className="text-gray-400 fs">Loading your profile...</p>
+            <Loader2 size={40} className="animate-spin mx-auto mb-4 text-black" />
+            <p className="text-gray-500 fs">Loading your profile...</p>
           </div>
         </div>
       </>
@@ -334,19 +295,16 @@ export default function PersonalDetails() {
   return (
     <>
       <Header />
-      <div className="min-h-screen bg-black text-white">
+      <div className="min-h-screen bg-gray-50">
         <Styles />
 
         {/* Hero Section */}
-        <div className="relative overflow-hidden pb-8" style={{ background: "linear-gradient(160deg, #0C0C0C 0%, #1a1812 60%, #0C0C0C 100%)" }}>
-          <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(ellipse 65% 45% at 50% 0%, rgba(201,169,110,0.08) 0%, transparent 65%)" }} />
-          <div className="h-px w-full" style={{ background: "linear-gradient(90deg, transparent, #C9A96E, transparent)" }} />
-          
+        <div className="relative overflow-hidden pb-8 bg-white border-b border-gray-200">
           <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-10">
             {/* Back button */}
             <button 
               onClick={() => navigate(-1)}
-              className="flex items-center gap-2 text-gray-400 hover:text-white transition-colors mb-6 fs text-sm"
+              className="flex items-center gap-2 text-gray-500 hover:text-black transition-colors mb-6 fs text-sm"
             >
               <ChevronRight size={16} className="rotate-180" />
               Back
@@ -356,30 +314,28 @@ export default function PersonalDetails() {
             <div className="flex flex-col sm:flex-row items-center sm:items-end gap-6">
               {/* Avatar */}
               <div className="relative">
-                <div className="absolute inset-0 rounded-full pulse-gold" style={{ margin: "-3px" }} />
-                <div className="absolute inset-0 rounded-full" style={{ margin: "-1.5px", background: "conic-gradient(#C9A96E 0deg, #E8C97A 120deg, #C9A96E 240deg, #E8C97A 360deg)", borderRadius: "50%", padding: "1.5px" }} />
+                <div className="absolute inset-0 rounded-full" style={{ margin: "-1.5px", background: "conic-gradient(#000 0deg, #333 120deg, #000 240deg, #333 360deg)", borderRadius: "50%", padding: "1.5px" }} />
                 <img 
                   src={formData.profilePicture || "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=200&h=200&fit=crop&q=90&auto=format"} 
                   alt={fullName}
-                  className="relative rounded-full object-cover"
-                  style={{ width: "clamp(80px, 15vw, 100px)", height: "clamp(80px, 15vw, 100px)", border: "3px solid #0C0C0C" }}
+                  className="relative rounded-full object-cover bg-white"
+                  style={{ width: "clamp(80px, 15vw, 100px)", height: "clamp(80px, 15vw, 100px)", border: "3px solid white" }}
                 />
                 {isEditing && (
-                  <button className="absolute bottom-0 right-0 w-7 h-7 rounded-full flex items-center justify-center transition-all hover:scale-110"
-                    style={{ background: "linear-gradient(135deg, #C9A96E, #a8843f)", border: "2px solid #0C0C0C" }}>
-                    <Camera size={12} className="text-black" />
+                  <button className="absolute bottom-0 right-0 w-7 h-7 rounded-full flex items-center justify-center transition-all hover:scale-110 bg-black text-white border-2 border-white">
+                    <Camera size={12} />
                   </button>
                 )}
               </div>
 
               {/* Name and title */}
               <div className="flex-1 text-center sm:text-left">
-                <h1 className="fd font-black text-white text-2xl sm:text-3xl lg:text-4xl mb-1">{fullName}</h1>
+                <h1 className="fd font-black text-gray-900 text-2xl sm:text-3xl lg:text-4xl mb-1">{fullName}</h1>
                 <div className="flex flex-wrap items-center justify-center sm:justify-start gap-2">
-                  <span className="text-xs font-medium px-2.5 py-0.5 rounded-full" style={{ background: `${COFFEE}20`, color: COFFEE }}>
+                  <span className="text-xs font-medium px-2.5 py-0.5 rounded-full bg-black text-white">
                     Gold Member
                   </span>
-                  <span className="text-xs text-gray-500 fs">Member since Jan 2023</span>
+                  <span className="text-xs text-gray-400 fs">Member since Jan 2023</span>
                 </div>
               </div>
 
@@ -387,8 +343,7 @@ export default function PersonalDetails() {
               {!isEditing ? (
                 <button
                   onClick={() => setIsEditing(true)}
-                  className="flex items-center gap-2 px-5 py-2.5 rounded-xl font-semibold text-sm fs transition-all hover:scale-105 active:scale-95"
-                  style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.12)", color: "rgba(245,240,232,0.9)" }}
+                  className="flex items-center gap-2 px-5 py-2.5 rounded-xl font-semibold text-sm fs transition-all hover:scale-105 active:scale-95 bg-gray-900 text-white hover:bg-black"
                 >
                   <Edit2 size={14} />
                   Edit Profile
@@ -397,8 +352,7 @@ export default function PersonalDetails() {
                 <div className="flex gap-3">
                   <button
                     onClick={handleCancel}
-                    className="flex items-center gap-2 px-5 py-2.5 rounded-xl font-semibold text-sm fs transition-all hover:bg-gray-800"
-                    style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.12)" }}
+                    className="flex items-center gap-2 px-5 py-2.5 rounded-xl font-semibold text-sm fs transition-all bg-gray-100 text-gray-700 hover:bg-gray-200"
                   >
                     <X size={14} />
                     Cancel
@@ -406,8 +360,7 @@ export default function PersonalDetails() {
                   <button
                     onClick={handleSave}
                     disabled={saving}
-                    className="flex items-center gap-2 px-5 py-2.5 rounded-xl font-semibold text-sm fs transition-all hover:opacity-90 disabled:opacity-50"
-                    style={{ background: `linear-gradient(135deg, ${COFFEE}, #a8843f)`, color: "#0C0C0C" }}
+                    className="flex items-center gap-2 px-5 py-2.5 rounded-xl font-semibold text-sm fs transition-all hover:opacity-90 disabled:opacity-50 bg-black text-white"
                   >
                     {saving ? <Loader2 size={14} className="animate-spin" /> : <Save size={14} />}
                     {saving ? "Saving..." : "Save Changes"}
@@ -417,7 +370,7 @@ export default function PersonalDetails() {
             </div>
           </div>
           
-          <div className="h-px w-full" style={{ background: "linear-gradient(90deg, transparent, rgba(201,169,110,0.35), transparent)" }} />
+          <div className="h-px w-full bg-gradient-to-r from-transparent via-gray-300 to-transparent" />
         </div>
 
         {/* Main Content */}
@@ -431,10 +384,9 @@ export default function PersonalDetails() {
                   onClick={() => setActiveSection("personal")}
                   className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all fs text-sm ${
                     activeSection === "personal" 
-                      ? "bg-coffee/10 text-coffee border border-coffee/30" 
-                      : "text-gray-400 hover:bg-gray-900 hover:text-white"
+                      ? "bg-black text-white" 
+                      : "text-gray-600 hover:bg-gray-100 hover:text-black"
                   }`}
-                  style={{ borderColor: activeSection === "personal" ? COFFEE : undefined, color: activeSection === "personal" ? COFFEE : undefined }}
                 >
                   <User size={16} />
                   Personal Information
@@ -443,8 +395,8 @@ export default function PersonalDetails() {
                   onClick={() => setActiveSection("contact")}
                   className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all fs text-sm ${
                     activeSection === "contact" 
-                      ? "bg-coffee/10 text-coffee border border-coffee/30" 
-                      : "text-gray-400 hover:bg-gray-900 hover:text-white"
+                      ? "bg-black text-white" 
+                      : "text-gray-600 hover:bg-gray-100 hover:text-black"
                   }`}
                 >
                   <Phone size={16} />
@@ -454,8 +406,8 @@ export default function PersonalDetails() {
                   onClick={() => setActiveSection("preferences")}
                   className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all fs text-sm ${
                     activeSection === "preferences" 
-                      ? "bg-coffee/10 text-coffee border border-coffee/30" 
-                      : "text-gray-400 hover:bg-gray-900 hover:text-white"
+                      ? "bg-black text-white" 
+                      : "text-gray-600 hover:bg-gray-100 hover:text-black"
                   }`}
                 >
                   <Heart size={16} />
@@ -465,8 +417,8 @@ export default function PersonalDetails() {
                   onClick={() => setActiveSection("security")}
                   className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all fs text-sm ${
                     activeSection === "security" 
-                      ? "bg-coffee/10 text-coffee border border-coffee/30" 
-                      : "text-gray-400 hover:bg-gray-900 hover:text-white"
+                      ? "bg-black text-white" 
+                      : "text-gray-600 hover:bg-gray-100 hover:text-black"
                   }`}
                 >
                   <Shield size={16} />
@@ -479,9 +431,9 @@ export default function PersonalDetails() {
             <div className="flex-1 min-w-0">
               {/* Personal Information Section */}
               {activeSection === "personal" && (
-                <div className="bg-gray-900/30 rounded-2xl border border-gray-800 p-5 sm:p-6 animate-scaleIn">
-                  <h2 className="text-lg font-bold text-white fd mb-5 flex items-center gap-2">
-                    <User size={18} style={{ color: COFFEE }} />
+                <div className="bg-white rounded-2xl border border-gray-200 p-5 sm:p-6 animate-scaleIn shadow-sm">
+                  <h2 className="text-lg font-bold text-gray-900 fd mb-5 flex items-center gap-2">
+                    <User size={18} className="text-black" />
                     Personal Information
                   </h2>
                   
@@ -535,9 +487,9 @@ export default function PersonalDetails() {
 
               {/* Contact Details Section */}
               {activeSection === "contact" && (
-                <div className="bg-gray-900/30 rounded-2xl border border-gray-800 p-5 sm:p-6 animate-scaleIn">
-                  <h2 className="text-lg font-bold text-white fd mb-5 flex items-center gap-2">
-                    <Phone size={18} style={{ color: COFFEE }} />
+                <div className="bg-white rounded-2xl border border-gray-200 p-5 sm:p-6 animate-scaleIn shadow-sm">
+                  <h2 className="text-lg font-bold text-gray-900 fd mb-5 flex items-center gap-2">
+                    <Phone size={18} className="text-black" />
                     Contact Details
                   </h2>
                   
@@ -568,32 +520,32 @@ export default function PersonalDetails() {
 
               {/* Preferences Section */}
               {activeSection === "preferences" && (
-                <div className="bg-gray-900/30 rounded-2xl border border-gray-800 p-5 sm:p-6 animate-scaleIn">
-                  <h2 className="text-lg font-bold text-white fd mb-5 flex items-center gap-2">
-                    <Heart size={18} style={{ color: COFFEE }} />
+                <div className="bg-white rounded-2xl border border-gray-200 p-5 sm:p-6 animate-scaleIn shadow-sm">
+                  <h2 className="text-lg font-bold text-gray-900 fd mb-5 flex items-center gap-2">
+                    <Heart size={18} className="text-black" />
                     Preferences & Notifications
                   </h2>
                   
                   {!isEditing ? (
                     <div className="space-y-1">
                       <InfoField icon={Globe} label="Preferred Language" value={formData.preferredLanguage} />
-                      <div className="flex items-center gap-3 py-3 border-b border-gray-800/50 last:border-0">
-                        <div className="w-9 h-9 rounded-lg bg-gray-800/50 flex items-center justify-center">
-                          <Mail size={16} className="text-gray-400" />
+                      <div className="flex items-center gap-3 py-3 border-b border-gray-100 last:border-0">
+                        <div className="w-9 h-9 rounded-lg bg-gray-100 flex items-center justify-center">
+                          <Mail size={16} className="text-gray-500" />
                         </div>
                         <div className="flex-1">
-                          <p className="text-xs text-gray-500 fs">Email Newsletter</p>
-                          <p className="text-sm text-white fs">{formData.newsletterEnabled ? "Subscribed" : "Not subscribed"}</p>
+                          <p className="text-xs text-gray-400 fs">Email Newsletter</p>
+                          <p className="text-sm text-gray-900 fs">{formData.newsletterEnabled ? "Subscribed" : "Not subscribed"}</p>
                         </div>
                         {formData.newsletterEnabled && <CheckCircle size={14} className="text-green-500" />}
                       </div>
-                      <div className="flex items-center gap-3 py-3 border-b border-gray-800/50 last:border-0">
-                        <div className="w-9 h-9 rounded-lg bg-gray-800/50 flex items-center justify-center">
-                          <Smartphone size={16} className="text-gray-400" />
+                      <div className="flex items-center gap-3 py-3 border-b border-gray-100 last:border-0">
+                        <div className="w-9 h-9 rounded-lg bg-gray-100 flex items-center justify-center">
+                          <Smartphone size={16} className="text-gray-500" />
                         </div>
                         <div className="flex-1">
-                          <p className="text-xs text-gray-500 fs">SMS Updates</p>
-                          <p className="text-sm text-white fs">{formData.smsUpdates ? "Enabled" : "Disabled"}</p>
+                          <p className="text-xs text-gray-400 fs">SMS Updates</p>
+                          <p className="text-sm text-gray-900 fs">{formData.smsUpdates ? "Enabled" : "Disabled"}</p>
                         </div>
                         {formData.smsUpdates && <CheckCircle size={14} className="text-green-500" />}
                       </div>
@@ -611,29 +563,29 @@ export default function PersonalDetails() {
                       />
                       
                       <div className="space-y-3 pt-2">
-                        <label className="flex items-center justify-between cursor-pointer p-3 bg-gray-800/30 rounded-xl">
+                        <label className="flex items-center justify-between cursor-pointer p-3 bg-gray-50 rounded-xl">
                           <div className="flex items-center gap-3">
-                            <Mail size={16} className="text-gray-400" />
-                            <span className="text-sm text-white fs">Email Newsletter</span>
+                            <Mail size={16} className="text-gray-500" />
+                            <span className="text-sm text-gray-900 fs">Email Newsletter</span>
                           </div>
                           <button
                             type="button"
                             onClick={() => setFormData(prev => ({ ...prev, newsletterEnabled: !prev.newsletterEnabled }))}
-                            className={`w-11 h-6 rounded-full transition-all duration-200 ${formData.newsletterEnabled ? "bg-coffee" : "bg-gray-700"}`}
+                            className={`w-11 h-6 rounded-full transition-all duration-200 ${formData.newsletterEnabled ? "bg-black" : "bg-gray-300"}`}
                           >
                             <div className={`w-5 h-5 rounded-full bg-white transition-all duration-200 transform ${formData.newsletterEnabled ? "translate-x-5" : "translate-x-0.5"}`} />
                           </button>
                         </label>
                         
-                        <label className="flex items-center justify-between cursor-pointer p-3 bg-gray-800/30 rounded-xl">
+                        <label className="flex items-center justify-between cursor-pointer p-3 bg-gray-50 rounded-xl">
                           <div className="flex items-center gap-3">
-                            <Smartphone size={16} className="text-gray-400" />
-                            <span className="text-sm text-white fs">SMS Updates</span>
+                            <Smartphone size={16} className="text-gray-500" />
+                            <span className="text-sm text-gray-900 fs">SMS Updates</span>
                           </div>
                           <button
                             type="button"
                             onClick={() => setFormData(prev => ({ ...prev, smsUpdates: !prev.smsUpdates }))}
-                            className={`w-11 h-6 rounded-full transition-all duration-200 ${formData.smsUpdates ? "bg-coffee" : "bg-gray-700"}`}
+                            className={`w-11 h-6 rounded-full transition-all duration-200 ${formData.smsUpdates ? "bg-black" : "bg-gray-300"}`}
                           >
                             <div className={`w-5 h-5 rounded-full bg-white transition-all duration-200 transform ${formData.smsUpdates ? "translate-x-5" : "translate-x-0.5"}`} />
                           </button>
@@ -646,44 +598,44 @@ export default function PersonalDetails() {
 
               {/* Security Section */}
               {activeSection === "security" && (
-                <div className="bg-gray-900/30 rounded-2xl border border-gray-800 p-5 sm:p-6 animate-scaleIn">
-                  <h2 className="text-lg font-bold text-white fd mb-5 flex items-center gap-2">
-                    <Shield size={18} style={{ color: COFFEE }} />
+                <div className="bg-white rounded-2xl border border-gray-200 p-5 sm:p-6 animate-scaleIn shadow-sm">
+                  <h2 className="text-lg font-bold text-gray-900 fd mb-5 flex items-center gap-2">
+                    <Shield size={18} className="text-black" />
                     Security Settings
                   </h2>
                   
                   <div className="space-y-4">
-                    <button className="w-full flex items-center justify-between p-4 bg-gray-800/30 rounded-xl hover:bg-gray-800/50 transition-all group">
+                    <button className="w-full flex items-center justify-between p-4 bg-gray-50 rounded-xl hover:bg-gray-100 transition-all group">
                       <div className="flex items-center gap-3">
-                        <Lock size={16} className="text-gray-400 group-hover:text-coffee transition-colors" />
+                        <Lock size={16} className="text-gray-500 group-hover:text-black transition-colors" />
                         <div className="text-left">
-                          <p className="text-sm font-medium text-white fs">Change Password</p>
-                          <p className="text-xs text-gray-500 fs">Update your password regularly</p>
+                          <p className="text-sm font-medium text-gray-900 fs">Change Password</p>
+                          <p className="text-xs text-gray-400 fs">Update your password regularly</p>
                         </div>
                       </div>
-                      <ChevronRight size={16} className="text-gray-500 group-hover:text-coffee transition-colors" />
+                      <ChevronRight size={16} className="text-gray-400 group-hover:text-black transition-colors" />
                     </button>
                     
-                    <button className="w-full flex items-center justify-between p-4 bg-gray-800/30 rounded-xl hover:bg-gray-800/50 transition-all group">
+                    <button className="w-full flex items-center justify-between p-4 bg-gray-50 rounded-xl hover:bg-gray-100 transition-all group">
                       <div className="flex items-center gap-3">
-                        <Shield size={16} className="text-gray-400 group-hover:text-coffee transition-colors" />
+                        <Shield size={16} className="text-gray-500 group-hover:text-black transition-colors" />
                         <div className="text-left">
-                          <p className="text-sm font-medium text-white fs">Two-Factor Authentication</p>
-                          <p className="text-xs text-gray-500 fs">Add an extra layer of security</p>
+                          <p className="text-sm font-medium text-gray-900 fs">Two-Factor Authentication</p>
+                          <p className="text-xs text-gray-400 fs">Add an extra layer of security</p>
                         </div>
                       </div>
-                      <ChevronRight size={16} className="text-gray-500 group-hover:text-coffee transition-colors" />
+                      <ChevronRight size={16} className="text-gray-400 group-hover:text-black transition-colors" />
                     </button>
                     
-                    <button className="w-full flex items-center justify-between p-4 bg-gray-800/30 rounded-xl hover:bg-gray-800/50 transition-all group">
+                    <button className="w-full flex items-center justify-between p-4 bg-gray-50 rounded-xl hover:bg-gray-100 transition-all group">
                       <div className="flex items-center gap-3">
-                        <Smartphone size={16} className="text-gray-400 group-hover:text-coffee transition-colors" />
+                        <Smartphone size={16} className="text-gray-500 group-hover:text-black transition-colors" />
                         <div className="text-left">
-                          <p className="text-sm font-medium text-white fs">Active Sessions</p>
-                          <p className="text-xs text-gray-500 fs">Manage devices where you're logged in</p>
+                          <p className="text-sm font-medium text-gray-900 fs">Active Sessions</p>
+                          <p className="text-xs text-gray-400 fs">Manage devices where you're logged in</p>
                         </div>
                       </div>
-                      <ChevronRight size={16} className="text-gray-500 group-hover:text-coffee transition-colors" />
+                      <ChevronRight size={16} className="text-gray-400 group-hover:text-black transition-colors" />
                     </button>
                   </div>
                 </div>

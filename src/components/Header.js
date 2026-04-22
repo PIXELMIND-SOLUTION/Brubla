@@ -245,7 +245,7 @@ const SearchOverlay = ({ open, onClose }) => {
                         <ArrowLeftIcon c="w-5 h-5" />
                     </button>
                     <div className="flex-1 flex items-center gap-2.5 rounded-full px-4 py-2.5"
-                        style={{ background: "#f9f5f0", border: "1.5px solid #000", boxShadow: "0 0 0 3px rgba(111,78,55,0.08)" }}>
+                        style={{ background: "#fff", border: "1.5px solid #000", boxShadow: "0 0 0 3px rgba(111,78,55,0.08)" }}>
                         <SearchIcon c="w-4 h-4 flex-shrink-0 opacity-50" />
                         <input ref={inputRef} type="text" placeholder="Search products, brands, categories…"
                             value={q} onChange={e => setQ(e.target.value)}
@@ -259,11 +259,11 @@ const SearchOverlay = ({ open, onClose }) => {
                         <div className="pt-4">
                             {filtered.length > 0 ? (
                                 <>
-                                    <p className="text-[9px] font-black uppercase tracking-widest mb-2" style={{ color: "#7a6a5a" }}>Suggestions</p>
+                                    <p className="text-[9px] font-black uppercase tracking-widest mb-2" style={{ color: "#000" }}>Suggestions</p>
                                     {filtered.map(s => (
                                         <button key={s.label} className="w-full flex items-center justify-between py-2.5 px-1 rounded-xl transition-colors hover:bg-[#f9f5f0]" onClick={onClose}>
                                             <div className="flex items-center gap-3">
-                                                <div className="w-7 h-7 rounded-full flex items-center justify-center flex-shrink-0" style={{ background: "#f9f5f0" }}><SearchIcon c="w-3.5 h-3.5 opacity-50" /></div>
+                                                <div className="w-7 h-7 rounded-full flex items-center justify-center flex-shrink-0" style={{ background: "#fff" }}><SearchIcon c="w-3.5 h-3.5 opacity-50" /></div>
                                                 <span className="text-sm font-medium" style={{ color: "#000" }}>{s.label}</span>
                                             </div>
                                             <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full" style={{ background: "#f9f5f0", color: "#7a6a5a" }}>{s.tag}</span>
@@ -284,13 +284,13 @@ const SearchOverlay = ({ open, onClose }) => {
                             {RECENT.length > 0 && (
                                 <div className="pt-5">
                                     <div className="flex items-center justify-between mb-2">
-                                        <p className="text-[9px] font-black uppercase tracking-widest" style={{ color: "#7a6a5a" }}>Recent</p>
+                                        <p className="text-[9px] font-black uppercase tracking-widest" style={{ color: "#000" }}>Recent</p>
                                         <button className="text-[10px] font-semibold" style={{ color: "#000" }}>Clear all</button>
                                     </div>
                                     <div className="flex flex-wrap gap-2">
                                         {RECENT.map(r => (
                                             <button key={r} className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium transition-colors hover:bg-[#f0ebe4]"
-                                                style={{ background: "#f9f5f0", color: "#333", border: "1px solid rgba(111,78,55,0.15)" }} onClick={onClose}>
+                                                style={{ background: "#fff", color: "#000", border: "1px solid rgba(0, 0, 0, 1)" }} onClick={onClose}>
                                                 <ClockIcon c="w-3 h-3 opacity-40" />{r}
                                             </button>
                                         ))}
@@ -300,12 +300,12 @@ const SearchOverlay = ({ open, onClose }) => {
                             <div className="pt-5">
                                 <div className="flex items-center gap-1.5 mb-3">
                                     <TrendingIcon c="w-3.5 h-3.5" />
-                                    <p className="text-[9px] font-black uppercase tracking-widest" style={{ color: "#7a6a5a" }}>Trending Now</p>
+                                    <p className="text-[9px] font-black uppercase tracking-widest" style={{ color: "#000" }}>Trending Now</p>
                                 </div>
                                 <div className="flex flex-wrap gap-2">
                                     {TRENDING.map((t, i) => (
                                         <button key={t} className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold transition-all hover:scale-105"
-                                            style={{ background: i === 0 ? "linear-gradient(135deg,#000,#1a1a1a)" : "#f9f5f0", color: i === 0 ? "#000" : "#333", border: i === 0 ? "none" : "1px solid rgba(111,78,55,0.15)" }}
+                                            style={{ background: i === 0 ? "linear-gradient(135deg,#fff,#fff)" : "#fff", color: "#000", border: "1px solid rgba(0, 0, 0, 1)" }}
                                             onClick={onClose}>
                                             {i === 0 && <ZapIcon c="w-2.5 h-2.5" />}{t}
                                         </button>
@@ -313,13 +313,13 @@ const SearchOverlay = ({ open, onClose }) => {
                                 </div>
                             </div>
                             <div className="pt-5">
-                                <p className="text-[9px] font-black uppercase tracking-widest mb-3" style={{ color: "#7a6a5a" }}>Popular Categories</p>
+                                <p className="text-[9px] font-black uppercase tracking-widest mb-3" style={{ color: "#000" }}>Popular Categories</p>
                                 <div className="grid grid-cols-2 gap-2">
                                     {SUGGESTIONS.slice(0, 4).map(s => (
                                         <button key={s.label} className="flex items-center justify-between px-3 py-2.5 rounded-xl transition-colors hover:bg-[#f0ebe4] text-left"
-                                            style={{ background: "#f9f5f0", border: "1px solid rgba(111,78,55,0.12)" }} onClick={onClose}>
+                                            style={{ background: "#fff", border: "1px solid rgba(0, 0, 0, 1)" }} onClick={onClose}>
                                             <span className="text-xs font-semibold" style={{ color: "#000" }}>{s.label}</span>
-                                            <span className="text-[9px] font-medium" style={{ color: "#7a6a5a" }}>{s.tag}</span>
+                                            <span className="text-[9px] font-medium" style={{ color: "#0c0c0c" }}>{s.tag}</span>
                                         </button>
                                     ))}
                                 </div>
@@ -416,45 +416,94 @@ const LocationSelector = () => {
 // COLLECTIONS HOVER PANEL
 // ─────────────────────────────────────────────────────────────────────────────
 const collectionItems = [
-    { title: "Valentine Special", img: "/collection.png" },
-    { title: "Caps", img: "/collection.png" },
-    { title: "Winter Collection", img: "/collection.png" },
-    { title: "Bluorng Racing Club", img: "/collection.png" },
-    { title: "Bluorng Basics", img: "/collection.png" },
-    { title: "Yacht Collection", img: "/collection.png" },
+    { id: 1, title: "Global Collections", img: "https://images.unsplash.com/photo-1556906781-9a412961c28c?w=800&h=1200&fit=crop&q=80&auto=format" },
+    { id: 2, title: "Luxury Collections", img: "https://images.unsplash.com/photo-1539008835657-9e8e9680c956?w=800&h=1000&fit=crop&q=80&auto=format" },
+    { id: 3, title: "Originals by Brubla", img: "https://images.unsplash.com/photo-1617137968427-85924c800a22?w=800&h=1300&fit=crop&q=80&auto=format" },
+    { id: 4, title: "Indian Roots", img: "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=800&h=1400&fit=crop&q=80&auto=format" },
+    { id: 5, title: "Weddings & Celebrations", img: "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=800&h=1400&fit=crop&q=80&auto=format" },
+    { id: 6, title: "Street Style Edit", img: "https://images.unsplash.com/photo-1556821840-3a63f95609a7?w=800&h=1200&fit=crop&q=80&auto=format" },
+    { id: 7, title: "Sustainable Fashion", img: "https://images.unsplash.com/photo-1523381210434-271e8be1f52b?w=800&h=1150&fit=crop&q=80&auto=format" },
+    { id: 8, title: "Accessories Edit", img: "https://images.unsplash.com/photo-1611591437281-460bfbe1220a?w=800&h=1000&fit=crop&q=80&auto=format" },
 ];
 
-const CollectionsPanel = ({ show, onMouseEnter, onMouseLeave, navbarHeight }) => (
-    <div
-        onMouseEnter={onMouseEnter}
-        onMouseLeave={onMouseLeave}
-        className="fixed left-0 w-full z-40 transition-all duration-300"
-        style={{
-            top: `${navbarHeight}px`,
-            background: "#f9f5f0",
-            borderBottom: "1px solid rgba(111,78,55,0.15)",
-            boxShadow: "0 8px 32px rgba(0,0,0,0.08)",
-            opacity: show ? 1 : 0,
-            pointerEvents: show ? "auto" : "none",
-            transform: show ? "translateY(0)" : "translateY(-8px)",
-        }}
-    >
-        <div className="px-6 md:px-10 py-6">
-            <p className="text-[9px] font-black uppercase tracking-widest mb-4" style={{ color: "#7a6a5a" }}>Collections</p>
-            <div className="flex gap-4 overflow-x-auto pb-2" style={{ scrollbarWidth: "none" }}>
-                {collectionItems.map((item, i) => (
-                    <div key={i} className="min-w-[160px] cursor-pointer group flex-shrink-0">
-                        <div className="rounded-2xl overflow-hidden" style={{ border: "1px solid rgba(111,78,55,0.15)" }}>
-                            <img src={item.img} alt={item.title} className="w-full h-44 object-cover group-hover:scale-105 transition-transform duration-300"
-                                onError={e => { e.target.style.background = "#e8ddd5"; e.target.style.minHeight = "176px"; }} />
+
+const CollectionsPanel = ({
+    show,
+    onMouseEnter,
+    onMouseLeave,
+    navbarHeight,
+}) => {
+    const navigate = useNavigate();
+
+    return (
+        <div
+            onMouseEnter={onMouseEnter}
+            onMouseLeave={onMouseLeave}
+            className="fixed left-0 w-full z-40 transition-all duration-300"
+            style={{
+                top: `${navbarHeight}px`,
+                background: "#f9f5f0",
+                borderBottom: "1px solid rgba(111,78,55,0.15)",
+                boxShadow: "0 12px 40px rgba(0,0,0,0.08)",
+                opacity: show ? 1 : 0,
+                pointerEvents: show ? "auto" : "none",
+                transform: show ? "translateY(0)" : "translateY(-10px)",
+            }}
+        >
+            {/* Hide scrollbar */}
+            <style>{`.hide-scrollbar::-webkit-scrollbar{display:none}`}</style>
+
+            <div className="px-4 md:px-8 lg:px-12 py-6">
+                {/* Header */}
+                <p className="text-[10px] font-black uppercase tracking-[0.2em] mb-5 text-[#7a6a5a]">
+                    Collections
+                </p>
+
+                {/* Cards */}
+                <div
+                    className="hide-scrollbar flex gap-4 md:gap-5 overflow-x-auto pb-2"
+                    style={{
+                        scrollbarWidth: "none",
+                        WebkitOverflowScrolling: "touch",
+                    }}
+                >
+                    {collectionItems.map((item, i) => (
+                        <div
+                            key={i}
+                            onClick={() => navigate(`/collections/${item.id}`)}
+                            className="min-w-[160px] sm:min-w-[180px] md:min-w-[200px] flex-shrink-0 cursor-pointer group"
+                        >
+                            {/* Image Card */}
+                            <div
+                                className="relative overflow-hidden rounded-2xl bg-white transition-all duration-500
+                shadow-[0_6px_18px_rgba(0,0,0,0.08)]
+                group-hover:shadow-[0_20px_50px_rgba(0,0,0,0.18)]"
+                            >
+                                <img
+                                    src={item.img}
+                                    alt={item.title}
+                                    className="w-full h-40 sm:h-44 md:h-48 object-cover transition-transform duration-500 ease-[cubic-bezier(0.25,0.46,0.45,0.94)] group-hover:scale-105"
+                                    onError={(e) => {
+                                        e.target.style.background = "#e8ddd5";
+                                        e.target.style.minHeight = "176px";
+                                    }}
+                                />
+
+                                {/* subtle overlay */}
+                                <div className="absolute inset-0 bg-gradient-to-t from-black/10 to-transparent opacity-0 group-hover:opacity-100 transition" />
+                            </div>
+
+                            {/* Title */}
+                            <p className="text-xs sm:text-sm font-semibold mt-2 text-center text-[#2f2f2f] tracking-tight">
+                                {item.title}
+                            </p>
                         </div>
-                        <p className="text-xs font-semibold mt-2 text-center" style={{ color: "#333" }}>{item.title}</p>
-                    </div>
-                ))}
+                    ))}
+                </div>
             </div>
         </div>
-    </div>
-);
+    );
+};
 
 // ─────────────────────────────────────────────────────────────────────────────
 // MEGA MENU PANEL
@@ -479,7 +528,7 @@ const MegaMenuPanel = ({ show, onClose, navbarHeight }) => (
             <div className="grid grid-cols-2 md:grid-cols-5 gap-6">
                 <div className="space-y-3">
                     <p className="text-[9px] font-black uppercase tracking-widest mb-3" style={{ color: "#7a6a5a" }}>Featured</p>
-                    {["New Arrivals", "Winter Collection 2025", "Basics", "Bluorng Racing Club", "Iconics"].map(item => (
+                    {["New Arrivals", "Winter Collection 2025", "Basics", "Brubla Racing Club", "Iconics"].map(item => (
                         <p key={item} className="text-sm font-semibold cursor-pointer transition-colors hover:text-[#000]" style={{ color: "#000" }}>{item}</p>
                     ))}
                 </div>

@@ -65,7 +65,7 @@ const filterOptions = {
   ],
 };
 
-const COFFEE = "#C9A96E";
+const COFFEE = "#000";
 
 // ─── Tag badge (Light Theme) ───────────────────────────────────────────────────
 const TAG_STYLES = {

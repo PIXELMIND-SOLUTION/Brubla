@@ -335,7 +335,7 @@ export default function RecommendedProducts() {
     <section className="w-full py-8 md:py-12 bg-white overflow-hidden" aria-label="Recommended Products">
       <style>{`.prod-track::-webkit-scrollbar{display:none}`}</style>
 
-      <div className="max-w-[1600px] mx-auto">
+      <div className="max-w-7xl mx-auto">
 
         {/* ── HEADER ── */}
         <div
