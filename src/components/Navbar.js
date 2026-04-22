@@ -508,70 +508,139 @@ const CollectionsPanel = ({
 // ─────────────────────────────────────────────────────────────────────────────
 // MEGA MENU PANEL
 // ─────────────────────────────────────────────────────────────────────────────
-const MegaMenuPanel = ({ show, onClose, navbarHeight }) => (
-    <div
-        className="fixed left-0 w-full z-40 transition-all duration-300"
-        style={{
-            top: `${navbarHeight}px`,
-            background: "#f9f5f0",
-            borderBottom: "1px solid rgba(111,78,55,0.15)",
-            boxShadow: "0 8px 32px rgba(0,0,0,0.1)",
-            opacity: show ? 1 : 0,
-            pointerEvents: show ? "auto" : "none",
-            transform: show ? "translateY(0)" : "translateY(-8px)",
-        }}
-    >
-        <div className="px-6 md:px-10 py-6 relative">
-            <button onClick={onClose} className="absolute top-4 right-5 p-2 rounded-full transition-colors hover:bg-[#ece5de]" style={{ color: "#333" }}>
-                <CloseIcon c="w-4 h-4" />
-            </button>
-            <div className="grid grid-cols-2 md:grid-cols-5 gap-6">
-                <div className="space-y-3">
-                    <p className="text-[9px] font-black uppercase tracking-widest mb-3" style={{ color: "#7a6a5a" }}>Featured</p>
-                    {["New Arrivals", "Winter Collection 2025", "Basics", "Brubla Racing Club", "Iconics"].map(item => (
-                        <p key={item} className="text-sm font-semibold cursor-pointer transition-colors hover:text-[#000]" style={{ color: "#000" }}>{item}</p>
-                    ))}
-                </div>
-                <div>
-                    <h3 className="text-[9px] font-black uppercase tracking-widest mb-3" style={{ color: "#7a6a5a" }}>Top</h3>
-                    <div className="flex flex-wrap gap-2">
-                        {["T-Shirts", "Polos", "Shirts", "Sweatshirts", "Hoodies", "Jackets"].map(i => (
-                            <span key={i} className="px-3 py-1.5 rounded-full text-xs font-medium cursor-pointer transition-colors hover:bg-[#ece5de]"
-                                style={{ background: "#fff", color: "#333", border: "1px solid rgba(111,78,55,0.15)" }}>{i}</span>
-                        ))}
-                    </div>
-                </div>
-                <div>
-                    <h3 className="text-[9px] font-black uppercase tracking-widest mb-3" style={{ color: "#7a6a5a" }}>Bottom</h3>
-                    <div className="flex flex-wrap gap-2">
-                        {["Cargos", "Jeans", "Pants", "Shorts"].map(i => (
-                            <span key={i} className="px-3 py-1.5 rounded-full text-xs font-medium cursor-pointer transition-colors hover:bg-[#ece5de]"
-                                style={{ background: "#fff", color: "#333", border: "1px solid rgba(111,78,55,0.15)" }}>{i}</span>
-                        ))}
-                    </div>
-                </div>
-                <div>
-                    <h3 className="text-[9px] font-black uppercase tracking-widest mb-3" style={{ color: "#7a6a5a" }}>Accessories</h3>
-                    <div className="flex flex-wrap gap-2">
-                        {["Bags", "Caps"].map(i => (
-                            <span key={i} className="px-3 py-1.5 rounded-full text-xs font-medium cursor-pointer transition-colors hover:bg-[#ece5de]"
-                                style={{ background: "#fff", color: "#333", border: "1px solid rgba(111,78,55,0.15)" }}>{i}</span>
-                        ))}
-                    </div>
-                </div>
-                <div>
-                    <h3 className="text-[9px] font-black uppercase tracking-widest mb-3" style={{ color: "#7a6a5a" }}>Shop by color</h3>
-                    <div className="flex flex-wrap gap-2">
-                        {["Blues", "Browns", "Greens", "Neutrals", "Purples", "Reds"].map(i => (
-                            <span key={i} className="px-3 py-1.5 rounded-full text-xs font-medium cursor-pointer transition-colors hover:bg-[#ece5de]"
-                                style={{ background: "#fff", color: "#333", border: "1px solid rgba(111,78,55,0.15)" }}>{i}</span>
-                        ))}
-                    </div>
+const MegaMenuPanel = ({ show, onClose, navbarHeight }) => {
+    const navigate = useNavigate();
+
+    const Section = ({ title, children }) => (
+        <div>
+            <h3 className="text-[10px] font-black uppercase tracking-[0.18em] mb-3 text-[#7a6a5a]">
+                {title}
+            </h3>
+            {children}
+        </div>
+    );
+
+    const Pill = ({ label, onClick }) => (
+        <span
+            onClick={onClick}
+            className="px-3 py-1.5 rounded-full text-xs font-medium cursor-pointer
+      bg-white border border-[rgba(111,78,55,0.15)] text-[#333]
+      transition-all duration-300
+      hover:bg-[#ece5de] hover:scale-[1.04] active:scale-95"
+        >
+            {label}
+        </span>
+    );
+
+    return (
+        <div
+            className="fixed left-0 w-full z-40 transition-all duration-300"
+            style={{
+                top: `${navbarHeight}px`,
+                background: "#f9f5f0",
+                borderBottom: "1px solid rgba(111,78,55,0.15)",
+                boxShadow: "0 12px 40px rgba(0,0,0,0.1)",
+                opacity: show ? 1 : 0,
+                pointerEvents: show ? "auto" : "none",
+                transform: show ? "translateY(0)" : "translateY(-10px)",
+            }}
+        >
+            <div className="px-4 md:px-8 lg:px-12 py-8 relative">
+                {/* Close Button */}
+                <button
+                    onClick={onClose}
+                    className="absolute top-4 right-5 w-9 h-9 flex items-center justify-center rounded-full
+          bg-white border border-[rgba(111,78,55,0.2)]
+          shadow hover:bg-[#ece5de] transition"
+                >
+                    ✕
+                </button>
+
+                {/* GRID */}
+                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-6 md:gap-8">
+
+                    {/* Featured */}
+                    <Section title="Featured">
+                        <div className="space-y-2">
+                            {[
+                                "New Arrivals",
+                                "Winter Collection 2025",
+                                "Basics",
+                                "Brubla Racing Club",
+                                "Iconics",
+                            ].map((item) => (
+                                <p
+                                    key={item}
+                                    onClick={() => navigate(`/products`)}
+                                    className="text-sm font-semibold text-[#1f1f1f] cursor-pointer
+                  transition-all duration-200 hover:translate-x-1 hover:text-black"
+                                >
+                                    {item}
+                                </p>
+                            ))}
+                        </div>
+                    </Section>
+
+                    {/* Top */}
+                    <Section title="Top">
+                        <div className="flex flex-wrap gap-2">
+                            {["T-Shirts", "Polos", "Shirts", "Sweatshirts", "Hoodies", "Jackets"].map(
+                                (item) => (
+                                    <Pill
+                                        key={item}
+                                        label={item}
+                                        onClick={() => navigate(`/products?category=${item}`)}
+                                    />
+                                )
+                            )}
+                        </div>
+                    </Section>
+
+                    {/* Bottom */}
+                    <Section title="Bottom">
+                        <div className="flex flex-wrap gap-2">
+                            {["Cargos", "Jeans", "Pants", "Shorts"].map((item) => (
+                                <Pill
+                                    key={item}
+                                    label={item}
+                                    onClick={() => navigate(`/products?category=${item}`)}
+                                />
+                            ))}
+                        </div>
+                    </Section>
+
+                    {/* Sizes */}
+                    <Section title="Sizes">
+                        <div className="flex flex-wrap gap-2">
+                            {["XXXS", "XXS", "XS", "S", "M", "L", "XL", "XXL", "XXXL", "W26", "W28", "W30", "W32", "W34"].map((item) => (
+                                <Pill
+                                    key={item}
+                                    label={item}
+                                    onClick={() => navigate(`/products?size=${item}`)}
+                                />
+                            ))}
+                        </div>
+                    </Section>
+
+                    {/* Colors */}
+                    <Section title="Shop by color">
+                        <div className="flex flex-wrap gap-2">
+                            {["Blues", "Browns", "Greens", "Neutrals", "Purples", "Reds"].map(
+                                (item) => (
+                                    <Pill
+                                        key={item}
+                                        label={item}
+                                        onClick={() => navigate(`/products?color=${item}`)}
+                                    />
+                                )
+                            )}
+                        </div>
+                    </Section>
                 </div>
             </div>
         </div>
-    </div>
-);
+    );
+};
 
 // ─────────────────────────────────────────────────────────────────────────────
 // SIDEBAR

@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from "react";
+import { useSearchParams, useNavigate } from "react-router-dom";
 import Header from "../components/Header";
 
 // ─── Data ────────────────────────────────────────────────────────────────────
@@ -40,6 +41,26 @@ const COLOR_GROUPS = [
     { label: "Reds", colors: ["#dc2626", "#f87171", "#991b1b"] },
 ];
 
+// ─── Helper: Parse query params ───────────────────────────────────────────────
+
+function parseFiltersFromParams(searchParams) {
+    return {
+        sizes: searchParams.getAll("size"),
+        types: searchParams.getAll("type"),
+        colors: searchParams.getAll("color"),
+        availability: searchParams.get("availability") || "all",
+    };
+}
+
+function updateUrlParams(searchParams, filters, setSearchParams) {
+    const newParams = new URLSearchParams();
+    filters.sizes.forEach(s => newParams.append("size", s));
+    filters.types.forEach(t => newParams.append("type", t));
+    filters.colors.forEach(c => newParams.append("color", c));
+    if (filters.availability !== "all") newParams.set("availability", filters.availability);
+    setSearchParams(newParams, { replace: true });
+}
+
 // ─── Sub-components ───────────────────────────────────────────────────────────
 
 function BookmarkIcon({ saved, onToggle }) {
@@ -57,14 +78,14 @@ function BookmarkIcon({ saved, onToggle }) {
     );
 }
 
-function ProductCard({ product }) {
+function ProductCard({ onClick, product }) {
     const [saved, setSaved] = useState(false);
     const discount = product.originalPrice
         ? Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100)
         : null;
 
     return (
-        <div className="group relative cursor-pointer" style={{ fontFamily: "'DM Sans', sans-serif" }}>
+        <div onClick={onClick} className="group relative cursor-pointer" style={{ fontFamily: "'DM Sans', sans-serif" }}>
             {/* Image */}
             <div className="relative overflow-hidden rounded-xl aspect-[3/4] bg-gray-100">
                 <img
@@ -133,7 +154,7 @@ function FilterSection({ title, children }) {
     );
 }
 
-function FilterDrawer({ open, onClose, filters, setFilters }) {
+function FilterDrawer({ open, onClose, filters, setFilters, onApply }) {
     const totalActive =
         filters.sizes.length + filters.types.length + filters.colors.length +
         (filters.availability !== "all" ? 1 : 0);
@@ -149,7 +170,10 @@ function FilterDrawer({ open, onClose, filters, setFilters }) {
         setFilters({ sizes: [], types: [], colors: [], availability: "all" });
     }
 
-    function apply() { onClose(); }
+    function handleApply() {
+        onApply(filters);
+        onClose();
+    }
 
     return (
         <>
@@ -253,7 +277,7 @@ function FilterDrawer({ open, onClose, filters, setFilters }) {
                         Remove All
                     </button>
                     <button
-                        onClick={apply}
+                        onClick={handleApply}
                         className="flex-1 py-3 rounded-full bg-black text-white text-xs font-semibold tracking-widest uppercase hover:bg-gray-900 transition-colors"
                     >
                         Apply
@@ -267,10 +291,28 @@ function FilterDrawer({ open, onClose, filters, setFilters }) {
 // ─── Main Page ────────────────────────────────────────────────────────────────
 
 export default function AllProducts() {
+    const [searchParams, setSearchParams] = useSearchParams();
+    const navigate = useNavigate();
     const [activeCategory, setActiveCategory] = useState("View all");
     const [filterOpen, setFilterOpen] = useState(false);
-    const [filters, setFilters] = useState({ sizes: [], types: [], colors: [], availability: "all" });
+    const [tempFilters, setTempFilters] = useState({ sizes: [], types: [], colors: [], availability: "all" });
+    const [filters, setFilters] = useState(() => parseFiltersFromParams(searchParams));
     const navRef = useRef(null);
+
+    // Sync URL changes to filters
+    useEffect(() => {
+        setFilters(parseFiltersFromParams(searchParams));
+    }, [searchParams]);
+
+    // Sync category from URL
+    useEffect(() => {
+        const cat = searchParams.get("category");
+        if (cat && NAV_CATEGORIES.includes(cat)) {
+            setActiveCategory(cat);
+        } else if (!cat) {
+            setActiveCategory("View all");
+        }
+    }, [searchParams]);
 
     // Filtered products
     const filtered = allProducts.filter(p => {
@@ -285,6 +327,41 @@ export default function AllProducts() {
     const activeFilterCount =
         filters.sizes.length + filters.types.length + filters.colors.length +
         (filters.availability !== "all" ? 1 : 0);
+
+    // Handlers
+    const handleCategoryClick = (cat) => {
+        setActiveCategory(cat);
+        const newParams = new URLSearchParams(searchParams);
+        if (cat === "View all") {
+            newParams.delete("category");
+        } else {
+            newParams.set("category", cat);
+        }
+        setSearchParams(newParams, { replace: true });
+    };
+
+    const handleApplyFilters = (newFilters) => {
+        updateUrlParams(searchParams, newFilters, setSearchParams);
+        setFilters(newFilters);
+    };
+
+    const handleClearFilters = () => {
+        const emptyFilters = { sizes: [], types: [], colors: [], availability: "all" };
+        updateUrlParams(searchParams, emptyFilters, setSearchParams);
+        setFilters(emptyFilters);
+    };
+
+    const handleResetAll = () => {
+        handleClearFilters();
+        setActiveCategory("View all");
+        setSearchParams(new URLSearchParams(), { replace: true });
+    };
+
+    // Open filter drawer with current filters
+    const openFilterDrawer = () => {
+        setTempFilters(filters);
+        setFilterOpen(true);
+    };
 
     // Horizontal scroll with mouse drag on category bar
     useEffect(() => {
@@ -328,7 +405,7 @@ export default function AllProducts() {
                                 {NAV_CATEGORIES.map(cat => (
                                     <button
                                         key={cat}
-                                        onClick={() => setActiveCategory(cat)}
+                                        onClick={() => handleCategoryClick(cat)}
                                         className={`flex-shrink-0 px-4 py-2 rounded-full text-xs font-semibold tracking-wide border transition-all duration-200 whitespace-nowrap ${activeCategory === cat ? "bg-black text-white border-black" : "bg-white text-gray-700 border-gray-200 hover:border-gray-400"}`}
                                     >
                                         {cat}
@@ -345,7 +422,7 @@ export default function AllProducts() {
                                     </svg>
                                 </button>
                                 <button
-                                    onClick={() => setFilterOpen(true)}
+                                    onClick={openFilterDrawer}
                                     className="relative flex items-center gap-2 px-4 py-2 rounded-full border border-gray-200 text-xs font-semibold tracking-wide text-gray-700 hover:border-gray-400 transition-all duration-200 whitespace-nowrap"
                                 >
                                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -373,7 +450,7 @@ export default function AllProducts() {
                         </p>
                         {activeFilterCount > 0 && (
                             <button
-                                onClick={() => setFilters({ sizes: [], types: [], colors: [], availability: "all" })}
+                                onClick={handleClearFilters}
                                 className="text-xs text-gray-400 hover:text-gray-700 underline transition-colors"
                             >
                                 Clear filters
@@ -387,7 +464,7 @@ export default function AllProducts() {
                             <p className="text-lg font-semibold text-gray-700 mb-2">No products found</p>
                             <p className="text-sm text-gray-400">Try adjusting your category or filters</p>
                             <button
-                                onClick={() => { setActiveCategory("View all"); setFilters({ sizes: [], types: [], colors: [], availability: "all" }); }}
+                                onClick={handleResetAll}
                                 className="mt-5 px-6 py-2.5 rounded-full bg-black text-white text-xs font-semibold tracking-widest uppercase"
                             >
                                 Reset
@@ -396,7 +473,7 @@ export default function AllProducts() {
                     ) : (
                         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-4 gap-x-4 gap-y-8 sm:gap-x-5 sm:gap-y-10">
                             {filtered.map(product => (
-                                <ProductCard key={product.id} product={product} />
+                                <ProductCard key={product.id} onClick={()=>navigate(`/product/${product.id}`)} product={product} />
                             ))}
                         </div>
                     )}
@@ -406,8 +483,9 @@ export default function AllProducts() {
                 <FilterDrawer
                     open={filterOpen}
                     onClose={() => setFilterOpen(false)}
-                    filters={filters}
-                    setFilters={setFilters}
+                    filters={tempFilters}
+                    setFilters={setTempFilters}
+                    onApply={handleApplyFilters}
                 />
             </div>
         </>
