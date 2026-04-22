@@ -1,10 +1,8 @@
-// AllCollections.jsx
 import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
-import Navbar from "../components/Navbar";
 import Header from "../components/Header";
 
-const COFFEE = "#C9A96E";
+const COFFEE = "#000";
 
 // Styles
 const Styles = () => (
@@ -145,7 +143,7 @@ const COLLECTIONS = [
     }
 ];
 
-// Collection Card Component
+// Collection Card Component (Light Theme)
 const CollectionCard = ({ collection, index, onClick }) => {
     const [visible, setVisible] = useState(false);
     const [hovered, setHovered] = useState(false);
@@ -175,7 +173,7 @@ const CollectionCard = ({ collection, index, onClick }) => {
             onMouseEnter={() => setHovered(true)}
             onMouseLeave={() => setHovered(false)}
         >
-            <div className="relative rounded-2xl overflow-hidden max-w-5xl mx-auto shadow-lg hover:shadow-2xl transition-all duration-500">
+            <div className="relative rounded-2xl overflow-hidden max-w-5xl mx-auto shadow-sm hover:shadow-xl transition-all duration-500 bg-white">
                 {/* Image */}
                 <div className="relative overflow-hidden">
                     <img
@@ -185,16 +183,16 @@ const CollectionCard = ({ collection, index, onClick }) => {
                         style={{
                             transform: hovered ? "scale(1.08)" : "scale(1)",
                             aspectRatio: "auto",
-                            minHeight: "300px",
+                            minHeight: "280px",
                         }}
                         loading="lazy"
                     />
 
-                    {/* Gradient Overlay */}
+                    {/* Gradient Overlay - Light Theme */}
                     <div
                         className="absolute inset-0 transition-opacity duration-500"
                         style={{
-                            background: "linear-gradient(180deg, transparent 0%, rgba(0,0,0,0.2) 50%, rgba(0,0,0,0.85) 100%)",
+                            background: "linear-gradient(180deg, transparent 0%, rgba(0,0,0,0.1) 50%, rgba(0,0,0,0.7) 100%)",
                             opacity: hovered ? 1 : 0.8,
                         }}
                     />
@@ -202,28 +200,27 @@ const CollectionCard = ({ collection, index, onClick }) => {
                     {/* Content */}
                     <div className="absolute inset-0 flex flex-col justify-end p-4 sm:p-5">
                         {/* Icon */}
-                        <div
-                            className="text-3xl mb-2 transition-transform duration-300"
+                        {/* <div
+                            className="text-3xl mb-2 transition-transform duration-300 drop-shadow-lg"
                             style={{ transform: hovered ? "scale(1.1)" : "scale(1)" }}
                         >
                             {collection.icon}
-                        </div>
+                        </div> */}
 
                         {/* Subtitle */}
-                        <p
+                        {/* <p
                             className="text-[9px] sm:text-[10px] font-black uppercase tracking-[0.2em] mb-1"
                             style={{ color: COFFEE }}
                         >
                             {collection.subtitle}
-                        </p>
+                        </p> */}
 
                         {/* Title */}
                         <h3
-                            className="font-black text-white leading-tight mb-2"
+                            className="font-black text-white leading-tight mb-2 drop-shadow-md"
                             style={{
                                 fontSize: "clamp(18px, 4vw, 24px)",
                                 fontFamily: "Playfair Display, Georgia, serif",
-                                textShadow: "0 1px 8px rgba(0,0,0,0.3)"
                             }}
                         >
                             {collection.title}
@@ -231,7 +228,7 @@ const CollectionCard = ({ collection, index, onClick }) => {
 
                         {/* Description - shown on hover */}
                         <p
-                            className="text-gray-200 text-xs fs mb-3 line-clamp-2 transition-all duration-300"
+                            className="text-white/80 text-xs fs mb-3 line-clamp-2 transition-all duration-300 drop-shadow"
                             style={{
                                 opacity: hovered ? 1 : 0,
                                 transform: hovered ? "translateY(0)" : "translateY(10px)",
@@ -250,14 +247,14 @@ const CollectionCard = ({ collection, index, onClick }) => {
                             }}
                         >
                             <div className="flex items-center gap-2">
-                                <span className="text-[9px] font-bold text-white/70 uppercase tracking-wide">Products</span>
-                                <span className="text-sm font-black text-white">{collection.productCount}+</span>
+                                <span className="text-[9px] font-bold text-white/80 uppercase tracking-wide drop-shadow">Products</span>
+                                <span className="text-sm font-black text-white drop-shadow">{collection.productCount}+</span>
                             </div>
 
                             <button
-                                className="flex items-center gap-1.5 px-3 py-1.5 rounded-full font-black text-[10px] tracking-wide transition-all duration-300"
+                                className="flex items-center gap-1.5 px-3 py-1.5 rounded-full font-black text-[10px] tracking-wide transition-all duration-300 shadow-md"
                                 style={{
-                                    background: "#6F4E37",
+                                    background: COFFEE,
                                     color: "#fff",
                                     transform: hovered ? "translateX(0)" : "translateX(5px)",
                                 }}
@@ -275,7 +272,7 @@ const CollectionCard = ({ collection, index, onClick }) => {
     );
 };
 
-// Main All Collections Page
+// Main All Collections Page (Light Theme)
 export default function AllCollections() {
     const navigate = useNavigate();
     const [loading, setLoading] = useState(true);
@@ -295,9 +292,9 @@ export default function AllCollections() {
         return (
             <>
                 <Header />
-                <div className="min-h-screen bg-white flex items-center justify-center">
+                <div className="min-h-screen bg-gray-50 flex items-center justify-center">
                     <div className="text-center px-4">
-                        <div className="w-10 h-10 rounded-full border-2 border-coffee border-t-transparent animate-spin mx-auto mb-3" />
+                        <div className="w-10 h-10 rounded-full border-2 border-coffee border-t-transparent animate-spin mx-auto mb-3" style={{ borderColor: `${COFFEE} transparent ${COFFEE} transparent` }} />
                         <p className="text-gray-500 fs text-sm">Loading collections...</p>
                     </div>
                 </div>
@@ -308,20 +305,21 @@ export default function AllCollections() {
     return (
         <>
             <Header />
-            <div className="min-h-screen bg-black">
+            <div className="min-h-screen bg-gray-50">
                 <Styles />
 
-                {/* Hero Section */}
-                <div className="relative overflow-hidden" style={{ background: "black" }}>
-                    <div className="absolute inset-0 opacity-20">
-                        <div className="absolute top-20 left-10 w-64 h-64 rounded-full bg-coffee/10 blur-3xl" />
-                        <div className="absolute bottom-20 right-10 w-96 h-96 rounded-full bg-coffee/10 blur-3xl" />
+                {/* Hero Section - Light Theme */}
+                <div className="relative overflow-hidden bg-white border-b border-gray-100">
+                    {/* Decorative blobs */}
+                    <div className="absolute inset-0 opacity-30 pointer-events-none">
+                        <div className="absolute top-20 left-10 w-64 h-64 rounded-full bg-coffee/5 blur-3xl" />
+                        <div className="absolute bottom-20 right-10 w-96 h-96 rounded-full bg-coffee/5 blur-3xl" />
                     </div>
 
                     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-16 relative z-10">
                         <button
                             onClick={() => navigate('/')}
-                            className="inline-flex items-center gap-1.5 text-gray-400 hover:text-coffee transition-colors mb-5 sm:mb-6 text-xs sm:text-sm group"
+                            className="inline-flex items-center gap-1.5 text-gray-500 hover:text-coffee transition-colors mb-5 sm:mb-6 text-xs sm:text-sm group"
                         >
                             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} className="group-hover:-translate-x-0.5 transition-transform">
                                 <path d="M15 18l-6-6 6-6" />
@@ -336,29 +334,29 @@ export default function AllCollections() {
                                 transition: "opacity 0.6s ease, transform 0.6s ease"
                             }}
                         >
-                            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#6F4E37] mb-5">
-                                <span className="w-1.5 h-1.5 rounded-full bg-coffee animate-pulse" />
-                                <span className="text-[9px] font-black uppercase tracking-[0.2em] text-white">Curated For You</span>
+                            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-gray-100 mb-5">
+                                <span className="w-1.5 h-1.5 rounded-full bg-coffee animate-pulse" style={{ backgroundColor: COFFEE }} />
+                                <span className="text-[9px] font-black uppercase tracking-[0.2em] text-gray-600">Curated For You</span>
                             </div>
 
                             <h1
-                                className="fd font-black text-white mb-3"
+                                className="fd font-black text-gray-900 mb-3"
                                 style={{ fontSize: "clamp(28px, 7vw, 52px)", letterSpacing: "-0.02em" }}
                             >
                                 Our Collections
                             </h1>
 
-                            <p className="text-gray-300 fs text-sm sm:text-base max-w-lg mx-auto">
+                            <p className="text-gray-500 fs text-sm sm:text-base max-w-lg mx-auto">
                                 Discover carefully curated collections, each telling a unique story of craftsmanship and elegance.
                             </p>
                         </div>
                     </div>
 
-                    <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-coffee/50 to-transparent" />
+                    <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-coffee/30 to-transparent" />
                 </div>
 
-                {/* Pinterest Masonry Grid */}
-                <div className="max-w-7xl mx-auto bg-black px-4 sm:px-6 lg:px-8 py-8 md:py-12">
+                {/* Pinterest Masonry Grid - Light Theme */}
+                <div className="max-w-7xl mx-auto bg-gray-50 px-4 sm:px-6 lg:px-8 py-8 md:py-12">
                     <div className="masonry-grid">
                         {COLLECTIONS.map((collection, idx) => (
                             <CollectionCard

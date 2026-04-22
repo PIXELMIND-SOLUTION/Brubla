@@ -10,70 +10,70 @@ const CATEGORIES = [
     label: "Men",
     sublabel: "432 styles",
     img: "https://images.unsplash.com/photo-1617137968427-85924c800a22?w=400&h=520&fit=crop&q=80&auto=format",
-    accent: "#6F4E37",
+    accent: "#000",
   },
   {
     id: 2,
     label: "Women",
     sublabel: "860 styles",
     img: "https://images.unsplash.com/photo-1509631179647-0177331693ae?w=400&h=520&fit=crop&q=80&auto=format",
-    accent: "#6F4E37",
+    accent: "#000",
   },
   {
     id: 3,
     label: "Kids",
     sublabel: "210 styles",
     img: "https://images.unsplash.com/photo-1503919545889-aef636e10ad4?w=400&h=520&fit=crop&q=80&auto=format",
-    accent: "#6F4E37",
+    accent: "#000",
   },
   {
     id: 4,
     label: "Home & Living",
     sublabel: "380 items",
     img: "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=400&h=520&fit=crop&q=80&auto=format",
-    accent: "#6F4E37",
+    accent: "#000",
   },
   {
     id: 5,
     label: "Beauty",
     sublabel: "190 products",
     img: "https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?w=400&h=520&fit=crop&q=80&auto=format",
-    accent: "#6F4E37",
+    accent: "#000",
   },
   {
     id: 6,
     label: "Accessories",
     sublabel: "145 pieces",
     img: "https://images.unsplash.com/photo-1523170335258-f5ed11844a49?w=400&h=520&fit=crop&q=80&auto=format",
-    accent: "#6F4E37",
+    accent: "#000",
   },
   {
     id: 7,
     label: "Footwear",
     sublabel: "260 pairs",
     img: "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=400&h=520&fit=crop&q=80&auto=format",
-    accent: "#6F4E37",
+    accent: "#000",
   },
   {
     id: 8,
     label: "Sale",
     sublabel: "BUY 1 GET 1",
     img: "https://images.unsplash.com/photo-1483985988355-763728e1935b?w=400&h=520&fit=crop&q=80&auto=format",
-    accent: "#6F4E37",
+    accent: "#000",
   },
 ];
 
 // ─────────────────────────────────────────────────────────────────────────────
 // ARROW ICONS
 // ─────────────────────────────────────────────────────────────────────────────
-const ChevRight = ({ color = "#6F4E37", size = 13 }) => (
+const ChevRight = ({ color = "#000", size = 13 }) => (
   <svg width={size} height={size} viewBox="0 0 24 24" fill="none"
     stroke={color} strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round">
     <path d="M9 18l6-6-6-6" />
   </svg>
 );
 
-const ChevLeft = ({ color = "#6F4E37", size = 13 }) => (
+const ChevLeft = ({ color = "#000", size = 13 }) => (
   <svg width={size} height={size} viewBox="0 0 24 24" fill="none"
     stroke={color} strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round">
     <path d="M15 18l-6-6 6-6" />
@@ -106,7 +106,7 @@ const CategoryCard = ({ cat, index }) => {
       ref={ref}
       className="relative flex-shrink-0 overflow-hidden cursor-pointer rounded-xl transition-all duration-300"
       style={{
-        width: "160px",
+        width: "200px",
         aspectRatio: "3 / 4",
         opacity: visible ? 1 : 0,
         transform: visible ? "translateY(0) scale(1)" : "translateY(20px) scale(0.97)",
@@ -216,7 +216,7 @@ const ScrollBtn = ({ dir, onClick, visible }) => (
     style={{
       width: "38px",
       height: "38px",
-      background: "#6F4E37",
+      background: "#000",
       border: "1.5px solid rgba(201,169,110,0.3)",
       opacity: visible ? 1 : 0.25,
       cursor: visible ? "pointer" : "not-allowed",
@@ -293,16 +293,16 @@ export default function CategorySection() {
         >
           {/* Left: title */}
           <div>
-            <p className="text-[10px] font-black uppercase tracking-[0.22em] mb-1 text-[#6F4E37]">
+            <p className="text-[10px] font-black uppercase tracking-[0.22em] mb-1 text-[#0C0C0C]">
               Shop by
             </p>
             <h2 
-              className="font-black leading-none text-2xl md:text-3xl lg:text-4xl text-[#0C0C0C] tracking-tight"
+              className="font-black leading-none text-2xl md:text-3xl lg:text-4xl text-[#000] tracking-tight"
               style={{ fontFamily: "Georgia,'Times New Roman',serif" }}
             >
               Categories
             </h2>
-            <div className="mt-2 h-[3px] w-10 bg-gradient-to-r from-[#6F4E37] to-[#6F4E37]" />
+            <div className="mt-2 h-[3px] w-10 bg-gradient-to-r from-[#000] to-[#000]" />
           </div>
 
           {/* Right: scroll arrows + view all */}
@@ -314,7 +314,7 @@ export default function CategorySection() {
               onClick={() => navigate('/category')}
             >
               View All
-              <span className="flex items-center justify-center transition-all duration-200 group-hover:scale-110 w-[26px] h-[26px] bg-[#6F4E37] rounded-full">
+              <span className="flex items-center justify-center transition-all duration-200 group-hover:scale-110 w-[26px] h-[26px] bg-[#000] rounded-full">
                 <ChevRight color="#fff" size={11} />
               </span>
             </button>
@@ -369,7 +369,7 @@ export default function CategorySection() {
           <button
             className="flex items-center gap-2 text-xs font-bold px-5 py-2.5 transition-all active:scale-95 rounded-full"
             style={{
-              background: "#6F4E37",
+              background: "#000",
               color: "#fff",
             }}
             onClick={() => navigate('/category')}

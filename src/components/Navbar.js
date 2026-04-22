@@ -94,15 +94,15 @@ const FloatingJoinBtn = () => {
     return (
         <div className="fixed bottom-6 right-5 z-50 flex flex-col items-end gap-2">
             <div className="text-xs font-semibold px-3 py-1.5 rounded-full shadow-lg transition-all duration-200 whitespace-nowrap"
-                style={{ background: "#000", color: "#6F4E37", opacity: hovered ? 1 : 0, transform: hovered ? "translateY(0) scale(1)" : "translateY(6px) scale(0.95)", pointerEvents: "none", letterSpacing: "0.06em" }}>
+                style={{ background: "#000", color: "#000", opacity: hovered ? 1 : 0, transform: hovered ? "translateY(0) scale(1)" : "translateY(6px) scale(0.95)", pointerEvents: "none", letterSpacing: "0.06em" }}>
                 ✦ Become a Partner
             </div>
             <button onClick={() => navigate("/joinUs")} onMouseEnter={() => setHovered(true)} onMouseLeave={() => setHovered(false)}
                 aria-label="Join us"
                 className="relative flex items-center gap-2 rounded-full font-bold text-sm shadow-2xl transition-all duration-300 active:scale-95"
                 style={{
-                    background: hovered ? "linear-gradient(135deg,#000 0%,#1a1a1a 100%)" : "linear-gradient(135deg,#6F4E37 0%,#8B6347 50%,#6F4E37 100%)",
-                    color: hovered ? "#6F4E37" : "#fff",
+                    background: hovered ? "linear-gradient(135deg,#000 0%,#1a1a1a 100%)" : "linear-gradient(135deg,#000 0%,#8B6347 50%,#000 100%)",
+                    color: hovered ? "#000" : "#fff",
                     padding: "12px 20px",
                     boxShadow: hovered ? "0 8px 32px rgba(0,0,0,0.45)" : "0 6px 24px rgba(111,78,55,0.45)",
                     letterSpacing: "0.06em", minHeight: "48px", justifyContent: "center",
@@ -246,12 +246,12 @@ const SearchOverlay = ({ open, onClose }) => {
                         <ArrowLeftIcon c="w-5 h-5" />
                     </button>
                     <div className="flex-1 flex items-center gap-2.5 rounded-full px-4 py-2.5"
-                        style={{ background: "#f9f5f0", border: "1.5px solid #6F4E37", boxShadow: "0 0 0 3px rgba(111,78,55,0.08)" }}>
+                        style={{ background: "#f9f5f0", border: "1.5px solid #000", boxShadow: "0 0 0 3px rgba(111,78,55,0.08)" }}>
                         <SearchIcon c="w-4 h-4 flex-shrink-0 opacity-50" />
                         <input ref={inputRef} type="text" placeholder="Search products, brands, categories…"
                             value={q} onChange={e => setQ(e.target.value)}
                             className="bg-transparent text-sm outline-none flex-1 min-w-0 placeholder:opacity-40"
-                            style={{ color: "#000", caretColor: "#6F4E37" }} />
+                            style={{ color: "#000", caretColor: "#000" }} />
                         {q && <button onClick={() => setQ("")} className="flex-shrink-0 opacity-50 hover:opacity-90 transition-opacity"><CloseIcon c="w-4 h-4" /></button>}
                     </div>
                 </div>
@@ -286,7 +286,7 @@ const SearchOverlay = ({ open, onClose }) => {
                                 <div className="pt-5">
                                     <div className="flex items-center justify-between mb-2">
                                         <p className="text-[9px] font-black uppercase tracking-widest" style={{ color: "#7a6a5a" }}>Recent</p>
-                                        <button className="text-[10px] font-semibold" style={{ color: "#6F4E37" }}>Clear all</button>
+                                        <button className="text-[10px] font-semibold" style={{ color: "#000" }}>Clear all</button>
                                     </div>
                                     <div className="flex flex-wrap gap-2">
                                         {RECENT.map(r => (
@@ -306,7 +306,7 @@ const SearchOverlay = ({ open, onClose }) => {
                                 <div className="flex flex-wrap gap-2">
                                     {TRENDING.map((t, i) => (
                                         <button key={t} className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold transition-all hover:scale-105"
-                                            style={{ background: i === 0 ? "linear-gradient(135deg,#000,#1a1a1a)" : "#f9f5f0", color: i === 0 ? "#6F4E37" : "#333", border: i === 0 ? "none" : "1px solid rgba(111,78,55,0.15)" }}
+                                            style={{ background: i === 0 ? "linear-gradient(135deg,#000,#1a1a1a)" : "#f9f5f0", color: i === 0 ? "#000" : "#333", border: i === 0 ? "none" : "1px solid rgba(111,78,55,0.15)" }}
                                             onClick={onClose}>
                                             {i === 0 && <ZapIcon c="w-2.5 h-2.5" />}{t}
                                         </button>
@@ -373,19 +373,19 @@ const LocationSelector = ({ transparent }) => {
         <div className="relative" ref={ref}>
             <button onClick={() => setOpen(o => !o)} className="relative p-2 rounded-full transition-colors hover:bg-white/10" style={{ color: iconColor }} aria-label="Change location">
                 <PinIcon c="w-5 h-5" />
-                <span className="absolute bottom-1.5 right-1.5 w-1.5 h-1.5 rounded-full" style={{ background: "#6F4E37" }} />
+                <span className="absolute bottom-1.5 right-1.5 w-1.5 h-1.5 rounded-full" style={{ background: "#000" }} />
             </button>
             {open && (
                 <div className="absolute top-full right-0 mt-2 w-60 rounded-2xl shadow-2xl z-[200] overflow-hidden" style={{ background: "#fff", border: "1px solid rgba(111,78,55,0.15)" }}>
                     <div className="px-4 pt-3 pb-2 flex items-center gap-2" style={{ borderBottom: "1px solid rgba(111,78,55,0.12)" }}>
-                        <span style={{ color: "#6F4E37" }}><ZapIcon c="w-3 h-3" /></span>
+                        <span style={{ color: "#000" }}><ZapIcon c="w-3 h-3" /></span>
                         <div className="flex flex-col">
                             <span className="text-[9px] font-black uppercase tracking-widest" style={{ color: "#7a6a5a" }}>Delivering to</span>
-                            <span className="text-xs font-bold" style={{ color: "#6F4E37" }}>{sel === -1 ? (gpsLabel || "Current Location") : `${loc.city} — ${loc.pin}`}</span>
+                            <span className="text-xs font-bold" style={{ color: "#000" }}>{sel === -1 ? (gpsLabel || "Current Location") : `${loc.city} — ${loc.pin}`}</span>
                         </div>
                     </div>
                     <button onClick={handleGps} className="w-full flex items-center gap-3 px-4 py-3 transition-colors hover:bg-[#f9f5f0]" style={{ borderBottom: "1px solid rgba(111,78,55,0.1)" }}>
-                        <div className="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0" style={{ background: "linear-gradient(135deg,#6F4E37,#4a3520)" }}>
+                        <div className="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0" style={{ background: "linear-gradient(135deg,#000,#4a3520)" }}>
                             {gpsLoading ? <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" /> : <GpsIcon c="w-4 h-4 text-white" />}
                         </div>
                         <div className="flex flex-col items-start">
@@ -399,12 +399,12 @@ const LocationSelector = ({ transparent }) => {
                         <button key={l.pin} onClick={() => { setSel(i); setOpen(false); }}
                             className={`w-full flex items-center gap-2.5 px-4 py-2.5 transition-colors ${i === sel ? "" : "hover:bg-[#f9f5f0]"}`}
                             style={{ background: i === sel ? "#f9f5f0" : "transparent" }}>
-                            <span style={{ color: "#6F4E37" }}><PinIcon c="w-3.5 h-3.5" /></span>
+                            <span style={{ color: "#000" }}><PinIcon c="w-3.5 h-3.5" /></span>
                             <div className="flex flex-col items-start">
-                                <span className="text-xs font-semibold" style={{ color: i === sel ? "#6F4E37" : "#000" }}>{l.city}</span>
+                                <span className="text-xs font-semibold" style={{ color: i === sel ? "#000" : "#000" }}>{l.city}</span>
                                 <span className="text-[10px]" style={{ color: "#7a6a5a" }}>{l.pin}</span>
                             </div>
-                            {i === sel && <span className="ml-auto" style={{ color: "#6F4E37" }}><CheckIcon /></span>}
+                            {i === sel && <span className="ml-auto" style={{ color: "#000" }}><CheckIcon /></span>}
                         </button>
                     ))}
                 </div>
@@ -481,7 +481,7 @@ const MegaMenuPanel = ({ show, onClose, navbarHeight }) => (
                 <div className="space-y-3">
                     <p className="text-[9px] font-black uppercase tracking-widest mb-3" style={{ color: "#7a6a5a" }}>Featured</p>
                     {["New Arrivals", "Winter Collection 2025", "Basics", "Bluorng Racing Club", "Iconics"].map(item => (
-                        <p key={item} className="text-sm font-semibold cursor-pointer transition-colors hover:text-[#6F4E37]" style={{ color: "#000" }}>{item}</p>
+                        <p key={item} className="text-sm font-semibold cursor-pointer transition-colors hover:text-[#000]" style={{ color: "#000" }}>{item}</p>
                     ))}
                 </div>
                 <div>
@@ -565,7 +565,7 @@ const Sidebar = ({ open, onClose, navigate }) => {
                         <img src="/logo2.png" className="h-10 w-10" alt="logo" onError={e => { e.target.style.display = "none"; }} />
                         <div className="flex flex-col leading-none">
                             <span className="text-[13px] font-black tracking-[0.18em] uppercase" style={{ color: "#000" }}>BRU</span>
-                            <span className="text-[13px] font-black tracking-[0.18em] uppercase -mt-[2px]" style={{ color: "#6F4E37" }}>BLA</span>
+                            <span className="text-[13px] font-black tracking-[0.18em] uppercase -mt-[2px]" style={{ color: "#000" }}>BLA</span>
                         </div>
                     </div>
                     <button onClick={onClose} className="p-2 rounded-full transition-colors hover:bg-[#f9f5f0]" style={{ color: "#333" }} aria-label="Close menu">
@@ -579,13 +579,13 @@ const Sidebar = ({ open, onClose, navigate }) => {
                         return (
                             <button key={id} onClick={() => handleNav(id, link)}
                                 className="w-full flex items-center gap-3 px-3 py-3 rounded-xl transition-all duration-150 mb-0.5"
-                                style={{ background: isActive ? special ? "linear-gradient(135deg,#6F4E37,#4a3520)" : "#000" : "transparent", color: isActive ? "#fff" : "#333" }}>
+                                style={{ background: isActive ? special ? "linear-gradient(135deg,#000,#4a3520)" : "#000" : "transparent", color: isActive ? "#fff" : "#333" }}>
                                 <div className="flex items-center justify-center w-8 h-8 rounded-lg flex-shrink-0"
                                     style={{ background: isActive ? "rgba(255,255,255,0.12)" : special ? "rgba(111,78,55,0.1)" : "#f9f5f0" }}>
                                     <Icon c="w-4 h-4" />
                                 </div>
                                 <span className="text-sm font-semibold">{label}</span>
-                                {special && !isActive && <span className="ml-auto text-[9px] font-black px-2 py-0.5 rounded-full" style={{ background: "linear-gradient(135deg,#6F4E37,#8B6347)", color: "#fff" }}>NEW</span>}
+                                {special && !isActive && <span className="ml-auto text-[9px] font-black px-2 py-0.5 rounded-full" style={{ background: "linear-gradient(135deg,#000,#8B6347)", color: "#fff" }}>NEW</span>}
                                 {isActive && <ChevRight c="w-4 h-4 ml-auto opacity-60" />}
                             </button>
                         );
@@ -594,7 +594,7 @@ const Sidebar = ({ open, onClose, navigate }) => {
                 <div className="px-5 py-4" style={{ borderTop: "1px solid rgba(111,78,55,0.12)" }}>
                     <div className="flex items-center gap-3 p-3 rounded-xl" style={{ background: "#f9f5f0" }}>
                         <div className="w-9 h-9 rounded-full flex items-center justify-center flex-shrink-0" style={{ background: "linear-gradient(135deg,#000,#1a1a1a)", border: "1px solid rgba(111,78,55,0.25)" }}>
-                            <ProfileIcon c="w-4 h-4" style={{ color: "#6F4E37" }} />
+                            <ProfileIcon c="w-4 h-4" style={{ color: "#000" }} />
                         </div>
                         <div className="flex flex-col min-w-0">
                             <span className="text-xs font-bold truncate" style={{ color: "#000" }}>My Account</span>
@@ -618,7 +618,7 @@ const CartBtn = ({ count, transparent }) => {
             <CartIcon c="w-5 h-5" />
             {count > 0 && (
                 <span className="absolute -top-0.5 -right-0.5 text-[9px] font-black w-4 h-4 rounded-full flex items-center justify-center leading-none shadow-sm"
-                    style={{ background: "#6F4E37", color: "#fff" }}>
+                    style={{ background: "#000", color: "#fff" }}>
                     {count}
                 </span>
             )}
@@ -771,7 +771,7 @@ const Navbar = () => {
                             <button
                                 onMouseEnter={() => { setShowCollections(true); setOpenMenu(false); }}
                                 className="flex items-center gap-1 px-3 py-1.5 rounded-full text-xs font-semibold transition-all duration-150"
-                                style={{ color: showCollections ? (transparent ? "#fff" : "#6F4E37") : textColor }}
+                                style={{ color: showCollections ? (transparent ? "#fff" : "#000") : textColor }}
                                 onMouseLeave={() => { /* panel closes itself */ }}
                             >
                                 Collections
@@ -861,8 +861,8 @@ const Navbar = () => {
                                     onMouseEnter={label === "Collections" ? () => { setShowCollections(true); setOpenMenu(false); } : undefined}
                                     className="flex-shrink-0 px-3 py-1.5 text-xs font-semibold rounded-full transition-colors"
                                     style={{
-                                        border: `1.5px solid ${red ? "#6F4E37" : "rgba(111,78,55,0.18)"}`,
-                                        background: red ? "#6F4E37" : "#f9f5f0",
+                                        border: `1.5px solid ${red ? "#000" : "rgba(111,78,55,0.18)"}`,
+                                        background: red ? "#000" : "#f9f5f0",
                                         color: red ? "#fff" : "#000",
                                     }}>
                                     {label}

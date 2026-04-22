@@ -203,7 +203,7 @@ const AddressCard = ({
           )}
           <button
             onClick={() => onEdit(address)}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#6F4E37] text-white text-xs font-medium fs hover:bg-gray-700 transition-colors"
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#000] text-white text-xs font-medium fs hover:bg-gray-700 transition-colors"
           >
             <Edit2 size={12} />
             Edit
@@ -795,7 +795,7 @@ export default function UserAddresses() {
                   setEditingAddress(null);
                   setIsModalOpen(true);
                 }}
-                className="flex items-center justify-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-1.5 sm:py-2 rounded-xl bg-[#6F4E37] text-white font-semibold fs text-xs sm:text-sm transition-all hover:opacity-90 active:scale-95"
+                className="flex items-center justify-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-1.5 sm:py-2 rounded-xl bg-[#000] text-white font-semibold fs text-xs sm:text-sm transition-all hover:opacity-90 active:scale-95"
               >
                 <Plus size={14} />
                 Add New Address
@@ -844,7 +844,7 @@ export default function UserAddresses() {
                   setEditingAddress(null);
                   setIsModalOpen(true);
                 }}
-                className="px-5 sm:px-6 py-2 sm:py-2.5 rounded-xl bg-[#6F4E37] text-white font-semibold fs text-xs sm:text-sm transition-all hover:opacity-90 active:scale-95"
+                className="px-5 sm:px-6 py-2 sm:py-2.5 rounded-xl bg-[#000] text-white font-semibold fs text-xs sm:text-sm transition-all hover:opacity-90 active:scale-95"
               >
                 Add Your First Address
               </button>

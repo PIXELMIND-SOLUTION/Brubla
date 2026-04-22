@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { X } from "lucide-react";
 
-const COFFEE = "#6F4E37";
+const COFFEE = "#000";
 
 export default function SizeGuideModal({ isOpen, onClose }) {
     const [unit, setUnit] = useState("in");

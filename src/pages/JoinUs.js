@@ -32,7 +32,7 @@ const EyeIcon = ({ c }) => <Ic className={c || "w-4 h-4"}><path d="M1 12s4-8 11-
 // ─────────────────────────────────────────────────────────────────────────────
 // COLOR THEME
 // ─────────────────────────────────────────────────────────────────────────────
-// Primary brown:  #6F4E37
+// Primary brown:  #000
 // White:          #fff
 // Black:          #000
 // Soft bg:        #f9f5f0
@@ -49,7 +49,7 @@ const ROLES = [
         tagline: "Stitch the Future",
         desc: "Bring your craftsmanship to thousands of customers who value perfectly fitted, handcrafted garments.",
         Icon: ScissIcon,
-        accent: "#6F4E37",
+        accent: "#000",
         accentSoft: "rgba(111,78,55,0.1)",
         accentBorder: "rgba(111,78,55,0.25)",
         perks: ["Set your own pricing", "Manage orders digitally", "Access to premium fabric network"],
@@ -61,7 +61,7 @@ const ROLES = [
         tagline: "Define the Aesthetic",
         desc: "Share your vision, build your clientele, and turn your passion for fashion into a thriving career.",
         Icon: BrushIcon,
-        accent: "#6F4E37",
+        accent: "#000",
         accentSoft: "rgba(111,78,55,0.1)",
         accentBorder: "rgba(111,78,55,0.25)",
         perks: ["Personal portfolio page", "Client booking system", "Collaborate with top brands"],
@@ -73,7 +73,7 @@ const ROLES = [
         tagline: "Create the Collection",
         desc: "Launch your label, showcase your designs, and connect directly with fashion-forward buyers across India.",
         Icon: PenIcon,
-        accent: "#6F4E37",
+        accent: "#000",
         accentSoft: "rgba(111,78,55,0.1)",
         accentBorder: "rgba(111,78,55,0.25)",
         perks: ["Launch your brand page", "Direct sales channel", "Marketing & PR support"],
@@ -391,7 +391,7 @@ const RegistrationForm = ({ role, onBack, onSuccess }) => {
                     disabled={loading}
                     className="w-full py-4 rounded-2xl text-sm font-black uppercase tracking-widest transition-all duration-300 flex items-center justify-center gap-2 mt-2"
                     style={{
-                        background: loading ? "#f0ebe4" : `linear-gradient(135deg, #6F4E37, #8B6347)`,
+                        background: loading ? "#f0ebe4" : `linear-gradient(135deg, #000, #8B6347)`,
                         color: loading ? "#7a6a5a" : "#fff",
                         boxShadow: loading ? "none" : `0 8px 24px rgba(111,78,55,0.35)`,
                     }}
@@ -469,7 +469,7 @@ export default function JoinUs() {
                         {/* Logo wordmark */}
                         <div className="flex flex-col leading-none select-none">
                             <span className="text-[10px] font-black tracking-[0.22em] uppercase" style={{ color: "#000" }}>NEW</span>
-                            <span className="text-[10px] font-black tracking-[0.22em] uppercase -mt-[1px]" style={{ color: "#6F4E37" }}>ME</span>
+                            <span className="text-[10px] font-black tracking-[0.22em] uppercase -mt-[1px]" style={{ color: "#000" }}>ME</span>
                         </div>
                     </div>
 
@@ -482,8 +482,8 @@ export default function JoinUs() {
                             {/* Pill badge */}
                             <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full mb-6"
                                 style={{ background: "rgba(111,78,55,0.1)", border: "1px solid rgba(111,78,55,0.25)" }}>
-                                <SparkIcon c="w-3 h-3" style={{ color: "#6F4E37" }} />
-                                <span className="text-[11px] font-bold uppercase tracking-widest" style={{ color: "#6F4E37" }}>
+                                <SparkIcon c="w-3 h-3" style={{ color: "#000" }} />
+                                <span className="text-[11px] font-bold uppercase tracking-widest" style={{ color: "#000" }}>
                                     Partner Programme
                                 </span>
                             </div>
@@ -496,7 +496,7 @@ export default function JoinUs() {
                                 }}>
                                 Become a Part<br />
                                 <span style={{
-                                    background: "linear-gradient(135deg, #6F4E37, #a0714f, #6F4E37)",
+                                    background: "linear-gradient(135deg, #000, #a0714f, #000)",
                                     WebkitBackgroundClip: "text",
                                     WebkitTextFillColor: "transparent",
                                     backgroundClip: "text",
@@ -555,9 +555,9 @@ export default function JoinUs() {
                                         onClick={() => setSelectedRole(r)}
                                         className="px-4 py-1.5 rounded-full text-xs font-bold transition-all duration-200"
                                         style={{
-                                            background: selectedRole.id === r.id ? "#6F4E37" : "#f0ebe4",
+                                            background: selectedRole.id === r.id ? "#000" : "#f0ebe4",
                                             color: selectedRole.id === r.id ? "#fff" : "#7a6a5a",
-                                            border: `1.5px solid ${selectedRole.id === r.id ? "#6F4E37" : "transparent"}`,
+                                            border: `1.5px solid ${selectedRole.id === r.id ? "#000" : "transparent"}`,
                                         }}
                                     >
                                         {r.title}
@@ -573,7 +573,7 @@ export default function JoinUs() {
                                     boxShadow: "0 8px 48px rgba(0,0,0,0.08)",
                                 }}>
                                 {/* Top stripe */}
-                                <div className="h-1.5" style={{ background: `linear-gradient(90deg, #6F4E37, rgba(111,78,55,0.4))` }} />
+                                <div className="h-1.5" style={{ background: `linear-gradient(90deg, #000, rgba(111,78,55,0.4))` }} />
 
                                 <RegistrationForm
                                     role={selectedRole}

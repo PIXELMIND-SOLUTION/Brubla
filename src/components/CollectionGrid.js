@@ -15,7 +15,7 @@ const COLLECTIONS = [
     desc: "International styles, global trends, locally delivered",
     cta: "Explore World",
     img: "https://images.unsplash.com/photo-1469334031218-e382a71b716b?w=800&h=1000&fit=crop&q=85&auto=format",
-    accent: "#6F4E37",
+    accent: "#000",
     overlay: "linear-gradient(170deg,rgba(12,12,12,0.12) 0%,rgba(12,12,12,0.30) 40%,rgba(12,12,12,0.82) 100%)",
     gridArea: "global",
     count: "240+ Styles",
@@ -28,7 +28,7 @@ const COLLECTIONS = [
     desc: "Hand-picked opulence, crafted for the discerning few",
     cta: "Shop Luxury",
     img: "https://images.unsplash.com/photo-1512436991641-6745cdb1723f?w=800&h=600&fit=crop&q=85&auto=format",
-    accent: "#6F4E37",
+    accent: "#000",
     overlay: "linear-gradient(170deg,rgba(10,8,4,0.08) 0%,rgba(10,8,4,0.25) 45%,rgba(10,8,4,0.88) 100%)",
     gridArea: "luxury",
     count: "85+ Pieces",
@@ -41,7 +41,7 @@ const COLLECTIONS = [
     desc: "Designed in-house. Worn everywhere.",
     cta: "View Originals",
     img: "https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=800&h=600&fit=crop&q=85&auto=format",
-    accent: "#6F4E37",
+    accent: "#000",
     overlay: "linear-gradient(170deg,rgba(12,12,12,0.05) 0%,rgba(12,12,12,0.20) 45%,rgba(12,12,12,0.85) 100%)",
     gridArea: "originals",
     count: "320+ Designs",
@@ -54,7 +54,7 @@ const COLLECTIONS = [
     desc: "Celebrating the timeless craft of Indian artisans",
     cta: "Discover Heritage",
     img: "https://images.unsplash.com/photo-1509631179647-0177331693ae?w=800&h=1000&fit=crop&q=85&auto=format",
-    accent: "#6F4E37",
+    accent: "#000",
     overlay: "linear-gradient(170deg,rgba(12,4,0,0.10) 0%,rgba(12,4,0,0.28) 40%,rgba(12,4,0,0.88) 100%)",
     gridArea: "indian",
     count: "180+ Styles",
@@ -67,7 +67,7 @@ const COLLECTIONS = [
     desc: "Every thread tells a love story. Dress the moment.",
     cta: "Plan Your Look",
     img: "https://images.unsplash.com/photo-1485230895905-ec40ba36b9bc?w=1600&h=500&fit=crop&q=85&auto=format",
-    accent: "#6F4E37",
+    accent: "#000",
     overlay: "linear-gradient(170deg,rgba(12,4,0,0.05) 0%,rgba(12,4,0,0.22) 50%,rgba(12,4,0,0.84) 100%)",
     gridArea: "wedding",
     count: "500+ Looks",
@@ -161,7 +161,7 @@ const CollectionCard = ({ col, index, style = {} }) => {
         }} />
 
       {/* ── COUNT CHIP top-right ── */}
-      <div
+      {/* <div
         className="absolute top-4 right-4 z-10 text-[9px] font-black tracking-[0.12em] uppercase px-2.5 py-1"
         style={{
           background: "rgba(12,12,12,0.55)",
@@ -173,10 +173,10 @@ const CollectionCard = ({ col, index, style = {} }) => {
         }}
       >
         {col.count}
-      </div>
+      </div> */}
 
       {/* ── TAG top-left ── */}
-      <div className="absolute top-4 left-4 z-10">
+      {/* <div className="absolute top-4 left-4 z-10">
         <span
           className="text-[9px] font-black tracking-[0.16em] uppercase px-2 py-1"
           style={{
@@ -188,7 +188,7 @@ const CollectionCard = ({ col, index, style = {} }) => {
         >
           {col.tag}
         </span>
-      </div>
+      </div> */}
 
       {/* ── CONTENT BLOCK bottom ── */}
       <div
@@ -291,7 +291,7 @@ const SectionHeader = () => {
     >
       <div>
         <p className="text-[10px] font-black uppercase tracking-[0.24em] mb-1"
-          style={{ color: "#6F4E37" }}>
+          style={{ color: "#000" }}>
           Our Universe
         </p>
         <h2
@@ -307,9 +307,9 @@ const SectionHeader = () => {
         </h2>
         <div className="flex items-center gap-2 mt-2.5">
           <div className="h-[3px] w-10"
-            style={{ background: "linear-gradient(90deg,#C9A96E,#E8C97A)" }} />
-          <div className="h-[3px] w-4" style={{ background: "rgba(111, 78, 55, 0.3)" }} />
-          <div className="h-[3px] w-2" style={{ background: "rgba(111, 78, 55, 0.14)" }} />
+            style={{ background: "linear-gradient(90deg,#fff,#fff)" }} />
+          <div className="h-[3px] w-4" style={{ background: "rgba(238, 238, 238, 0.3)" }} />
+          <div className="h-[3px] w-2" style={{ background: "rgba(214, 211, 211, 0.14)" }} />
         </div>
       </div>
 
@@ -322,7 +322,7 @@ const SectionHeader = () => {
         All Collections
         <span
           className="flex items-center justify-center transition-all duration-200 group-hover:scale-110"
-          style={{ width: "26px", height: "26px", background: "#6F4E37", color: "#fff" }}
+          style={{ width: "26px", height: "26px", background: "#000", color: "#fff" }}
         >
           <ArrowIcon size={11} color="#fff" />
         </span>
@@ -374,7 +374,7 @@ const MobileViewAllButton = () => {
         <span>View All Collections</span>
         <span
           className="flex items-center justify-center"
-          style={{ width: 28, height: 28, background: "#6F4E37" }}
+          style={{ width: 28, height: 28, background: "#000" }}
         >
           <ArrowIcon size={12} color="#fff" />
         </span>

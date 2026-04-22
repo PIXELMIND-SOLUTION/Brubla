@@ -12,7 +12,7 @@ const BANNERS = [
     title: "SOS SALE",
     subtitle: "BUY 1 GET 1 FREE on all styles",
     cta: "Shop Now",
-    ctaColor: "#6F4E37",
+    ctaColor: "#000",
     overlay: "rgba(12,12,12,0.55)",
   },
   {
@@ -22,7 +22,7 @@ const BANNERS = [
     title: "SUMMER 2025",
     subtitle: "Fresh styles · Kurtas · Dresses",
     cta: "Explore",
-    ctaColor: "#6F4E37",
+    ctaColor: "#000",
     overlay: "rgba(12,12,12,0.5)",
   },
 ];

@@ -9,7 +9,7 @@ import {
 import Navbar from "../components/Navbar";
 import Header from "../components/Header";
 
-const COFFEE = "#6F4E37";
+const COFFEE = "#000";
 
 // Sample cart data
 const initialCartItems = [

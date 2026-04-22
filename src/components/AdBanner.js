@@ -101,7 +101,7 @@ const AdCard = ({ ad, onClick }) => (
       <button
         onClick={onClick}
         style={{
-          "background": "#6F4E37"
+          "background": "#000"
         }}
         className="
           px-4 py-1.5 sm:px-5 sm:py-2

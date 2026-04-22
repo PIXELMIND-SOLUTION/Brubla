@@ -1,7 +1,5 @@
-// SingleCollectionProducts.jsx
 import { useState, useEffect, useRef, useCallback } from "react";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
-import Navbar from "../components/Navbar";
 import Header from "../components/Header";
 
 const COFFEE = "#C9A96E";
@@ -85,9 +83,10 @@ const COLLECTION_PRODUCTS = {
     title: "Global Collections",
     subtitle: "WORLD-CLASS CRAFTMANSHIP",
     description: "Discover world-class craftsmanship inspired by fashion capitals — Paris, Milan, Tokyo, and New York. Each piece tells a story of global elegance.",
+    bgImage: "https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=1600&q=80",
     products: [
       {
-        id: 1,
+        id: 101,
         name: "Italian Leather Jacket",
         brand: "Brubla Global",
         price: 12999,
@@ -103,7 +102,7 @@ const COLLECTION_PRODUCTS = {
         sizes: ["XS", "S", "M", "L", "XL"],
       },
       {
-        id: 1,
+        id: 102,
         name: "Parisian Linen Blazer",
         brand: "Brubla Global",
         price: 8999,
@@ -119,7 +118,7 @@ const COLLECTION_PRODUCTS = {
         sizes: ["S", "M", "L", "XL"],
       },
       {
-        id: 1,
+        id: 103,
         name: "Tokyo Streetwear Hoodie",
         brand: "Brubla Global",
         price: 3499,
@@ -135,7 +134,7 @@ const COLLECTION_PRODUCTS = {
         sizes: ["S", "M", "L", "XL", "XXL"],
       },
       {
-        id: 1,
+        id: 104,
         name: "New York Tailored Trousers",
         brand: "Brubla Global",
         price: 4999,
@@ -151,7 +150,7 @@ const COLLECTION_PRODUCTS = {
         sizes: ["28", "30", "32", "34", "36"],
       },
       {
-        id: 1,
+        id: 105,
         name: "London Checkered Coat",
         brand: "Brubla Global",
         price: 11999,
@@ -167,7 +166,7 @@ const COLLECTION_PRODUCTS = {
         sizes: ["S", "M", "L", "XL"],
       },
       {
-        id: 1,
+        id: 106,
         name: "Milan Silk Scarf",
         brand: "Brubla Global",
         price: 2499,
@@ -183,7 +182,7 @@ const COLLECTION_PRODUCTS = {
         sizes: ["One Size"],
       },
       {
-        id: 1,
+        id: 107,
         name: "Berlin Minimalist Bag",
         brand: "Brubla Global",
         price: 6999,
@@ -199,7 +198,7 @@ const COLLECTION_PRODUCTS = {
         sizes: ["One Size"],
       },
       {
-        id: 1,
+        id: 108,
         name: "Barcelona Linen Shirt",
         brand: "Brubla Global",
         price: 3999,
@@ -221,9 +220,10 @@ const COLLECTION_PRODUCTS = {
     title: "Luxury Collections",
     subtitle: "BESPOKE ELEGANCE",
     description: "Experience the pinnacle of couture with hand-embroidered gowns, cashmere coats, and diamond-embellished accessories.",
+    bgImage: "https://images.unsplash.com/photo-1539109136881-3be0616acf4b?w=1600&q=80",
     products: [
       {
-        id: 2,
+        id: 201,
         name: "Hand-Embroidered Gown",
         brand: "Brubla Atelier",
         price: 45999,
@@ -239,7 +239,7 @@ const COLLECTION_PRODUCTS = {
         sizes: ["XS", "S", "M", "L"],
       },
       {
-        id: 2,
+        id: 202,
         name: "Cashmere Wrap Coat",
         brand: "Brubla Atelier",
         price: 32999,
@@ -255,7 +255,7 @@ const COLLECTION_PRODUCTS = {
         sizes: ["S", "M", "L", "XL"],
       },
       {
-        id: 2,
+        id: 203,
         name: "Diamond-Embellished Clutch",
         brand: "Brubla Atelier",
         price: 18999,
@@ -271,7 +271,7 @@ const COLLECTION_PRODUCTS = {
         sizes: ["One Size"],
       },
       {
-        id: 2,
+        id: 204,
         name: "Silk Evening Gown",
         brand: "Brubla Atelier",
         price: 39999,
@@ -287,7 +287,7 @@ const COLLECTION_PRODUCTS = {
         sizes: ["XS", "S", "M", "L"],
       },
       {
-        id: 2,
+        id: 205,
         name: "Pearl Necklace Set",
         brand: "Brubla Atelier",
         price: 24999,
@@ -303,7 +303,7 @@ const COLLECTION_PRODUCTS = {
         sizes: ["One Size"],
       },
       {
-        id: 2,
+        id: 206,
         name: "Velvet Tuxedo Blazer",
         brand: "Brubla Atelier",
         price: 27999,
@@ -325,9 +325,10 @@ const COLLECTION_PRODUCTS = {
     title: "Originals by Brubla",
     subtitle: "SIGNATURE STYLE",
     description: "Our signature collection that embodies the essence of modern luxury. Timeless pieces crafted for the discerning individual.",
+    bgImage: "https://images.unsplash.com/photo-1445205170230-053b83016050?w=1600&q=80",
     products: [
       {
-        id: 3,
+        id: 301,
         name: "Signature Kurta Set",
         brand: "Originals by Brubla",
         price: 4999,
@@ -343,7 +344,7 @@ const COLLECTION_PRODUCTS = {
         sizes: ["S", "M", "L", "XL", "XXL"],
       },
       {
-        id: 3,
+        id: 302,
         name: "Handblock Print Saree",
         brand: "Originals by Brubla",
         price: 8999,
@@ -359,7 +360,7 @@ const COLLECTION_PRODUCTS = {
         sizes: ["Free Size"],
       },
       {
-        id: 3,
+        id: 303,
         name: "Brubla Classic Shirt",
         brand: "Originals by Brubla",
         price: 2499,
@@ -375,7 +376,7 @@ const COLLECTION_PRODUCTS = {
         sizes: ["XS", "S", "M", "L", "XL"],
       },
       {
-        id: 3,
+        id: 304,
         name: "Embroidered Waistcoat",
         brand: "Originals by Brubla",
         price: 5999,
@@ -391,7 +392,7 @@ const COLLECTION_PRODUCTS = {
         sizes: ["S", "M", "L", "XL"],
       },
       {
-        id: 3,
+        id: 305,
         name: "Dupatta Set",
         brand: "Originals by Brubla",
         price: 3499,
@@ -407,7 +408,7 @@ const COLLECTION_PRODUCTS = {
         sizes: ["Free Size"],
       },
       {
-        id: 3,
+        id: 306,
         name: "Brubla Bomber Jacket",
         brand: "Originals by Brubla",
         price: 4499,
@@ -429,9 +430,10 @@ const COLLECTION_PRODUCTS = {
     title: "Indian Roots",
     subtitle: "TIMELESS TRADITIONS",
     description: "Celebrate timeless traditions with our curated ethnic wear. From Banarasi silk to handwoven khadi, embrace your heritage in style.",
+    bgImage: "https://images.unsplash.com/photo-1535043883686-1eade1b1a0f8?w=1600&q=80",
     products: [
       {
-        id: 4,
+        id: 401,
         name: "Banarasi Silk Saree",
         brand: "Indian Roots",
         price: 15999,
@@ -447,7 +449,7 @@ const COLLECTION_PRODUCTS = {
         sizes: ["Free Size"],
       },
       {
-        id: 4,
+        id: 402,
         name: "Handwoven Khadi Kurta",
         brand: "Indian Roots",
         price: 3499,
@@ -463,7 +465,7 @@ const COLLECTION_PRODUCTS = {
         sizes: ["S", "M", "L", "XL", "XXL"],
       },
       {
-        id: 4,
+        id: 403,
         name: "Phulkari Dupatta",
         brand: "Indian Roots",
         price: 2499,
@@ -479,7 +481,7 @@ const COLLECTION_PRODUCTS = {
         sizes: ["One Size"],
       },
       {
-        id: 4,
+        id: 404,
         name: "Bandhani Lehenga",
         brand: "Indian Roots",
         price: 12999,
@@ -495,7 +497,7 @@ const COLLECTION_PRODUCTS = {
         sizes: ["S", "M", "L", "XL"],
       },
       {
-        id: 4,
+        id: 405,
         name: "Pashmina Shawl",
         brand: "Indian Roots",
         price: 8999,
@@ -511,7 +513,7 @@ const COLLECTION_PRODUCTS = {
         sizes: ["One Size"],
       },
       {
-        id: 4,
+        id: 406,
         name: "Jutti Footwear",
         brand: "Indian Roots",
         price: 1999,
@@ -533,9 +535,10 @@ const COLLECTION_PRODUCTS = {
     title: "Weddings & Celebrations",
     subtitle: "YOUR SPECIAL DAY",
     description: "Make your special day unforgettable with our exquisite wedding collection. From bridal lehengas to groom sherwanis.",
+    bgImage: "https://images.unsplash.com/photo-1519741497674-611481863552?w=1600&q=80",
     products: [
       {
-        id: 5,
+        id: 501,
         name: "Bridal Lehenga Set",
         brand: "Brubla Weddings",
         price: 45999,
@@ -551,7 +554,7 @@ const COLLECTION_PRODUCTS = {
         sizes: ["S", "M", "L", "XL"],
       },
       {
-        id: 5,
+        id: 502,
         name: "Groom Sherwani",
         brand: "Brubla Weddings",
         price: 34999,
@@ -567,7 +570,7 @@ const COLLECTION_PRODUCTS = {
         sizes: ["S", "M", "L", "XL", "XXL"],
       },
       {
-        id: 5,
+        id: 503,
         name: "Bridesmaid Saree",
         brand: "Brubla Weddings",
         price: 12999,
@@ -583,7 +586,7 @@ const COLLECTION_PRODUCTS = {
         sizes: ["Free Size"],
       },
       {
-        id: 5,
+        id: 504,
         name: "Celebration Gown",
         brand: "Brubla Weddings",
         price: 19999,
@@ -599,7 +602,7 @@ const COLLECTION_PRODUCTS = {
         sizes: ["XS", "S", "M", "L"],
       },
       {
-        id: 5,
+        id: 505,
         name: "Wedding Accessory Set",
         brand: "Brubla Weddings",
         price: 5999,
@@ -615,7 +618,7 @@ const COLLECTION_PRODUCTS = {
         sizes: ["One Size"],
       },
       {
-        id: 5,
+        id: 506,
         name: "Reception Blazer",
         brand: "Brubla Weddings",
         price: 15999,
@@ -637,9 +640,10 @@ const COLLECTION_PRODUCTS = {
     title: "Street Style Edit",
     subtitle: "URBAN ESSENTIALS",
     description: "Elevate your everyday look with our curated streetwear collection. Casual, cool, and effortlessly stylish.",
+    bgImage: "https://images.unsplash.com/photo-1441984904996-e0b6ba687e04?w=1600&q=80",
     products: [
       {
-        id: 6,
+        id: 601,
         name: "Oversized Graphic Tee",
         brand: "Street Edit",
         price: 1899,
@@ -655,7 +659,7 @@ const COLLECTION_PRODUCTS = {
         sizes: ["S", "M", "L", "XL", "XXL"],
       },
       {
-        id: 6,
+        id: 602,
         name: "Cargo Pants",
         brand: "Street Edit",
         price: 2999,
@@ -671,7 +675,7 @@ const COLLECTION_PRODUCTS = {
         sizes: ["28", "30", "32", "34", "36"],
       },
       {
-        id: 6,
+        id: 603,
         name: "Denim Jacket",
         brand: "Street Edit",
         price: 4499,
@@ -687,7 +691,7 @@ const COLLECTION_PRODUCTS = {
         sizes: ["S", "M", "L", "XL"],
       },
       {
-        id: 6,
+        id: 604,
         name: "Sneakers",
         brand: "Street Edit",
         price: 5999,
@@ -709,9 +713,10 @@ const COLLECTION_PRODUCTS = {
     title: "Sustainable Fashion",
     subtitle: "ECO-CONSCIOUS",
     description: "Fashion that cares for the planet. Ethically sourced, sustainably produced, beautifully crafted.",
+    bgImage: "https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?w=1600&q=80",
     products: [
       {
-        id: 7,
+        id: 701,
         name: "Organic Cotton Dress",
         brand: "Sustainable",
         price: 3999,
@@ -727,7 +732,7 @@ const COLLECTION_PRODUCTS = {
         sizes: ["XS", "S", "M", "L"],
       },
       {
-        id: 7,
+        id: 702,
         name: "Hemp Tote Bag",
         brand: "Sustainable",
         price: 1499,
@@ -749,6 +754,7 @@ const COLLECTION_PRODUCTS = {
     title: "Accessories Edit",
     subtitle: "PERFECT FINISHING",
     description: "Complete your look with our curated accessories. Bags, jewelry, scarves, and more.",
+    bgImage: "https://images.unsplash.com/photo-1602173574767-37d01966c6a3?w=1600&q=80",
     products: [
       {
         id: 801,
@@ -767,7 +773,7 @@ const COLLECTION_PRODUCTS = {
         sizes: ["One Size"],
       },
       {
-        id: 8,
+        id: 802,
         name: "Gold Plated Necklace",
         brand: "Accessories Edit",
         price: 2999,
@@ -892,8 +898,7 @@ const ProductCard = ({ product, index }) => {
           {/* Badge */}
           <div className="absolute top-2 left-2 z-10">
             <span
-              className="text-[8px] sm:text-[9px] font-black uppercase tracking-wider px-1.5 py-0.5 sm:px-2 sm:py-1"
-              style={{ background: "#6F4E37", color: "#fff" }}
+              className="text-[8px] sm:text-[9px] font-black uppercase tracking-wider px-1.5 py-0.5 sm:px-2 sm:py-1 bg-black text-white rounded"
             >
               {product.badge}
             </span>
@@ -902,8 +907,8 @@ const ProductCard = ({ product, index }) => {
           {/* Discount */}
           <div className="absolute top-2 right-2 z-10">
             <span
-              className="text-[8px] sm:text-[9px] font-black px-1 py-0.5 sm:px-1.5 sm:py-0.5"
-              style={{ background: "#6F4E37", color: "#fff" }}
+              className="text-[8px] sm:text-[9px] font-black px-1 py-0.5 sm:px-1.5 sm:py-0.5 bg-coffee text-white rounded"
+              style={{ backgroundColor: COFFEE }}
             >
               {product.discount}% OFF
             </span>
@@ -912,16 +917,13 @@ const ProductCard = ({ product, index }) => {
           {/* Wishlist Button */}
           <button
             onClick={handleWishlist}
-            className="absolute z-20 flex items-center justify-center transition-all duration-300 rounded-full"
+            className="absolute z-20 flex items-center justify-center transition-all duration-300 rounded-full bg-white shadow-md"
             style={{
               top: hovered ? "8px" : "6px",
               right: "6px",
               width: "28px",
               height: "28px",
-              background: wishlisted ? "#e85d4a" : "rgba(255,255,255,0.95)",
-              color: wishlisted ? "#fff" : "#0C0C0C",
-              boxShadow: "0 2px 8px rgba(0,0,0,0.15)",
-              opacity: hovered ? 1 : 0.9,
+              color: wishlisted ? "#e85d4a" : "#0C0C0C",
             }}
           >
             <svg width="13" height="13" viewBox="0 0 24 24" fill={wishlisted ? "currentColor" : "none"} stroke="currentColor" strokeWidth={2}>
@@ -931,12 +933,9 @@ const ProductCard = ({ product, index }) => {
 
           {/* Quick View */}
           <button
-            className="absolute bottom-0 left-0 right-0 z-20 flex items-center justify-center gap-1.5 transition-all duration-300"
+            className="absolute bottom-0 left-0 right-0 z-20 flex items-center justify-center gap-1.5 transition-all duration-300 bg-black/85 text-white"
             style={{
               height: "34px",
-              background: "rgba(12,12,12,0.85)",
-              backdropFilter: "blur(8px)",
-              color: "#F5F0E8",
               fontSize: "9px",
               fontWeight: 700,
               letterSpacing: "0.08em",
@@ -954,7 +953,7 @@ const ProductCard = ({ product, index }) => {
 
         {/* Product Info */}
         <div className="p-2.5 sm:p-3">
-          <p className="text-[8px] sm:text-[9px] font-bold uppercase tracking-wider mb-0.5" style={{ color: "#8A8070" }}>
+          <p className="text-[8px] sm:text-[9px] font-bold uppercase tracking-wider mb-0.5 text-gray-500">
             {product.brand}
           </p>
           <h3 className="font-bold text-gray-800 text-xs sm:text-sm mb-1 line-clamp-1">{product.name}</h3>
@@ -966,13 +965,12 @@ const ProductCard = ({ product, index }) => {
             </div>
             <button
               onClick={handleCart}
-              className="flex items-center justify-center transition-all duration-300 active:scale-95"
+              className="flex items-center justify-center transition-all duration-300 active:scale-95 rounded-lg"
               style={{
                 width: "28px",
                 height: "28px",
-                background: addedCart ? "#6fcf97" : "#6F4E37",
+                background: addedCart ? "#6fcf97" : "#000",
                 color: "#fff",
-                borderRadius: "8px",
               }}
             >
               {addedCart ? (
@@ -1065,7 +1063,8 @@ const MobileFilterDrawer = ({ filters, onFilterChange, onClose, isOpen }) => {
                     value={option.value}
                     checked={sortBy === option.value}
                     onChange={(e) => setSortBy(e.target.value)}
-                    className="w-3.5 h-3.5 accent-coffee"
+                    className="w-3.5 h-3.5"
+                    style={{ accentColor: COFFEE }}
                   />
                   <span className="text-sm text-gray-600">{option.label}</span>
                 </label>
@@ -1081,16 +1080,18 @@ const MobileFilterDrawer = ({ filters, onFilterChange, onClose, isOpen }) => {
                 type="number"
                 value={priceRange[0]}
                 onChange={(e) => setPriceRange([Number(e.target.value), priceRange[1]])}
-                className="w-full px-3 py-1.5 text-sm border border-gray-300 rounded-lg focus:border-coffee outline-none"
+                className="w-full px-3 py-1.5 text-sm border border-gray-300 rounded-lg focus:outline-none focus:border-coffee"
                 placeholder="Min"
+                style={{ borderColor: priceRange[0] ? COFFEE : undefined }}
               />
               <span className="text-gray-400">-</span>
               <input
                 type="number"
                 value={priceRange[1]}
                 onChange={(e) => setPriceRange([priceRange[0], Number(e.target.value)])}
-                className="w-full px-3 py-1.5 text-sm border border-gray-300 rounded-lg focus:border-coffee outline-none"
+                className="w-full px-3 py-1.5 text-sm border border-gray-300 rounded-lg focus:outline-none focus:border-coffee"
                 placeholder="Max"
+                style={{ borderColor: priceRange[1] < 50000 ? COFFEE : undefined }}
               />
             </div>
           </div>
@@ -1105,9 +1106,10 @@ const MobileFilterDrawer = ({ filters, onFilterChange, onClose, isOpen }) => {
                   onClick={() => handleSizeToggle(size)}
                   className={`px-2 py-1 text-[11px] rounded-md transition-all ${
                     selectedSizes.includes(size)
-                      ? "bg-coffee text-white"
+                      ? "text-white"
                       : "bg-gray-100 text-gray-600 hover:bg-gray-200"
                   }`}
+                  style={selectedSizes.includes(size) ? { backgroundColor: COFFEE } : {}}
                 >
                   {size}
                 </button>
@@ -1125,8 +1127,7 @@ const MobileFilterDrawer = ({ filters, onFilterChange, onClose, isOpen }) => {
             </button>
             <button
               onClick={applyFilters}
-              className="flex-1 py-2 text-sm font-medium text-white rounded-lg transition-colors"
-              style={{ background: "#6F4E37" }}
+              className="flex-1 py-2 text-sm font-medium text-white rounded-lg transition-colors bg-black hover:bg-gray-800"
             >
               Apply
             </button>
@@ -1181,18 +1182,19 @@ const DesktopFilterSidebar = ({ filters, onFilterChange }) => {
     <div className="w-64 flex-shrink-0">
       <div className="sticky top-24">
         <div className="flex items-center justify-between mb-4">
-          <h3 className="font-bold text-white text-base">Filters</h3>
+          <h3 className="font-bold text-gray-800 text-base">Filters</h3>
           <button
             onClick={resetFilters}
-            className="text-xs text-gray-400 hover:text-coffee transition-colors"
+            className="text-xs text-gray-500 hover:text-coffee transition-colors"
+            style={{ color: COFFEE }}
           >
             Reset all
           </button>
         </div>
 
         {/* Sort By */}
-        <div className="mb-6 pb-4 border-b border-white/10">
-          <h4 className="font-semibold text-gray-300 text-sm mb-3">Sort By</h4>
+        <div className="mb-6 pb-4 border-b border-gray-200">
+          <h4 className="font-semibold text-gray-700 text-sm mb-3">Sort By</h4>
           <div className="space-y-2">
             {sortOptions.map(option => (
               <label key={option.value} className="flex items-center gap-2 cursor-pointer">
@@ -1202,31 +1204,32 @@ const DesktopFilterSidebar = ({ filters, onFilterChange }) => {
                   value={option.value}
                   checked={sortBy === option.value}
                   onChange={(e) => handleSortChange(e.target.value)}
-                  className="w-3.5 h-3.5 accent-coffee"
+                  className="w-3.5 h-3.5"
+                  style={{ accentColor: COFFEE }}
                 />
-                <span className="text-sm text-gray-400">{option.label}</span>
+                <span className="text-sm text-gray-600">{option.label}</span>
               </label>
             ))}
           </div>
         </div>
 
         {/* Price Range */}
-        <div className="mb-6 pb-4 border-b border-white/10">
-          <h4 className="font-semibold text-gray-300 text-sm mb-3">Price Range</h4>
+        <div className="mb-6 pb-4 border-b border-gray-200">
+          <h4 className="font-semibold text-gray-700 text-sm mb-3">Price Range</h4>
           <div className="flex items-center gap-2">
             <input
               type="number"
               value={priceRange[0]}
               onChange={(e) => handlePriceChange([Number(e.target.value), priceRange[1]])}
-              className="w-full px-3 py-1.5 text-sm bg-white/5 border border-white/20 rounded-lg focus:border-coffee outline-none text-white placeholder-gray-500"
+              className="w-full px-3 py-1.5 text-sm border border-gray-300 rounded-lg focus:outline-none focus:border-coffee"
               placeholder="Min"
             />
-            <span className="text-gray-500">-</span>
+            <span className="text-gray-400">-</span>
             <input
               type="number"
               value={priceRange[1]}
               onChange={(e) => handlePriceChange([priceRange[0], Number(e.target.value)])}
-              className="w-full px-3 py-1.5 text-sm bg-white/5 border border-white/20 rounded-lg focus:border-coffee outline-none text-white placeholder-gray-500"
+              className="w-full px-3 py-1.5 text-sm border border-gray-300 rounded-lg focus:outline-none focus:border-coffee"
               placeholder="Max"
             />
           </div>
@@ -1234,7 +1237,7 @@ const DesktopFilterSidebar = ({ filters, onFilterChange }) => {
 
         {/* Sizes */}
         <div className="mb-6">
-          <h4 className="font-semibold text-gray-300 text-sm mb-3">Size</h4>
+          <h4 className="font-semibold text-gray-700 text-sm mb-3">Size</h4>
           <div className="flex flex-wrap gap-1.5">
             {sizes.map(size => (
               <button
@@ -1242,9 +1245,10 @@ const DesktopFilterSidebar = ({ filters, onFilterChange }) => {
                 onClick={() => handleSizeToggle(size)}
                 className={`px-2 py-1 text-[11px] rounded-md transition-all ${
                   selectedSizes.includes(size)
-                    ? "bg-coffee text-white"
-                    : "bg-white/10 text-gray-400 hover:bg-white/20"
+                    ? "text-white"
+                    : "bg-gray-100 text-gray-600 hover:bg-gray-200"
                 }`}
+                style={selectedSizes.includes(size) ? { backgroundColor: COFFEE } : {}}
               >
                 {size}
               </button>
@@ -1349,10 +1353,10 @@ export default function SingleCollectionProducts() {
     return (
       <>
         <Header />
-        <div className="min-h-screen bg-black flex items-center justify-center">
+        <div className="min-h-screen bg-gray-50 flex items-center justify-center">
           <div className="text-center px-4">
-            <div className="w-10 h-10 rounded-full border-2 border-coffee border-t-transparent animate-spin mx-auto mb-3" />
-            <p className="text-gray-400 fs text-sm">Loading products...</p>
+            <div className="w-10 h-10 rounded-full border-2 border-coffee border-t-transparent animate-spin mx-auto mb-3" style={{ borderColor: `${COFFEE} transparent ${COFFEE} transparent` }} />
+            <p className="text-gray-500 fs text-sm">Loading products...</p>
           </div>
         </div>
       </>
@@ -1364,15 +1368,19 @@ export default function SingleCollectionProducts() {
   return (
     <>
       <Header />
-      <div className="min-h-screen bg-black">
+      <div className="min-h-screen bg-gray-50">
         <Styles />
 
-        {/* Hero Section */}
-        <div className="relative overflow-hidden bg-black border-b border-white/10">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-12 md:py-16">
+        {/* Hero Section with Background Image */}
+        <div 
+          className="relative overflow-hidden bg-cover bg-center bg-no-repeat"
+          style={{ backgroundImage: `linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.5)), url(${collection.bgImage})` }}
+        >
+          <div className="absolute inset-0 bg-black/30" />
+          <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 md:py-20">
             <button
               onClick={() => navigate("/collections")}
-              className="inline-flex items-center gap-1.5 text-gray-400 hover:text-coffee transition-colors mb-5 sm:mb-6 text-xs sm:text-sm group"
+              className="inline-flex items-center gap-1.5 text-white/80 hover:text-white transition-colors mb-5 sm:mb-6 text-xs sm:text-sm group"
             >
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} className="group-hover:-translate-x-0.5 transition-transform">
                 <path d="M15 18l-6-6 6-6" />
@@ -1381,22 +1389,22 @@ export default function SingleCollectionProducts() {
             </button>
 
             <div className="text-center">
-              <p className="text-[9px] sm:text-[10px] font-black uppercase tracking-[0.2em] text-coffee mb-2">
+              <p className="text-[9px] sm:text-[10px] font-black uppercase tracking-[0.2em] text-coffee mb-2" style={{ color: COFFEE }}>
                 {collection.subtitle}
               </p>
               <h1 
                 className="fd font-black text-white px-2"
-                style={{ fontSize: "clamp(24px, 7vw, 48px)" }}
+                style={{ fontSize: "clamp(28px, 8vw, 52px)" }}
               >
                 {collection.title}
               </h1>
-              <p className="text-gray-300 fs text-xs sm:text-sm max-w-2xl mx-auto mt-3 px-4">
+              <p className="text-white/90 fs text-xs sm:text-sm max-w-2xl mx-auto mt-3 px-4">
                 {collection.description}
               </p>
               <div className="flex justify-center gap-6 mt-5 sm:mt-6">
                 <div>
-                  <p className="text-xl sm:text-2xl font-black text-coffee">{collection.products.length}</p>
-                  <p className="text-[8px] sm:text-[9px] font-bold uppercase tracking-wide text-gray-400">Products</p>
+                  <p className="text-xl sm:text-2xl font-black text-coffee" style={{ color: COFFEE }}>{collection.products.length}</p>
+                  <p className="text-[8px] sm:text-[9px] font-bold uppercase tracking-wide text-white/70">Products</p>
                 </div>
               </div>
             </div>
@@ -1414,16 +1422,17 @@ export default function SingleCollectionProducts() {
                 placeholder="Search products..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-9 pr-3 py-2 sm:py-2.5 bg-black border border-white/20 rounded-xl text-sm text-white placeholder-gray-500 focus:border-coffee focus:outline-none transition-colors"
+                className="w-full pl-9 pr-3 py-2 sm:py-2.5 bg-white border border-gray-300 rounded-xl text-sm text-gray-800 placeholder-gray-400 focus:border-coffee focus:outline-none transition-colors"
+                style={{ borderColor: searchQuery ? COFFEE : undefined }}
               />
-              <svg className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
+              <svg className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
                 <circle cx="11" cy="11" r="8" />
                 <path d="M21 21l-4.35-4.35" />
               </svg>
               {searchQuery && (
                 <button
                   onClick={() => setSearchQuery("")}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
                 >
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
                     <path d="M18 6L6 18M6 6l12 12" />
@@ -1435,14 +1444,14 @@ export default function SingleCollectionProducts() {
             <div className="flex items-center gap-2">
               <button
                 onClick={() => setIsFilterOpen(true)}
-                className="flex items-center justify-center gap-2 px-4 py-2 bg-black border border-white/20 rounded-xl text-sm font-medium text-white hover:border-coffee transition-colors lg:hidden flex-1 sm:flex-none"
+                className="flex items-center justify-center gap-2 px-4 py-2 bg-white border border-gray-300 rounded-xl text-sm font-medium text-gray-700 hover:border-coffee transition-colors lg:hidden flex-1 sm:flex-none"
               >
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
                   <path d="M4 4h16v2.172a2 2 0 01-.586 1.414L15 12v7l-6 2v-9L4.586 7.586A2 2 0 014 6.172V4z" />
                 </svg>
                 Filters
                 {(filters.sizes.length > 0 || filters.priceRange[0] > 0 || filters.priceRange[1] < 50000) && (
-                  <span className="px-1.5 py-0.5 text-[10px] rounded-full bg-coffee text-white">
+                  <span className="px-1.5 py-0.5 text-[10px] rounded-full text-white" style={{ backgroundColor: COFFEE }}>
                     {filters.sizes.length + (filters.priceRange[0] > 0 || filters.priceRange[1] < 50000 ? 1 : 0)}
                   </span>
                 )}
@@ -1460,18 +1469,18 @@ export default function SingleCollectionProducts() {
             {/* Products Grid */}
             <div className="flex-1">
               {filteredProducts.length === 0 ? (
-                <div className="text-center py-12 sm:py-16">
-                  <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-white/5 flex items-center justify-center mx-auto mb-4">
-                    <svg width="28" height="28" className="sm:w-8 sm:h-8 text-gray-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5}>
+                <div className="text-center py-12 sm:py-16 bg-white rounded-2xl">
+                  <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-gray-100 flex items-center justify-center mx-auto mb-4">
+                    <svg width="28" height="28" className="sm:w-8 sm:h-8 text-gray-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5}>
                       <circle cx="11" cy="11" r="8" />
                       <path d="M21 21l-4.35-4.35" />
                     </svg>
                   </div>
-                  <h3 className="font-semibold text-white text-base sm:text-lg mb-1">No products found</h3>
-                  <p className="text-sm text-gray-400">Try adjusting your filters or search term</p>
+                  <h3 className="font-semibold text-gray-800 text-base sm:text-lg mb-1">No products found</h3>
+                  <p className="text-sm text-gray-500">Try adjusting your filters or search term</p>
                   <button
                     onClick={clearAllFilters}
-                    className="mt-4 px-5 py-2 text-sm font-medium text-coffee border border-coffee rounded-lg hover:bg-coffee/10 transition-colors"
+                    className="mt-4 px-5 py-2 text-sm font-medium rounded-lg transition-colors border border-coffee text-coffee hover:bg-coffee/10"
                   >
                     Clear all filters
                   </button>
@@ -1479,11 +1488,12 @@ export default function SingleCollectionProducts() {
               ) : (
                 <>
                   <div className="flex justify-between items-center mb-4">
-                    <p className="text-xs sm:text-sm text-gray-400">Showing {filteredProducts.length} products</p>
+                    <p className="text-xs sm:text-sm text-gray-500">Showing {filteredProducts.length} products</p>
                     {(searchQuery || filters.sizes.length > 0 || filters.priceRange[0] > 0 || filters.priceRange[1] < 50000) && (
                       <button
                         onClick={clearAllFilters}
                         className="text-xs text-coffee hover:underline"
+                        style={{ color: COFFEE }}
                       >
                         Clear all
                       </button>
