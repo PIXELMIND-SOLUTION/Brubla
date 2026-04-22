@@ -649,10 +649,10 @@ const MegaMenuPanel = ({ show, onClose, navbarHeight }) => {
 // ─────────────────────────────────────────────────────────────────────────────
 const SIDEBAR_LINKS = [
     { id: "home", label: "Home", Icon: HomeIcon, link: "/" },
-    { id: "tailor", label: "Tailor", Icon: ScissorsIcon, link: "/" },
+    { id: "tailor", label: "Tailor", Icon: ScissorsIcon, link: "/exclusive" },
     { id: "exclusive", label: "Exclusive", Icon: GemIcon, link: "/exclusiveproducts", special: true },
-    { id: "stylist", label: "AI Stylist", Icon: BrushIcon, link: "/" },
-    { id: "wishlist", label: "Wishlist", Icon: HeartIcon, link: "/" },
+    { id: "stylist", label: "AI Stylist", Icon: BrushIcon, link: "/exclusive" },
+    { id: "designer", label: "Designer", Icon: HeartIcon, link: "/exclusive" },
     { id: "profile", label: "Profile", Icon: ProfileIcon, link: "/profile" },
 ];
 
