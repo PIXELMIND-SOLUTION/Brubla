@@ -826,7 +826,7 @@ const StarRating = ({ rating }) => {
 };
 
 // Product Card Component
-const ProductCard = ({ product, index }) => {
+const ProductCard = ({ onClick, product, index }) => {
   const [hovered, setHovered] = useState(false);
   const [wishlisted, setWish] = useState(false);
   const [addedCart, setCart] = useState(false);
@@ -870,6 +870,7 @@ const ProductCard = ({ product, index }) => {
       }}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
+      onClick={onClick}
     >
       <div className="relative rounded-xl overflow-hidden bg-white shadow-md hover:shadow-xl transition-all duration-300">
         {/* Image Container */}
@@ -1501,7 +1502,7 @@ export default function SingleCollectionProducts() {
                   </div>
                   <div className="product-grid">
                     {filteredProducts.map((product, idx) => (
-                      <ProductCard key={product.id} product={product} index={idx} />
+                      <ProductCard key={product.id} onClick={()=>navigate(`/product/${product.id}`)} product={product} index={idx} />
                     ))}
                   </div>
                 </>
