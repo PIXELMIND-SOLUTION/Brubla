@@ -120,6 +120,9 @@ function EmptyState({ onClear }) {
 
 // ─── Product Card (Grid) - Light Theme ─────────────────────────────────────────
 function ProductCard({ product, isWishlisted, onWishlistToggle }) {
+
+  const navigate = useNavigate();
+
   const discount = product.originalPrice
     ? Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100)
     : null;
@@ -127,7 +130,7 @@ function ProductCard({ product, isWishlisted, onWishlistToggle }) {
   return (
     <div className="group flex flex-col bg-white rounded-xl overflow-hidden border border-gray-100 hover:border-gray-200 hover:shadow-md transition-all duration-300">
       {/* Image */}
-      <div className="relative overflow-hidden bg-gray-50" style={{ aspectRatio: "3/4" }}>
+      <div onClick={() => navigate(`/product/${product.id}`)} className="relative overflow-hidden bg-gray-50" style={{ aspectRatio: "3/4" }}>
         <img
           src={product.image}
           alt={product.name}
@@ -193,10 +196,10 @@ function ProductCard({ product, isWishlisted, onWishlistToggle }) {
               <span className="text-gray-400 text-[10px] line-through">${product.originalPrice}</span>
             )}
           </div>
-          <Link to={`/product/${product.id}`} className="text-gray-500 hover:text-amber-600 transition-colors">
+          {/* <Link to={`/product/${product.id}`} className="text-gray-500 hover:text-amber-600 transition-colors">
             <FaEye size={14} />
-          </Link>
-          {/* <button
+          </Link> */}
+          <button
             disabled={!product.inStock}
             className={`flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-[10px] font-medium transition-all ${product.inStock
               ? "text-white hover:opacity-80 active:scale-95"
@@ -206,7 +209,7 @@ function ProductCard({ product, isWishlisted, onWishlistToggle }) {
           >
             <ShoppingBag size={10} />
             Add
-          </button> */}
+          </button>
         </div>
       </div>
     </div>
@@ -334,18 +337,17 @@ function FilterDrawer({ selectedFilters, setSelectedFilters, onClose }) {
             <h3 className="text-xs text-gray-500 uppercase tracking-widest font-semibold mb-3">Price Range</h3>
             <div className="space-y-2">
               {[...filterOptions.price, { label: "Any price", min: null, max: null }].map((range, idx) => {
-                const isSelected = range.label === "Any price" 
-                  ? priceRange === null 
+                const isSelected = range.label === "Any price"
+                  ? priceRange === null
                   : priceRange?.label === range.label;
                 return (
                   <label key={range.label} className="flex items-center gap-3 cursor-pointer group/radio">
                     <span
                       onClick={() => setPriceRange(range.label === "Any price" ? null : filterOptions.price[idx])}
-                      className={`w-4 h-4 rounded-full border flex items-center justify-center flex-shrink-0 transition-colors ${
-                        isSelected
+                      className={`w-4 h-4 rounded-full border flex items-center justify-center flex-shrink-0 transition-colors ${isSelected
                           ? "border-coffee bg-coffee"
                           : "border-gray-300 group-hover/radio:border-gray-400"
-                      }`}
+                        }`}
                       style={isSelected ? { borderColor: COFFEE, backgroundColor: COFFEE } : {}}
                     >
                       {isSelected && (
@@ -367,11 +369,10 @@ function FilterDrawer({ selectedFilters, setSelectedFilters, onClose }) {
                 <label key={r.label} className="flex items-center gap-3 cursor-pointer group/radio">
                   <span
                     onClick={() => setMinRating(r.value)}
-                    className={`w-4 h-4 rounded-full border flex items-center justify-center flex-shrink-0 transition-colors ${
-                      minRating === r.value
+                    className={`w-4 h-4 rounded-full border flex items-center justify-center flex-shrink-0 transition-colors ${minRating === r.value
                         ? "border-coffee bg-coffee"
                         : "border-gray-300 group-hover/radio:border-gray-400"
-                    }`}
+                      }`}
                     style={minRating === r.value ? { borderColor: COFFEE, backgroundColor: COFFEE } : {}}
                   >
                     {minRating === r.value && (
@@ -390,9 +391,8 @@ function FilterDrawer({ selectedFilters, setSelectedFilters, onClose }) {
             <label className="flex items-center gap-3 cursor-pointer group/check">
               <span
                 onClick={() => setInStockOnly(!inStockOnly)}
-                className={`w-4 h-4 rounded border flex items-center justify-center flex-shrink-0 transition-colors ${
-                  inStockOnly ? "border-coffee bg-coffee" : "border-gray-300 group-hover/check:border-gray-400"
-                }`}
+                className={`w-4 h-4 rounded border flex items-center justify-center flex-shrink-0 transition-colors ${inStockOnly ? "border-coffee bg-coffee" : "border-gray-300 group-hover/check:border-gray-400"
+                  }`}
                 style={inStockOnly ? { borderColor: COFFEE, backgroundColor: COFFEE } : {}}
               >
                 {inStockOnly && (
@@ -619,8 +619,14 @@ export default function CategoryProductsPage() {
           {filteredProducts.length === 0 ? (
             <EmptyState onClear={clearFilters} />
           ) : viewMode === "grid" ? (
-            <div className="grid gap-3 sm:gap-4"
-              style={{ gridTemplateColumns: "repeat(auto-fill, minmax(140px, 1fr))" }}
+            <div
+              className="grid gap-3 sm:gap-4"
+              style={{
+                gridTemplateColumns:
+                  window.innerWidth >= 1024
+                    ? "repeat(auto-fill, minmax(200px, 1fr))"
+                    : "repeat(auto-fill, minmax(140px, 1fr))",
+              }}
             >
               {filteredProducts.map((product) => (
                 <ProductCard

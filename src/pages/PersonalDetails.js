@@ -49,7 +49,7 @@ const SAMPLE_USER_DATA = {
   email: "vijay.nimmakeyala@email.com",
   phone: "+91 6303092897",
   alternatePhone: "+91 6303092897",
-  dateOfBirth: "1995-06-15",
+  dateOfBirth: "1995-07-10",
   gender: "male",
   nationality: "Indian",
   preferredLanguage: "English",

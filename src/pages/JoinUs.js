@@ -202,78 +202,78 @@ const FormField = ({ field, value, onChange, accent }) => {
 // ─────────────────────────────────────────────────────────────────────────────
 // ROLE CARD - Dark Theme
 // ─────────────────────────────────────────────────────────────────────────────
-const RoleCard = ({ role, onSelect, index }) => {
-    const [hovered, setHovered] = useState(false);
-    const { Icon, accent, accentSoft, accentBorder } = role;
 
-    return (
-        <div
-            onClick={() => onSelect(role)}
-            onMouseEnter={() => setHovered(true)}
-            onMouseLeave={() => setHovered(false)}
-            className="relative cursor-pointer rounded-3xl overflow-hidden transition-all duration-400 group"
-            style={{
-                background: hovered ? "#FFFFFF" : "rgba(255,255,255,0.05)",
-                border: `1.5px solid ${hovered ? "#FFFFFF" : "rgba(255,255,255,0.15)"}`,
-                boxShadow: hovered
-                    ? `0 20px 60px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.3)`
-                    : "0 2px 16px rgba(0,0,0,0.3)",
-                transform: hovered ? "translateY(-6px) scale(1.01)" : "translateY(0) scale(1)",
-            }}
-        >
-            {/* Top accent bar */}
-            <div className="h-1 w-full bg-gradient-to-r from-white via-white/50 to-transparent" />
+const RoleCard = ({ role, onSelect }) => {
+  const [hovered, setHovered] = useState(false);
+  const { Icon } = role;
 
-            <div className="p-7 flex flex-col gap-5">
-                {/* Icon badge */}
-                <div className="w-16 h-16 rounded-2xl flex items-center justify-center transition-all duration-300"
-                    style={{
-                        background: hovered ? "rgba(0,0,0,0.1)" : "rgba(255,255,255,0.1)",
-                        border: `1.5px solid ${hovered ? "#FFFFFF" : "rgba(255,255,255,0.25)"}`,
-                        color: hovered ? "#000000" : "#FFFFFF",
-                        boxShadow: hovered ? `0 0 24px rgba(255,255,255,0.2)` : "none",
-                    }}>
-                    <Icon c="w-7 h-7" />
-                </div>
+  return (
+    <div
+      onClick={() => onSelect(role)}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+      className="relative cursor-pointer rounded-3xl overflow-hidden group transition-all duration-500"
+    >
+      {/* Glass Background */}
+      <div className="absolute inset-0 backdrop-blur-xl bg-white/5 border border-white/10 transition-all duration-500 group-hover:bg-white/10 group-hover:border-white/20" />
 
-                {/* Text */}
-                <div>
-                    <p className="text-[10px] font-black uppercase tracking-[0.2em] mb-1 text-white/70">{role.tagline}</p>
-                    <h3 className="text-2xl font-black mb-2 transition-colors duration-300 font-serif tracking-[-0.02em]"
-                        style={{ color: hovered ? "#000000" : "#FFFFFF" }}>
-                        {role.title}
-                    </h3>
-                    <p className="text-sm leading-relaxed transition-colors duration-300"
-                        style={{ color: hovered ? "rgba(0,0,0,0.6)" : "rgba(255,255,255,0.6)" }}>
-                        {role.desc}
-                    </p>
-                </div>
+      {/* Soft Glow */}
+      <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition duration-500 bg-[radial-gradient(circle_at_30%_20%,rgba(255,255,255,0.15),transparent_60%)]" />
 
-                {/* Perks */}
-                <ul className="flex flex-col gap-2">
-                    {role.perks.map(p => (
-                        <li key={p} className="flex items-center gap-2 text-xs font-medium transition-colors duration-300"
-                            style={{ color: hovered ? "rgba(0,0,0,0.7)" : "rgba(255,255,255,0.7)" }}>
-                            <span className="text-white"><SparkIcon c="w-2.5 h-2.5" /></span>
-                            {p}
-                        </li>
-                    ))}
-                </ul>
+      {/* Content */}
+      <div className="relative p-7 flex flex-col gap-5 z-10 transition-all duration-500 group-hover:-translate-y-2 group-hover:scale-[1.02]">
+        
+        {/* Top Accent */}
+        <div className="h-[2px] w-16 rounded-full bg-gradient-to-r from-white via-white/60 to-transparent mb-2 opacity-70 group-hover:opacity-100 transition" />
 
-                {/* CTA row */}
-                <div className="flex items-center justify-between pt-2"
-                    style={{ borderTop: `1px solid ${hovered ? "rgba(0,0,0,0.1)" : "rgba(255,255,255,0.1)"}` }}>
-                    <span className="text-xs font-bold uppercase tracking-wider text-white">Apply Now</span>
-                    <div className="w-8 h-8 rounded-full flex items-center justify-center transition-all duration-300 bg-white text-black"
-                        style={{
-                            transform: hovered ? "translateX(4px)" : "translateX(0)",
-                        }}>
-                        <ChevRight c="w-4 h-4" />
-                    </div>
-                </div>
-            </div>
+        {/* Icon */}
+        <div className="w-16 h-16 rounded-2xl flex items-center justify-center transition-all duration-300 bg-white/10 border border-white/20 text-white group-hover:bg-white/20 group-hover:shadow-lg">
+          <Icon c="w-7 h-7" />
         </div>
-    );
+
+        {/* Text */}
+        <div>
+          <p className="text-[10px] font-bold uppercase tracking-[0.25em] mb-1 text-white/60 group-hover:text-white/80 transition">
+            {role.tagline}
+          </p>
+
+          <h3 className="text-2xl font-extrabold font-serif tracking-tight text-white group-hover:text-white transition">
+            {role.title}
+          </h3>
+
+          <p className="text-sm leading-relaxed mt-2 text-white/60 group-hover:text-white/80 transition">
+            {role.desc}
+          </p>
+        </div>
+
+        {/* Perks */}
+        <ul className="flex flex-col gap-2 mt-1">
+          {role.perks.map((p) => (
+            <li
+              key={p}
+              className="flex items-center gap-2 text-xs font-medium text-white/70 group-hover:text-white transition"
+            >
+              <span className="opacity-80">
+                <SparkIcon c="w-3 h-3" />
+              </span>
+              {p}
+            </li>
+          ))}
+        </ul>
+
+        {/* CTA */}
+        <div className="flex items-center justify-between pt-4 mt-2 border-t border-white/10 group-hover:border-white/20 transition">
+          <span className="text-xs font-bold uppercase tracking-wider text-white/80 group-hover:text-white transition">
+            Apply Now
+          </span>
+
+          <div className="w-9 h-9 rounded-full flex items-center justify-center transition-all duration-300 bg-white/90 text-black group-hover:bg-white group-hover:translate-x-1 group-hover:scale-105 shadow-md">
+            <ChevRight c="w-4 h-4" />
+          </div>
+        </div>
+      </div>
+    </div>
+  );
 };
 
 // ─────────────────────────────────────────────────────────────────────────────

@@ -171,7 +171,7 @@ export default function AdBanner() {
             className="h-1 rounded-full transition-all"
             style={{
               width: i === cur ? 20 : 6,
-              background: i === cur ? "#facc15" : "#aaa",
+              background: i === cur ? "#000" : "#aaa",
             }}
           />
         ))}
