@@ -20,6 +20,7 @@ import UserAddresses from './pages/UserAddresses';
 import UserNotifications from './pages/UserNotifications';
 import Collections from './pages/Collections';
 import SingleCollectionProducts from './pages/SingleCollectionProducts';
+import { WeddingPlannerPage } from './pages/WeddingPlanner';
 
 function App() {
   return (
@@ -43,6 +44,7 @@ function App() {
       <Route path='/profile/notifications' element={<UserNotifications/>} />
       <Route path="/collections" element={<Collections/>} />
       <Route path="/collections/:id" element={<SingleCollectionProducts/>} />
+      <Route path="/wedding" element={<WeddingPlannerPage/>}/>
     </Routes>
     </>
   );

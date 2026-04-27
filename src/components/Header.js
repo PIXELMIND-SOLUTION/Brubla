@@ -422,10 +422,9 @@ const collectionItems = [
     { id: 2, title: "Luxury Collections", img: "https://images.unsplash.com/photo-1539008835657-9e8e9680c956?w=800&h=1000&fit=crop&q=80&auto=format" },
     { id: 3, title: "Originals by Brubla", img: "https://images.unsplash.com/photo-1617137968427-85924c800a22?w=800&h=1300&fit=crop&q=80&auto=format" },
     { id: 4, title: "Indian Roots", img: "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=800&h=1400&fit=crop&q=80&auto=format" },
-    { id: 5, title: "Weddings & Celebrations", img: "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=800&h=1400&fit=crop&q=80&auto=format" },
+    { id: 5, title: "Accessories Edit", img: "https://images.unsplash.com/photo-1611591437281-460bfbe1220a?w=800&h=1000&fit=crop&q=80&auto=format" },
     { id: 6, title: "Street Style Edit", img: "https://images.unsplash.com/photo-1556821840-3a63f95609a7?w=800&h=1200&fit=crop&q=80&auto=format" },
     { id: 7, title: "Sustainable Fashion", img: "https://images.unsplash.com/photo-1523381210434-271e8be1f52b?w=800&h=1150&fit=crop&q=80&auto=format" },
-    { id: 8, title: "Accessories Edit", img: "https://images.unsplash.com/photo-1611591437281-460bfbe1220a?w=800&h=1000&fit=crop&q=80&auto=format" },
 ];
 
 
@@ -711,7 +710,7 @@ const Sidebar = ({ open, onClose, navigate }) => {
                     })}
                 </div>
                 <div className="px-5 py-4" style={{ borderTop: "1px solid rgba(111,78,55,0.12)" }}>
-                    <div onClick={()=>navigate('/profile')} className="flex items-center gap-3 p-3 rounded-xl" style={{ background: "#f9f5f0" }}>
+                    <div onClick={() => navigate('/profile')} className="flex items-center gap-3 p-3 rounded-xl" style={{ background: "#f9f5f0" }}>
                         <div className="w-9 h-9 rounded-full flex items-center justify-center flex-shrink-0" style={{ background: "linear-gradient(135deg,#000,#1a1a1a)", border: "1px solid rgba(111,78,55,0.25)" }}>
                             <ProfileIcon c="w-4 h-4" style={{ color: "#000" }} />
                         </div>
@@ -862,7 +861,7 @@ const Header = () => {
                                 style={{ color: textColor }}
                                 onMouseEnter={e => e.currentTarget.style.background = "rgba(0,0,0,0.06)"}
                                 onMouseLeave={e => e.currentTarget.style.background = "transparent"}
-                                onClick={()=>navigate('/exclusiveproducts')}
+                                onClick={() => navigate('/exclusiveproducts')}
                             >
                                 Exclusive
                             </button>

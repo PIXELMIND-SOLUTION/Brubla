@@ -112,14 +112,14 @@ const COLLECTIONS = [
     },
     {
         id: 5,
-        title: "Weddings & Celebrations",
-        subtitle: "YOUR SPECIAL DAY",
-        description: "Make your special day unforgettable with our exquisite wedding collection. From bridal lehengas to groom sherwanis.",
-        image: "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=800&h=1400&fit=crop&q=80&auto=format",
-        productCount: 38,
-        icon: "💍",
+        title: "Accessories Edit",
+        subtitle: "PERFECT FINISHING",
+        description: "Complete your look with our curated accessories. Bags, jewelry, scarves, and more.",
+        image: "https://images.unsplash.com/photo-1611591437281-460bfbe1220a?w=800&h=1000&fit=crop&q=80&auto=format",
+        productCount: 56,
+        icon: "👜",
         bgColor: "#FDFBF7",
-        tagline: "Bridal Edit"
+        tagline: "Final Touch"
     },
     {
         id: 6,
@@ -142,17 +142,6 @@ const COLLECTIONS = [
         icon: "🌱",
         bgColor: "#FDFBF7",
         tagline: "Conscious Collection"
-    },
-    {
-        id: 8,
-        title: "Accessories Edit",
-        subtitle: "PERFECT FINISHING",
-        description: "Complete your look with our curated accessories. Bags, jewelry, scarves, and more.",
-        image: "https://images.unsplash.com/photo-1611591437281-460bfbe1220a?w=800&h=1000&fit=crop&q=80&auto=format",
-        productCount: 56,
-        icon: "👜",
-        bgColor: "#FDFBF7",
-        tagline: "Final Touch"
     }
 ];
 

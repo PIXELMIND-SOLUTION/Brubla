@@ -7,6 +7,7 @@ import CollectionGrid from "./CollectionGrid";
 import UpcomingAndRadar, { DesignsOnRadar, UpcomingSection } from "./UpcommingAndRadar";
 import AdBanner from "./AdBanner";
 import AllCollections from "./AllCollections";
+import { BannerSection } from "../pages/WeddingBanner"
 
 const Home = () => {
     return (
@@ -19,7 +20,8 @@ const Home = () => {
                 <RecommendedProducts />
                 <CollectionGrid />
                 <UpcomingSection />
-                <AdBanner />
+                <BannerSection/>
+                {/* <AdBanner /> */}
                 {/* <DesignsOnRadar /> */}
                 <AllCollections />
             </main>

@@ -2,6 +2,8 @@ import { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import SingleOrderModal from "../pages/SingleOrderModal";
 import Header from "./Header";
+import { BannerSection } from "../pages/WeddingBanner";
+import AdBanner from "./AdBanner";
 
 // ─────────────────────────────────────────────────────────────────────────────
 // STYLES
@@ -473,6 +475,7 @@ export default function ProfilePage() {
         <Styles />
 
         <ProfileHero />
+        {/* <AdBanner /> */}
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-8 lg:px-14 pt-6 sm:pt-8">
 
