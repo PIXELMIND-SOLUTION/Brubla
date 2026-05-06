@@ -72,24 +72,24 @@ export const BannerSection = ({ onEnter }) => {
       </div>
 
       <div
-  onClick={onEnter}
-  className="
+        onClick={onEnter}
+        className="
     relative w-full max-w-sm sm:max-w-xl md:max-w-2xl lg:max-w-4xl
     cursor-pointer group overflow-hidden rounded-xl
     transition-all duration-500
     hover:scale-[1.01]
   "
-  style={{ aspectRatio: "21/10" }}
->
+        style={{ aspectRatio: "21/10" }}
+      >
 
-  {/* 🔥 Background Glow UNDER card */}
-  <div className="absolute inset-0 -z-10">
-    <div className="absolute -top-10 left-10 w-40 h-40 bg-white/10 blur-3xl rounded-full" />
-    <div className="absolute bottom-[-30px] right-10 w-40 h-40 bg-white/10 blur-3xl rounded-full" />
-  </div>
+        {/* 🔥 Background Glow UNDER card */}
+        <div className="absolute inset-0 -z-10">
+          <div className="absolute -top-10 left-10 w-40 h-40 bg-white/10 blur-3xl rounded-full" />
+          <div className="absolute bottom-[-30px] right-10 w-40 h-40 bg-white/10 blur-3xl rounded-full" />
+        </div>
 
-  {/* 💎 Glass Base */}
-  <div className="
+        {/* 💎 Glass Base */}
+        <div className="
     absolute inset-0
     bg-white/[0.05]
     backdrop-blur-xl
@@ -97,91 +97,91 @@ export const BannerSection = ({ onEnter }) => {
     shadow-[0_10px_50px_rgba(0,0,0,0.6)]
   " />
 
-  {/* ✨ Glass Reflection */}
-  <div className="
+        {/* ✨ Glass Reflection */}
+        <div className="
     absolute inset-0
     bg-gradient-to-br
     from-white/10 via-transparent to-transparent
     opacity-40
   " />
 
-  {/* 🎯 Inner Glow */}
-  <div className="
+        {/* 🎯 Inner Glow */}
+        <div className="
     absolute inset-0
     rounded-xl
     shadow-[inset_0_0_40px_rgba(255,255,255,0.05)]
   " />
 
-  {/* 📏 Vertical Lines */}
-  {Array.from({ length: 12 }).map((_, i) => (
-    <div
-      key={i}
-      className="absolute inset-y-0 opacity-[0.04]"
-      style={{
-        left: `${(i + 1) * 7}%`,
-        width: "1px",
-        background: "white",
-      }}
-    />
-  ))}
+        {/* 📏 Vertical Lines */}
+        {Array.from({ length: 12 }).map((_, i) => (
+          <div
+            key={i}
+            className="absolute inset-y-0 opacity-[0.04]"
+            style={{
+              left: `${(i + 1) * 7}%`,
+              width: "1px",
+              background: "white",
+            }}
+          />
+        ))}
 
-  {/* 🪟 Soft Overlay */}
-  <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent" />
+        {/* 🪟 Soft Overlay */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent" />
 
-  {/* 🧩 Decorative Elements UNDER content */}
-  <div className="absolute inset-0 pointer-events-none">
-    {/* Floating dots */}
-    <div className="absolute top-6 left-10 w-2 h-2 bg-white/30 rounded-full animate-pulse" />
-    <div className="absolute bottom-8 right-12 w-2 h-2 bg-white/20 rounded-full animate-pulse" />
+        {/* 🧩 Decorative Elements UNDER content */}
+        <div className="absolute inset-0 pointer-events-none">
+          {/* Floating dots */}
+          <div className="absolute top-6 left-10 w-2 h-2 bg-white/30 rounded-full animate-pulse" />
+          <div className="absolute bottom-8 right-12 w-2 h-2 bg-white/20 rounded-full animate-pulse" />
 
-    {/* Thin lines */}
-    <div className="absolute top-10 right-10 w-20 h-px bg-white/20" />
-    <div className="absolute bottom-10 left-10 w-16 h-px bg-white/20" />
-  </div>
+          {/* Thin lines */}
+          <div className="absolute top-10 right-10 w-20 h-px bg-white/20" />
+          <div className="absolute bottom-10 left-10 w-16 h-px bg-white/20" />
+        </div>
 
-  {/* 🔲 Corner Borders */}
-  {[
-    "top-2 left-2 border-t border-l",
-    "top-2 right-2 border-t border-r",
-    "bottom-2 left-2 border-b border-l",
-    "bottom-2 right-2 border-b border-r",
-  ].map((cls) => (
-    <div
-      key={cls}
-      className={`absolute w-4 h-4 sm:w-6 sm:h-6 ${cls} border-white/40 group-hover:border-white/70 transition`}
-    />
-  ))}
+        {/* 🔲 Corner Borders */}
+        {[
+          "top-2 left-2 border-t border-l",
+          "top-2 right-2 border-t border-r",
+          "bottom-2 left-2 border-b border-l",
+          "bottom-2 right-2 border-b border-r",
+        ].map((cls) => (
+          <div
+            key={cls}
+            className={`absolute w-4 h-4 sm:w-6 sm:h-6 ${cls} border-white/40 group-hover:border-white/70 transition`}
+          />
+        ))}
 
-  {/* 📝 Content */}
-  <div
-    onClick={() => navigate("/wedding")}
-    className="absolute inset-0 flex flex-col items-center justify-center px-3 sm:px-6 text-center"
-  >
-    <p className="text-white/40 text-[9px] sm:text-xs uppercase mb-1 sm:mb-2 tracking-[0.2em]">
-      Wedding Fashion Planner
-    </p>
+        {/* 📝 Content */}
+        <div
+          onClick={() => navigate("/wedding")}
+          className="absolute inset-0 flex flex-col items-center justify-center px-3 sm:px-6 text-center"
+        >
+          <p className="text-white/40 text-[9px] sm:text-xs uppercase mb-1 sm:mb-2 tracking-[0.2em]">
+            Wedding Fashion Planner
+          </p>
 
-    <h2 className="text-white text-sm sm:text-lg md:text-2xl lg:text-3xl font-serif mb-1 sm:mb-2 transition duration-500 group-hover:scale-[1.05]">
-      Plan Every Look. For Every Moment.
-    </h2>
+          <h2 className="text-white text-sm sm:text-lg md:text-2xl lg:text-3xl font-serif mb-1 sm:mb-2 transition duration-500 group-hover:scale-[1.05]">
+            Plan Every Look. For Every Moment.
+          </h2>
 
-    <p className="text-white/40 text-[9px] sm:text-xs uppercase tracking-wider">
-      Bridal · Groom · Events · Budget
-    </p>
+          <p className="text-white/40 text-[9px] sm:text-xs uppercase tracking-wider">
+            Bridal · Groom · Events · Budget
+          </p>
 
-    {/* CTA */}
-    <div className="mt-4 sm:mt-6 flex items-center gap-2 sm:gap-4 text-white">
-      <div className="h-px w-6 sm:w-10 bg-white/30 group-hover:w-16 transition-all duration-500" />
-      <span className="text-[9px] sm:text-xs uppercase tracking-[0.3em]">
-        Begin
-      </span>
-      <div className="h-px w-6 sm:w-10 bg-white/30 group-hover:w-16 transition-all duration-500" />
-    </div>
-  </div>
+          {/* CTA */}
+          <div className="mt-4 sm:mt-6 flex items-center gap-2 sm:gap-4 text-white">
+            <div className="h-px w-6 sm:w-10 bg-white/30 group-hover:w-16 transition-all duration-500" />
+            <span className="text-[9px] sm:text-xs uppercase tracking-[0.3em]">
+              Begin
+            </span>
+            <div className="h-px w-6 sm:w-10 bg-white/30 group-hover:w-16 transition-all duration-500" />
+          </div>
+        </div>
 
-  {/* 🔥 Bottom Hover Line */}
-  <div className="absolute bottom-0 left-0 h-px bg-white w-0 group-hover:w-full transition-all duration-700" />
-</div>
+        {/* 🔥 Bottom Hover Line */}
+        <div className="absolute bottom-0 left-0 h-px bg-white w-0 group-hover:w-full transition-all duration-700" />
+      </div>
 
       {/* Footer */}
       <p className="text-white/10 text-[9px] sm:text-xs md:text-sm uppercase mt-5 sm:mt-8 md:mt-10 text-center tracking-[0.4em]">

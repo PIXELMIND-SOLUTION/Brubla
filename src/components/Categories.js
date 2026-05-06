@@ -152,7 +152,7 @@ export default function CategoriesGrid() {
 
             <div className="min-h-screen bg-gray-50 px-4 sm:px-6 py-10">
                 {/* Header */}
-                <div className="max-w-7xl mx-auto mb-8">
+                <div className="max-w-9xl mx-auto mb-8">
                     <p className="text-xs uppercase tracking-[0.3em] text-coffee mb-2" style={{ color: COFFEE }}>
                         Browse by
                     </p>
@@ -163,7 +163,7 @@ export default function CategoriesGrid() {
                 </div>
 
                 {/* Masonry Layout */}
-                <div className="max-w-7xl mx-auto columns-1 sm:columns-2 md:columns-3 lg:columns-4 gap-4 space-y-4">
+                <div className="max-w-9xl mx-auto columns-1 sm:columns-2 md:columns-3 lg:columns-4 gap-4 space-y-4">
                     {categories.map((cat) => (
                         <div
                             key={cat.id}

@@ -279,8 +279,8 @@ export default function CategorySection() {
   };
 
   return (
-    <section className="w-full py-10 md:py-14 bg-white" aria-label="Shop by Category">
-      <div className="max-w-7xl mx-auto">
+    <section className="w-full p-10 md:py-14 bg-white" aria-label="Shop by Category">
+      <div className="max-w-9xl mx-auto">
 
         {/* ── HEADER ── */}
         <div

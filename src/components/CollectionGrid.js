@@ -389,7 +389,7 @@ const MobileViewAllButton = () => {
 export default function CollectionGrid() {
   return (
     <section
-      className="w-full py-12 md:py-16"
+      className="w-full p-10 md:py-16"
       style={{ background: "#000" }}
       aria-label="Collections"
     >
@@ -434,7 +434,7 @@ export default function CollectionGrid() {
         }
       `}</style>
 
-      <div className="max-w-7xl mx-auto px-4 md:px-6 lg:px-10 xl:px-14">
+      <div className="max-w-9xl mx-auto px-4 md:px-6 lg:px-10 xl:px-14">
         <SectionHeader />
 
         <div className="collection-grid">
