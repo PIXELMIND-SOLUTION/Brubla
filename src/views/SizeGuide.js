@@ -120,7 +120,7 @@ export default function SizeGuideModal({ isOpen, onClose }) {
     };
 
     return (
-        <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center">
+        <div className="fixed inset-0 z-[9999] flex items-end sm:items-center justify-center">
 
             {/* Overlay */}
             <div

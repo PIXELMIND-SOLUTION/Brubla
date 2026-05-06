@@ -506,7 +506,7 @@ export default function CartPage() {
   const discount = selectedCartItems.reduce((sum, item) => 
     sum + (item.originalPrice ? (item.originalPrice - item.price) * item.quantity : 0), 0
   );
-  const shipping = subtotal > 100 ? 0 : 9.99;
+  const shipping = subtotal > 100 ? 332.96 : 9.99;
   const tax = subtotal * 0.1;
   const total = subtotal - discount + shipping + tax;
 
@@ -623,7 +623,7 @@ export default function CartPage() {
                   Continue Shopping
                 </button>
                 <button
-                  onClick={() => navigate("/orders")}
+                  onClick={() => navigate("/profile/my-orders")}
                   className="flex-1 px-4 py-2 rounded-lg text-white font-semibold text-sm sm:text-base transition-all hover:opacity-90"
                   style={{ backgroundColor: COFFEE }}
                 >

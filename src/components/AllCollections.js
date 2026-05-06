@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect, useCallback } from "react";
+import { FaEye } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -393,6 +394,8 @@ const ProductCard = ({ product, index }) => {
   const [visible, setVisible] = useState(false);
   const ref = useRef(null);
 
+  const navigate = useNavigate();
+
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
@@ -428,18 +431,18 @@ const ProductCard = ({ product, index }) => {
 
         {/* Images */}
         {product.imgs.map((src, i) => (
-          <img
-            key={i}
-            src={src}
-            alt={product.name}
-            className={[
-              "absolute inset-0 w-full h-full object-cover object-top",
-              "transition-opacity duration-500 ease-in-out",
-              activeImg === i ? "opacity-100" : "opacity-0",
-            ].join(" ")}
-            loading="lazy"
-            draggable={false}
-          />
+            <img
+              key={i}
+              src={src}
+              alt={product.name}
+              className={[
+                "absolute inset-0 w-full h-full object-cover object-top",
+                "transition-opacity duration-500 ease-in-out",
+                activeImg === i ? "opacity-100" : "opacity-0",
+              ].join(" ")}
+              loading="lazy"
+              draggable={false}
+            />
         ))}
 
         {/* Invisible hover zones — split horizontally for image switching */}
@@ -500,6 +503,10 @@ const ProductCard = ({ product, index }) => {
           </p>
         </div>
 
+        <button onClick={() => navigate(`/product/${product.id}`)} className="flex-shrink-0 w-8 h-8 border border-black flex items-center justify-center rounded-full bg-white text-[#000] hover:bg-[#1a1a1a] hover:text-white transition-colors duration-200" aria-label="Quick view">
+            <FaEye size={14} className="text-[#000] hover:text-[#fff] transition-colors duration-200"/>
+        </button>
+
         {/* + / ✓ button */}
         <button
           onClick={handleCart}
@@ -508,11 +515,11 @@ const ProductCard = ({ product, index }) => {
             "rounded-full border transition-all duration-300 active:scale-95 mt-0.5",
             addedCart
               ? "bg-black border-black text-white scale-[1.1]"
-              : "bg-white border-[#ccc] text-[#1a1a1a] hover:border-[#1a1a1a]",
+              : "bg-white border-black text-[#1a1a1a] hover:border-[#1a1a1a]",
           ].join(" ")}
           aria-label="Add to cart"
         >
-          {addedCart ? <CheckIcon size={13} /> : <PlusIcon size={14} />}
+          {addedCart ? <CheckIcon className="text-white" size={13} /> : <PlusIcon className="text-[#000]" size={14} />}
         </button>
       </div>
     </div>

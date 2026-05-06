@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect, useCallback } from "react";
+import { FaEye } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -146,6 +147,8 @@ const ProductCard = ({ product, index }) => {
   const [visible, setVisible] = useState(false);
   const ref = useRef(null);
 
+  const navigate = useNavigate();
+
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
@@ -252,6 +255,10 @@ const ProductCard = ({ product, index }) => {
             RS. {product.price.toLocaleString()}
           </p>
         </div>
+
+        <button onClick={() => navigate(`/product/${product.id}`)} className="flex-shrink-0 w-8 h-8 border border-black flex items-center justify-center rounded-full bg-white text-[#000] hover:bg-[#000] hover:text-white transition-colors duration-200" aria-label="Quick view">
+          <FaEye size={14} className="text-[#000] hover:text-[#fff] transition-colors duration-200" />
+        </button>
 
         {/* + / ✓ button */}
         <button
