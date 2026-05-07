@@ -647,7 +647,7 @@ const MegaMenuPanel = ({ show, onClose, navbarHeight }) => {
 // SIDEBAR
 // ─────────────────────────────────────────────────────────────────────────────
 const SIDEBAR_LINKS = [
-    { id: "home", label: "Home", Icon: HomeIcon, link: "/" },
+    { id: "home", label: "Home", Icon: HomeIcon, link: "/home" },
     { id: "tailor", label: "Tailor", Icon: ScissorsIcon, link: "/exclusive" },
     { id: "exclusive", label: "Exclusive", Icon: GemIcon, link: "/exclusiveproducts", special: true },
     { id: "stylist", label: "AI Stylist", Icon: BrushIcon, link: "/exclusive" },
@@ -679,7 +679,7 @@ const Sidebar = ({ open, onClose, navigate }) => {
             <aside className="fixed top-0 left-0 h-full z-[400] flex flex-col transition-transform duration-300 ease-out"
                 style={{ width: "288px", transform: open ? "translateX(0)" : "translateX(-100%)", background: "#fff", borderRight: "1px solid rgba(111,78,55,0.15)", boxShadow: open ? "8px 0 40px rgba(0,0,0,0.15)" : "none" }}>
                 <div className="flex items-center justify-between px-5 py-4" style={{ borderBottom: "1px solid rgba(111,78,55,0.12)" }}>
-                    <div onClick={() => { navigate("/"); onClose(); }} className="cursor-pointer flex items-center gap-2">
+                    <div onClick={() => { navigate("/home"); onClose(); }} className="cursor-pointer flex items-center gap-2">
                         <img src="/logo2.png" className="h-10 w-10" alt="logo" onError={e => { e.target.style.display = "none"; }} />
                         <div className="flex flex-col leading-none">
                             <span className="text-[13px] font-black tracking-[0.18em] uppercase" style={{ color: "#000" }}>BRU</span>
@@ -847,7 +847,7 @@ const Header = () => {
                         {/* LEFT — logo image + Exclusive + Collections */}
                         <div className="flex items-center gap-2">
                             {/* Logo image */}
-                            <div onClick={() => navigate('/')} className="cursor-pointer flex-shrink-0">
+                            <div onClick={() => navigate('/home')} className="cursor-pointer flex-shrink-0">
                                 <img src="/logo2.png" className="h-10 w-10" alt="logo"
                                     onError={e => { e.target.style.display = "none"; }} />
                             </div>
@@ -880,7 +880,7 @@ const Header = () => {
 
                         {/* CENTER — BRUBLA wordmark */}
                         <div className="flex items-center justify-center">
-                            <BrublaWordmark onClick={() => navigate("/")} />
+                            <BrublaWordmark onClick={() => navigate("/home")} />
                         </div>
 
                         {/* RIGHT — search, cart, location, profile, menu */}
@@ -925,14 +925,14 @@ const Header = () => {
                         </button>
 
                         {/* Logo image on mobile */}
-                        <div onClick={() => navigate('/')} className="cursor-pointer flex-shrink-0">
+                        <div onClick={() => navigate('/home')} className="cursor-pointer flex-shrink-0">
                             <img src="/logo2.png" className="h-10 w-10" alt="logo"
                                 onError={e => { e.target.style.display = "none"; }} />
                         </div>
 
                         {/* Centered wordmark — mobile */}
                         <div className="flex-1 flex justify-center">
-                            <BrublaWordmark onClick={() => navigate("/")} />
+                            <BrublaWordmark onClick={() => navigate("/home")} />
                         </div>
 
                         {/* Right icons — mobile */}

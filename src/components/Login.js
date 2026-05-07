@@ -1,13 +1,52 @@
 import { useState, useEffect, useRef } from "react";
+import { useNavigate } from "react-router-dom";
 
 const letters = ["B", "R", "U", "B", "L", "A"];
 
 function AnimatedLetter({ char, index, phase }) {
   const [hovered, setHovered] = useState(false);
   const [glitching, setGlitching] = useState(false);
+  const [deviceSize, setDeviceSize] = useState("desktop");
   const glitchTimer = useRef(null);
   const floatDelays = [0, 0.4, 0.8, 1.2, 1.6, 2.0];
   const entryDelays = [0, 0.12, 0.24, 0.36, 0.48, 0.6];
+
+  useEffect(() => {
+    const handleResize = () => {
+      const width = window.innerWidth;
+      if (width < 480) setDeviceSize("mobile");
+      else if (width < 768) setDeviceSize("tablet");
+      else if (width < 1024) setDeviceSize("laptop");
+      else setDeviceSize("desktop");
+    };
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  const getFontSize = () => {
+    switch (deviceSize) {
+      case "mobile":
+        return "clamp(1.8rem, 8vw, 2.2rem)";
+      case "tablet":
+        return "clamp(2.5rem, 7vw, 3.2rem)";
+      case "laptop":
+        return "clamp(3rem, 5vw, 4rem)";
+      default:
+        return "clamp(3.5rem, 4.5vw, 5rem)";
+    }
+  };
+
+  const getPadding = () => {
+    switch (deviceSize) {
+      case "mobile":
+        return "0 1px";
+      case "tablet":
+        return "0 2px";
+      default:
+        return "0 3px";
+    }
+  };
 
   const triggerGlitch = () => {
     setGlitching(true);
@@ -19,22 +58,18 @@ function AnimatedLetter({ char, index, phase }) {
     <span
       onMouseEnter={() => { setHovered(true); triggerGlitch(); }}
       onMouseLeave={() => setHovered(false)}
+      className={`relative inline-block font-['Inter,_Helvetica_Neue,_Arial,_sans-serif'] font-black cursor-default rounded-sm transition-all duration-300 z-[1] hover:z-20 ${hovered ? "text-black bg-white" : "text-white bg-transparent"
+        }`}
       style={{
-        display: "inline-block",
-        position: "relative",
-        fontFamily: "'Georgia', 'Times New Roman', serif",
-        fontWeight: 900,
-        fontSize: "clamp(3.5rem, 9vw, 7.5rem)",
-        color: hovered ? "#000" : "#fff",
-        background: hovered ? "#fff" : "transparent",
-        letterSpacing: "-0.02em",
+        fontSize: getFontSize(),
+        letterSpacing: index === letters.length - 1 ? "0" : "-0.02em",
         opacity: phase === "landing" ? 0 : 1,
         transform:
           phase === "landing"
             ? "translateY(-80px) scale(1.3)"
             : hovered
-            ? "translateY(-10px) scale(1.18) rotate(-3deg)"
-            : "translateY(0px) scale(1)",
+              ? "translateY(-10px) scale(1.18) rotate(-3deg)"
+              : "translateY(0px) scale(1)",
         transition: `opacity 0.7s ease ${entryDelays[index]}s, transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), color 0.1s, background 0.1s`,
         animation:
           phase === "idle" && !hovered && !glitching
@@ -42,60 +77,46 @@ function AnimatedLetter({ char, index, phase }) {
             : "none",
         textShadow: hovered
           ? "3px 3px 0 #555, -2px -2px 0 #999"
-          : "0 0 40px rgba(255,255,255,0.12)",
-        cursor: "default",
-        padding: "0 3px",
-        borderRadius: "2px",
-        zIndex: hovered ? 20 : 1,
+          : deviceSize === "mobile"
+            ? "0 0 20px rgba(255,255,255,0.1)"
+            : "0 0 40px rgba(255,255,255,0.12)",
+        padding: getPadding(),
       }}
     >
       {/* Glitch layer Red */}
       {glitching && (
-        <span aria-hidden="true" style={{
-          position: "absolute", inset: 0,
-          color: hovered ? "#333" : "#fff",
-          fontFamily: "inherit", fontWeight: "inherit", fontSize: "inherit",
-          display: "flex", alignItems: "center", justifyContent: "center",
-          animation: "glitchR 0.55s steps(1) forwards",
-          pointerEvents: "none",
-        }}>{char}</span>
+        <span
+          aria-hidden="true"
+          className="absolute inset-0 flex items-center justify-center pointer-events-none"
+          style={{
+            color: hovered ? "#333" : "#fff",
+            fontFamily: "inherit",
+            fontWeight: "inherit",
+            fontSize: "inherit",
+            animation: "glitchR 0.55s steps(1) forwards",
+          }}
+        >
+          {char}
+        </span>
       )}
       {/* Glitch layer Blue */}
       {glitching && (
-        <span aria-hidden="true" style={{
-          position: "absolute", inset: 0,
-          color: "#888",
-          fontFamily: "inherit", fontWeight: "inherit", fontSize: "inherit",
-          display: "flex", alignItems: "center", justifyContent: "center",
-          animation: "glitchL 0.55s steps(1) forwards",
-          pointerEvents: "none",
-        }}>{char}</span>
+        <span
+          aria-hidden="true"
+          className="absolute inset-0 flex items-center justify-center pointer-events-none"
+          style={{
+            color: "#888",
+            fontFamily: "inherit",
+            fontWeight: "inherit",
+            fontSize: "inherit",
+            animation: "glitchL 0.55s steps(1) forwards",
+          }}
+        >
+          {char}
+        </span>
       )}
       {char}
     </span>
-  );
-}
-
-function Modal({ show, onSelect, onClose }) {
-  if (!show) return null;
-  return (
-    <div onClick={onClose} style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.78)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 200, backdropFilter: "blur(5px)" }}>
-      <div onClick={(e) => e.stopPropagation()} style={{ background: "#0c0c0c", border: "1px solid #222", borderRadius: "2px", padding: "3rem 2.5rem", width: "min(90vw, 380px)", textAlign: "center", animation: "slideUp 0.35s cubic-bezier(0.34,1.2,0.64,1) forwards" }}>
-        <p style={{ color: "#555", fontSize: "10px", letterSpacing: "0.4em", textTransform: "uppercase", marginBottom: "2rem" }}>Continue as</p>
-        <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
-          <button onClick={() => onSelect("login")} style={{ background: "#fff", color: "#000", border: "none", padding: "1rem 2rem", fontSize: "11px", letterSpacing: "0.3em", textTransform: "uppercase", fontWeight: 800, cursor: "pointer", borderRadius: "1px", transition: "background 0.2s, transform 0.15s" }}
-            onMouseEnter={(e) => { e.currentTarget.style.background = "#ddd"; e.currentTarget.style.transform = "translateY(-2px)"; }}
-            onMouseLeave={(e) => { e.currentTarget.style.background = "#fff"; e.currentTarget.style.transform = "none"; }}>
-            Sign In
-          </button>
-          <button onClick={() => onSelect("register")} style={{ background: "transparent", color: "#fff", border: "1px solid #333", padding: "1rem 2rem", fontSize: "11px", letterSpacing: "0.3em", textTransform: "uppercase", fontWeight: 600, cursor: "pointer", borderRadius: "1px", transition: "border-color 0.2s, transform 0.15s" }}
-            onMouseEnter={(e) => { e.currentTarget.style.borderColor = "#888"; e.currentTarget.style.transform = "translateY(-2px)"; }}
-            onMouseLeave={(e) => { e.currentTarget.style.borderColor = "#333"; e.currentTarget.style.transform = "none"; }}>
-            Create Account
-          </button>
-        </div>
-      </div>
-    </div>
   );
 }
 
@@ -105,44 +126,66 @@ function FormView({ type, onBack, onSubmit }) {
   const [submitted, setSubmitted] = useState(false);
 
   const fields = type === "login"
-    ? [{ key: "email", label: "Email", type: "email" }, { key: "password", label: "Password", type: "password" }]
-    : [{ key: "name", label: "Full Name", type: "text" }, { key: "email", label: "Email", type: "email" }, { key: "password", label: "Password", type: "password" }, { key: "confirm", label: "Confirm Password", type: "password" }];
+    ? [
+      { key: "email", label: "Email", type: "email" },
+      { key: "password", label: "Password", type: "password" }
+    ]
+    : [
+      { key: "name", label: "Full Name", type: "text" },
+      { key: "email", label: "Email", type: "email" },
+      { key: "password", label: "Password", type: "password" },
+      { key: "confirm", label: "Confirm Password", type: "password" }
+    ];
 
   if (submitted) {
     return (
-      <div style={{ textAlign: "center", padding: "4rem 0" }}>
-        <div style={{ width: 54, height: 54, borderRadius: "50%", border: "2px solid #fff", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 1.5rem", fontSize: "22px", animation: "popIn 0.4s cubic-bezier(0.34,1.56,0.64,1) forwards" }}>✓</div>
-        <p style={{ color: "#fff", fontSize: "13px", letterSpacing: "0.15em" }}>{type === "login" ? "Welcome back." : "Account created."}</p>
+      <div className="text-center py-6 sm:py-8 md:py-10 lg:py-12">
+        <div className="w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 rounded-full border-2 border-white flex items-center justify-center mx-auto mb-4 sm:mb-5 md:mb-6 text-lg sm:text-xl md:text-2xl animate-[popIn_0.4s_cubic-bezier(0.34,1.56,0.64,1)_forwards]">
+          ✓
+        </div>
+        <p className="text-white text-xs sm:text-sm md:text-base tracking-wide font-['Inter',sans-serif]">
+          {type === "login" ? "Welcome back." : "Account created."}
+        </p>
       </div>
     );
   }
 
   return (
-    <div style={{ animation: "slideUp 0.45s cubic-bezier(0.34,1.2,0.64,1) forwards" }}>
-      <button onClick={onBack} style={{ background: "none", border: "none", color: "#444", fontSize: "10px", letterSpacing: "0.25em", textTransform: "uppercase", cursor: "pointer", padding: "0 0 1.75rem", display: "flex", alignItems: "center", gap: "8px" }}
-        onMouseEnter={(e) => (e.currentTarget.style.color = "#999")}
-        onMouseLeave={(e) => (e.currentTarget.style.color = "#444")}>← Back</button>
-      <h2 style={{ fontFamily: "'Georgia', serif", color: "#fff", fontSize: "1.75rem", fontWeight: 700, marginBottom: "0.25rem", letterSpacing: "-0.02em" }}>
+    <div className="animate-[slideUp_0.45s_cubic-bezier(0.34,1.2,0.64,1)_forwards]">
+      <button
+        onClick={onBack}
+        className="bg-transparent border-none text-gray-500 hover:text-gray-300 text-[10px] sm:text-[11px] md:text-xs tracking-[0.2em] uppercase cursor-pointer p-0 pb-4 sm:pb-5 md:pb-6 flex items-center gap-1.5 sm:gap-2 font-['Inter',sans-serif] transition-colors"
+      >
+        ← Back
+      </button>
+      <h2 className="font-['Inter',_Helvetica_Neue,_sans-serif] text-white text-xl sm:text-2xl md:text-3xl font-bold mb-1 tracking-tight">
         {type === "login" ? "Welcome back" : "Join Brubla"}
       </h2>
-      <p style={{ color: "#444", fontSize: "12px", marginBottom: "2.25rem", letterSpacing: "0.05em" }}>
+      <p className="text-gray-500 text-[10px] sm:text-[11px] md:text-xs mb-5 sm:mb-6 md:mb-8 tracking-wide font-['Inter',sans-serif]">
         {type === "login" ? "Sign in to continue" : "Create your account"}
       </p>
-      <div style={{ display: "flex", flexDirection: "column", gap: "1.4rem", marginBottom: "2rem" }}>
+      <div className="flex flex-col gap-3 sm:gap-4 md:gap-5 mb-5 sm:mb-6 md:mb-8">
         {fields.map((f) => (
           <div key={f.key}>
-            <label style={{ color: "#555", fontSize: "9px", letterSpacing: "0.35em", textTransform: "uppercase", display: "block", marginBottom: "6px" }}>{f.label}</label>
-            <input type={f.type} value={values[f.key]}
+            <label className="text-gray-500 text-[9px] sm:text-[10px] md:text-[11px] tracking-[0.2em] uppercase block mb-1 font-['Inter',sans-serif]">
+              {f.label}
+            </label>
+            <input
+              type={f.type}
+              value={values[f.key]}
               onChange={(e) => setValues((v) => ({ ...v, [f.key]: e.target.value }))}
-              onFocus={() => setFocused(f.key)} onBlur={() => setFocused(null)}
-              style={{ background: "transparent", border: "none", borderBottom: `1px solid ${focused === f.key ? "#fff" : "#2e2e2e"}`, color: "#fff", fontSize: "15px", padding: "8px 0", width: "100%", outline: "none", transition: "border-color 0.2s", fontFamily: "inherit" }} />
+              onFocus={() => setFocused(f.key)}
+              onBlur={() => setFocused(null)}
+              className="bg-transparent border-none border-b border-b-gray-800 focus:border-b-white text-white text-sm sm:text-base py-1.5 sm:py-2 w-full outline-none transition-colors font-['Inter',sans-serif]"
+              style={{ borderBottomColor: focused === f.key ? "#fff" : "#2e2e2e" }}
+            />
           </div>
         ))}
       </div>
-      <button onClick={() => { setSubmitted(true); setTimeout(() => onSubmit(), 1300); }}
-        style={{ width: "100%", background: "#fff", color: "#000", border: "none", padding: "1rem", fontSize: "10px", letterSpacing: "0.4em", textTransform: "uppercase", fontWeight: 800, cursor: "pointer", borderRadius: "1px", transition: "transform 0.15s, background 0.2s" }}
-        onMouseEnter={(e) => { e.currentTarget.style.background = "#ddd"; e.currentTarget.style.transform = "translateY(-1px)"; }}
-        onMouseLeave={(e) => { e.currentTarget.style.background = "#fff"; e.currentTarget.style.transform = "none"; }}>
+      <button
+        onClick={() => { setSubmitted(true); setTimeout(() => onSubmit(), 1300); }}
+        className="w-full bg-white text-black border-none py-2.5 sm:py-3 md:py-4 text-[10px] sm:text-[11px] md:text-xs tracking-[0.3em] uppercase font-bold cursor-pointer rounded-sm transition-all duration-200 hover:bg-gray-200 hover:-translate-y-px font-['Inter',sans-serif]"
+      >
         {type === "login" ? "Sign In" : "Create Account"}
       </button>
     </div>
@@ -151,19 +194,20 @@ function FormView({ type, onBack, onSubmit }) {
 
 export default function BrublaLogin() {
   const [phase, setPhase] = useState("landing");
-  const [showModal, setShowModal] = useState(false);
   const [formType, setFormType] = useState(null);
   const [done, setDone] = useState(false);
   const [videoReady, setVideoReady] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const t = setTimeout(() => setPhase("idle"), 120);
     return () => clearTimeout(t);
   }, []);
 
-  const handleSelect = (type) => { setShowModal(false); setFormType(type); };
   const handleSubmit = () => {
     setDone(true);
+    navigate('/home');
+    sessionStorage.setItem("token", "b_r_u_l_a");
     setTimeout(() => { setDone(false); setFormType(null); }, 2200);
   };
 
@@ -207,81 +251,139 @@ export default function BrublaLogin() {
           to { opacity: 1; }
         }
         * { box-sizing: border-box; margin: 0; padding: 0; }
-        input:-webkit-autofill { -webkit-box-shadow: 0 0 0 1000px #0c0c0c inset !important; -webkit-text-fill-color: #fff !important; }
+        input:-webkit-autofill { 
+          -webkit-box-shadow: 0 0 0 1000px #0c0c0c inset !important; 
+          -webkit-text-fill-color: #fff !important; 
+        }
       `}</style>
 
-      <div style={{ minHeight: "100vh", background: "#000", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", fontFamily: "'Helvetica Neue', Helvetica, Arial, sans-serif", position: "relative", overflow: "hidden" }}>
+      <div className="min-h-screen bg-black flex flex-col items-center justify-center relative overflow-hidden p-3 sm:p-4 font-['Inter',_Helvetica_Neue,_Arial,_sans-serif]">
 
-        {/* ── YouTube video background ── */}
-        <div style={{ position: "absolute", inset: 0, zIndex: 0, overflow: "hidden" }}>
+        {/* YouTube video background */}
+        <div className="absolute inset-0 overflow-hidden">
           <iframe
             title="bg-video"
             src="https://www.youtube.com/embed/jfKfPfyJRdk?autoplay=1&mute=1&loop=1&playlist=jfKfPfyJRdk&controls=0&showinfo=0&rel=0&modestbranding=1&playsinline=1&iv_load_policy=3"
             allow="autoplay; fullscreen"
             frameBorder="0"
             onLoad={() => setVideoReady(true)}
+            className={`
+              absolute
+              top-1/2
+              left-1/2
+              -translate-x-1/2
+              -translate-y-1/2
+              pointer-events-none
+              transition-opacity
+              duration-1000
+
+              w-[300vw]
+              h-[170vw]
+
+              sm:w-[220vw]
+              sm:h-[125vw]
+
+              md:w-[180vw]
+              md:h-[101vw]
+
+              lg:w-[140vw]
+              lg:h-[78vw]
+
+              xl:w-[120vw]
+              xl:h-[67.5vw]
+
+              min-w-full
+              min-h-full
+            `}
             style={{
-              position: "absolute",
-              top: "50%", left: "50%",
-              width: "177.78vh", height: "100vh",
-              minWidth: "100vw", minHeight: "56.25vw",
-              transform: "translate(-50%,-50%)",
-              pointerEvents: "none",
               opacity: videoReady ? 1 : 0,
-              transition: "opacity 2s ease",
             }}
           />
           {/* B&W desaturate + darken overlay */}
-          <div style={{ position: "absolute", inset: 0, backdropFilter: "grayscale(100%) brightness(0.45) contrast(1.1)", WebkitBackdropFilter: "grayscale(100%) brightness(0.45) contrast(1.1)" }} />
+          <div className="absolute inset-0 backdrop-grayscale backdrop-brightness-[0.45] backdrop-contrast-110" />
           {/* Extra dimming vignette */}
-          <div style={{ position: "absolute", inset: 0, background: "radial-gradient(ellipse at center, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0.75) 100%)" }} />
+          <div className="absolute inset-0 bg-gradient-radial from-black/30 via-transparent to-black/75" />
         </div>
 
-        {/* Corner marks */}
-        {[{ top: 28, left: 28 }, { top: 28, right: 28 }, { bottom: 28, left: 28 }, { bottom: 28, right: 28 }].map((pos, i) => (
-          <div key={i} style={{ position: "absolute", ...pos, width: 22, height: 22, borderTop: i < 2 ? "1px solid #3a3a3a" : "none", borderBottom: i >= 2 ? "1px solid #3a3a3a" : "none", borderLeft: i % 2 === 0 ? "1px solid #3a3a3a" : "none", borderRight: i % 2 === 1 ? "1px solid #3a3a3a" : "none", zIndex: 5 }} />
+        {/* Corner marks - responsive */}
+        {[
+          { top: "clamp(0.6rem, 3vw, 28px)", left: "clamp(0.6rem, 3vw, 28px)", borderTop: true, borderLeft: true },
+          { top: "clamp(0.6rem, 3vw, 28px)", right: "clamp(0.6rem, 3vw, 28px)", borderTop: true, borderRight: true },
+          { bottom: "clamp(0.6rem, 3vw, 28px)", left: "clamp(0.6rem, 3vw, 28px)", borderBottom: true, borderLeft: true },
+          { bottom: "clamp(0.6rem, 3vw, 28px)", right: "clamp(0.6rem, 3vw, 28px)", borderBottom: true, borderRight: true }
+        ].map((pos, i) => (
+          <div
+            key={i}
+            className="absolute w-[clamp(12px,4vw,22px)] h-[clamp(12px,4vw,22px)] border-[#3a3a3a] z-[5]"
+            style={{
+              ...pos,
+              borderTopWidth: pos.borderTop ? "1px" : "0",
+              borderBottomWidth: pos.borderBottom ? "1px" : "0",
+              borderLeftWidth: pos.borderLeft ? "1px" : "0",
+              borderRightWidth: pos.borderRight ? "1px" : "0",
+            }}
+          />
         ))}
 
         {/* Main content */}
-        <div style={{ position: "relative", zIndex: 10, display: "flex", flexDirection: "column", alignItems: "center", gap: "2.5rem", padding: "2rem", width: "min(90vw, 500px)" }}>
+        <div className="relative z-10 flex flex-col items-center gap-4 sm:gap-6 md:gap-8 lg:gap-10 p-3 sm:p-4 md:p-6 lg:p-8 w-[min(92vw,500px)]">
 
-          {/* Animated letters */}
-          <div style={{ display: "flex", gap: "0.01em", userSelect: "none" }}>
+          {/* Animated letters - responsive layout */}
+          <div className="flex gap-0 sm:gap-0.5 md:gap-1 user-select-none flex-wrap justify-center px-1 sm:px-2 md:px-4">
             {letters.map((char, i) => (
               <AnimatedLetter key={i} char={char} index={i} phase={phase} />
             ))}
           </div>
 
-          {/* Tagline */}
-          <p style={{ color: "#444", fontSize: "10px", letterSpacing: "0.42em", textTransform: "uppercase", marginTop: "-1.5rem", opacity: phase === "idle" ? 1 : 0, transition: "opacity 0.7s ease 0.9s" }}>
+          {/* Tagline - responsive */}
+          <p
+            className="text-gray-500 text-[8px] sm:text-[9px] md:text-[10px] lg:text-[11px] tracking-[0.3em] sm:tracking-[0.35em] uppercase text-center px-2 font-['Inter',sans-serif] transition-all duration-700 ease-out"
+            style={{
+              opacity: phase === "idle" ? 1 : 0,
+              transitionDelay: "0.9s",
+              marginTop: "-0.25rem",
+            }}
+          >
             Where it begins
           </p>
 
-          {/* CTA or Form */}
+          {/* CTA or Form - responsive */}
           {formType ? (
-            <div style={{ width: "100%", background: "rgba(6,6,6,0.92)", border: "1px solid #1c1c1c", borderRadius: "2px", padding: "2.5rem", backdropFilter: "blur(10px)" }}>
+            <div className="w-full bg-black/90 border border-[#1c1c1c] rounded-sm p-4 sm:p-5 md:p-6 lg:p-8 backdrop-blur-md">
               {done ? (
-                <div style={{ textAlign: "center", padding: "3.5rem 0" }}>
-                  <div style={{ width: 54, height: 54, borderRadius: "50%", border: "2px solid #fff", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 1.5rem", fontSize: "22px", animation: "popIn 0.4s cubic-bezier(0.34,1.56,0.64,1) forwards" }}>✓</div>
-                  <p style={{ color: "#fff", fontSize: "13px", letterSpacing: "0.15em" }}>{formType === "login" ? "Welcome back." : "Account created."}</p>
+                <div className="text-center py-4 sm:py-6 md:py-8 lg:py-10">
+                  <div className="w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 rounded-full border-2 border-white flex items-center justify-center mx-auto mb-3 sm:mb-4 md:mb-6 text-lg sm:text-xl md:text-2xl animate-[popIn_0.4s_cubic-bezier(0.34,1.56,0.64,1)_forwards]">
+                    ✓
+                  </div>
+                  <p className="text-white text-xs sm:text-sm md:text-base tracking-wide font-['Inter',sans-serif]">
+                    {formType === "login" ? "Welcome back." : "Account created."}
+                  </p>
                 </div>
               ) : (
                 <FormView type={formType} onBack={() => setFormType(null)} onSubmit={handleSubmit} />
               )}
             </div>
           ) : (
-            <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "1rem", opacity: phase === "idle" ? 1 : 0, transform: phase === "idle" ? "none" : "translateY(20px)", transition: "opacity 0.6s ease 1.05s, transform 0.6s ease 1.05s" }}>
-              <button onClick={() => setShowModal(true)}
-                style={{ background: "#fff", color: "#000", border: "none", padding: "1rem 3.5rem", fontSize: "10px", letterSpacing: "0.42em", textTransform: "uppercase", fontWeight: 800, cursor: "pointer", borderRadius: "1px", transition: "transform 0.2s, background 0.2s" }}
-                onMouseEnter={(e) => { e.currentTarget.style.background = "#ddd"; e.currentTarget.style.transform = "translateY(-2px)"; }}
-                onMouseLeave={(e) => { e.currentTarget.style.background = "#fff"; e.currentTarget.style.transform = "none"; }}>
+            <div
+              className="flex flex-col items-center gap-3 sm:gap-4 transition-all duration-600 ease-out w-full"
+              style={{
+                opacity: phase === "idle" ? 1 : 0,
+                transform: phase === "idle" ? "none" : "translateY(20px)",
+                transitionDelay: "1.05s",
+              }}
+            >
+              <button
+                onClick={() => setFormType("login")}
+                className="bg-white text-black border-none py-2.5 px-6 sm:py-3 sm:px-8 md:py-3.5 md:px-10 lg:py-4 lg:px-12 text-[9px] sm:text-[10px] md:text-[11px] lg:text-xs tracking-[0.3em] sm:tracking-[0.35em] uppercase font-bold cursor-pointer rounded-sm transition-all duration-200 hover:bg-gray-200 hover:-translate-y-0.5 w-full max-w-[260px] sm:max-w-[280px] font-['Inter',sans-serif]"
+              >
                 Sign In
               </button>
-              <p style={{ color: "#3a3a3a", fontSize: "10px", letterSpacing: "0.15em" }}>
+              <p className="text-gray-500 text-[9px] sm:text-[10px] md:text-xs tracking-wide font-['Inter',sans-serif]">
                 New here?{" "}
-                <span onClick={() => handleSelect("register")} style={{ color: "#666", cursor: "pointer", textDecoration: "underline" }}
-                  onMouseEnter={(e) => (e.target.style.color = "#aaa")}
-                  onMouseLeave={(e) => (e.target.style.color = "#666")}>
+                <span
+                  onClick={() => setFormType("register")}
+                  className="text-gray-400 cursor-pointer underline transition-colors hover:text-gray-300"
+                >
                   Create an account
                 </span>
               </p>
@@ -289,11 +391,11 @@ export default function BrublaLogin() {
           )}
         </div>
 
-        {/* Footer */}
-        <p style={{ position: "absolute", bottom: "1.5rem", color: "#252525", fontSize: "10px", letterSpacing: "0.2em", zIndex: 10 }}>© 2026 BRUBLA</p>
+        {/* Footer - responsive */}
+        <p className="absolute bottom-3 sm:bottom-4 md:bottom-5 lg:bottom-6 text-gray-800 text-[8px] sm:text-[9px] md:text-[10px] lg:text-[11px] tracking-[0.12em] sm:tracking-[0.15em] z-10 font-['Inter',sans-serif]">
+          © 2026 BRUBLA
+        </p>
       </div>
-
-      <Modal show={showModal} onSelect={handleSelect} onClose={() => setShowModal(false)} />
     </>
   );
 }

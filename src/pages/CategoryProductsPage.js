@@ -429,7 +429,7 @@ function FilterDrawer({ selectedFilters, setSelectedFilters, onClose }) {
 
 // ─── Main Page - Light Theme ────────────────────────────────────────────────────
 export default function CategoryProductsPage() {
-  const category = window.location.pathname.split("/").pop() || "Women's-Fashion";
+  const category = window.location.pathname.split("/home").pop() || "Women's-Fashion";
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [sortBy, setSortBy] = useState("featured");

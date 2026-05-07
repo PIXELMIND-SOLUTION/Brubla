@@ -192,7 +192,7 @@ export const WeddingPlannerPage = () => {
                         </div>
                         
                         <button 
-                            onClick={() => navigate('/')}
+                            onClick={() => navigate('/home')}
                             className="w-full bg-gradient-to-r from-gray-900 to-gray-800 text-white py-3.5 font-mono text-sm tracking-widest uppercase rounded-xl hover:shadow-xl transition-all duration-300 transform hover:scale-[1.02]">
                             Back to Home
                         </button>
@@ -210,7 +210,7 @@ export const WeddingPlannerPage = () => {
                 <div className="sticky top-0 z-20 bg-white/80 backdrop-blur-xl border-b border-gray-100 px-6 py-4">
                     <div className="max-w-7xl mx-auto flex items-center justify-between">
                         <button 
-                            onClick={() => { step > 1 ? setStep(s => s - 1) : navigate('/') }}
+                            onClick={() => { step > 1 ? setStep(s => s - 1) : navigate('/home') }}
                             className="group flex items-center gap-2 text-gray-500 hover:text-gray-900 font-mono text-sm tracking-widest uppercase transition-all duration-300">
                             <span className="transform transition-transform group-hover:-translate-x-1">←</span>
                             {step > 1 ? "Back" : "Home"}
