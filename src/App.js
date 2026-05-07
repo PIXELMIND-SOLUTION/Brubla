@@ -27,7 +27,7 @@ import BrublaLogin from './components/Login';
 ========================= */
 
 const PrivateRoute = ({ children }) => {
-  const token = sessionStorage.getItem("token");
+  const token = sessionStorage.getItem("authToken");
 
   return token ? children : <Navigate to="/" replace />;
 };

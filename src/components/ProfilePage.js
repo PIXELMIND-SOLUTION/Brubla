@@ -468,6 +468,13 @@ export default function ProfilePage() {
   const navigate = useNavigate();
   const [selectedOrder, setSelectedOrder] = useState(null);
 
+
+  const handleLogout = () => {
+    sessionStorage.removeItem("authToken");
+    sessionStorage.removeItem("user");
+    navigate('/');
+  };
+
   return (
     <>
       <Header />
@@ -508,10 +515,7 @@ export default function ProfilePage() {
                 <MenuGroup key={i} group={g} delay={i * 60} />
               ))}
 
-              <button onClick={() => {
-                sessionStorage.removeItem("token");
-                navigate('/')
-              }}
+              <button onClick={handleLogout}
                 className="flex items-center justify-center gap-2 w-full py-3 rounded-xl sm:rounded-2xl font-bold text-xs sm:text-sm fs transition-all hover:scale-[1.01] active:scale-[0.99] bg-red-50 text-red-600 border border-red-200 hover:bg-red-100">
                 <Logout c="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                 Sign Out
