@@ -2,9 +2,9 @@ import { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 // ─────────────────────────────────────────────────────────────────────────────
-// CATEGORY DATA
+// CATEGORY DATA (FALLBACK IF API FAILS)
 // ─────────────────────────────────────────────────────────────────────────────
-const CATEGORIES = [
+const FALLBACK_CATEGORIES = [
   {
     id: 1,
     label: "Women's-Fashion",
@@ -62,6 +62,7 @@ const CATEGORIES = [
     accent: "#000",
   },
 ];
+
 
 // ─────────────────────────────────────────────────────────────────────────────
 // ARROW ICONS
@@ -128,10 +129,14 @@ const CategoryCard = ({ cat, index }) => {
         }}
         loading="lazy"
         draggable={false}
+        onError={(e) => {
+          e.target.src =
+            "https://placehold.co/600x800/e5e7eb/64748b?text=No+Image";
+        }}
       />
 
       {/* OVERLAY — default */}
-      <div 
+      <div
         className="absolute inset-0 transition-opacity duration-400"
         style={{
           background: "linear-gradient(180deg,rgba(12,12,12,0) 40%,rgba(12,12,12,0.78) 100%)",
@@ -140,7 +145,7 @@ const CategoryCard = ({ cat, index }) => {
       />
 
       {/* OVERLAY — hover */}
-      <div 
+      <div
         className="absolute inset-0 transition-opacity duration-400"
         style={{
           background: "linear-gradient(180deg,rgba(12,12,12,0.08) 0%,rgba(12,12,12,0.88) 100%)",
@@ -157,7 +162,7 @@ const CategoryCard = ({ cat, index }) => {
       )}
 
       {/* TOP ACCENT LINE on hover */}
-      <div 
+      <div
         className="absolute top-0 left-0 right-0 h-[3px] z-10 transition-opacity duration-350"
         style={{
           background: `linear-gradient(90deg,transparent,${cat.accent},transparent)`,
@@ -166,7 +171,7 @@ const CategoryCard = ({ cat, index }) => {
       />
 
       {/* TEXT BLOCK */}
-      <div 
+      <div
         className="absolute bottom-0 left-0 right-0 z-10 px-3 pb-3 pt-2 transition-transform duration-400"
         style={{
           transform: hovered ? "translateY(0)" : "translateY(3px)",
@@ -177,7 +182,7 @@ const CategoryCard = ({ cat, index }) => {
           {cat.label}
         </h3>
         <div className="flex items-center justify-between mt-0.5">
-          <p 
+          <p
             className="text-[10px] font-semibold tracking-wide transition-opacity duration-300"
             style={{
               color: "#c9b7b7",
@@ -187,7 +192,7 @@ const CategoryCard = ({ cat, index }) => {
             {cat.sublabel}
           </p>
           {/* Arrow chip */}
-          <div 
+          <div
             className="flex items-center justify-center transition-all duration-300 rounded-full"
             style={{
               width: "26px",
@@ -230,6 +235,21 @@ const ScrollBtn = ({ dir, onClick, visible }) => (
 );
 
 // ─────────────────────────────────────────────────────────────────────────────
+// LOADING SKELETON COMPONENT
+// ─────────────────────────────────────────────────────────────────────────────
+const LoadingSkeleton = () => (
+  <div className="flex gap-3 md:gap-4 overflow-x-auto" style={{ paddingLeft: "16px", paddingRight: "16px" }}>
+    {[1, 2, 3, 4].map((i) => (
+      <div
+        key={i}
+        className="relative flex-shrink-0 rounded-xl bg-gray-200 animate-pulse"
+        style={{ width: "200px", aspectRatio: "3 / 4" }}
+      />
+    ))}
+  </div>
+);
+
+// ─────────────────────────────────────────────────────────────────────────────
 // MAIN EXPORT - Category Section
 // Shows 4 cards on md/lg devices, 2 cards on mobile with horizontal scroll
 // ─────────────────────────────────────────────────────────────────────────────
@@ -240,7 +260,110 @@ export default function CategorySection() {
   const [headerVis, setHeaderVis] = useState(false);
   const headerRef = useRef(null);
 
+  const [categories, setCategories] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
   const navigate = useNavigate();
+
+  // Helper function to generate a consistent color accent based on category name
+  const getAccentColor = (name) => {
+    const colors = ["#000", "#2c3e50", "#8e44ad", "#c0392b", "#2980b9", "#d35400", "#27ae60", "#7f8c8d"];
+    let hash = 0;
+    for (let i = 0; i < name.length; i++) {
+      hash = ((hash << 5) - hash) + name.charCodeAt(i);
+      hash |= 0;
+    }
+    return colors[Math.abs(hash) % colors.length];
+  };
+
+  // Helper function to get sublabel text
+  const getSublabel = (category) => {
+    const subCount = category.subcategories?.length || 0;
+    if (subCount === 0) return "Explore now";
+    if (subCount === 1) return `${subCount} style`;
+    return `${subCount} styles`;
+  };
+
+  // Helper function to get first subcategory image or fallback
+  const getCategoryImage = (category) => {
+    if (category.subcategories && category.subcategories.length > 0 && category.subcategories[0].image) {
+      // Replace localhost with actual API base URL if needed
+      let imgUrl = category.subcategories[0].image;
+      // If the image URL points to localhost, replace with the actual API host
+      if (imgUrl.includes("localhost:4077")) {
+        imgUrl = imgUrl.replace("http://localhost:4077", "http://31.97.228.17:4077");
+      }
+      return imgUrl;
+    }
+    // Fallback images based on category name
+    const fallbackImages = {
+      "Men": "https://images.unsplash.com/photo-1490578474895-699cd4e2cf59?w=600&q=80",
+      "Women": "https://images.unsplash.com/photo-1483985988355-763728e1935b?w=800&q=80",
+      "Kids": "https://images.unsplash.com/photo-1519238263530-99bdd11df2ea?w=600&q=80",
+    };
+    return fallbackImages[category.name] || "https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=600&q=80";
+  };
+
+  // Fetch categories from API
+  useEffect(() => {
+    const fetchCategories = async () => {
+      setLoading(true);
+      setError(null);
+      try {
+        const response = await fetch("http://31.97.228.17:4077/api/admin/categories");
+
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const data = await response.json();
+
+        if (data.success && data.categories && data.categories.length > 0) {
+          // Filter only active categories
+          const activeCategories = data.categories.filter(cat => cat.isActive === true);
+
+          const mappedCategories = activeCategories.map((cat) => ({
+            id: cat._id,
+            label: cat.name,
+            sublabel: getSublabel(cat),
+            img: getCategoryImage(cat),
+            accent: getAccentColor(cat.name),
+            originalData: cat,
+          }));
+
+          setCategories(mappedCategories);
+        } else {
+          // No categories from API, use fallback
+          console.warn("No categories found in API response, using fallback data");
+          const fallbackMapped = FALLBACK_CATEGORIES.map((cat) => ({
+            id: String(cat.id),
+            label: cat.label,
+            sublabel: cat.sublabel,
+            img: cat.img,
+            accent: cat.accent,
+          }));
+          setCategories(fallbackMapped);
+        }
+      } catch (err) {
+        console.error("Failed to fetch categories:", err);
+        setError(err instanceof Error ? err.message : "Failed to load categories");
+        // Use fallback data on error
+        const fallbackMapped = FALLBACK_CATEGORIES.map((cat) => ({
+          id: String(cat.id),
+          label: cat.label,
+          sublabel: cat.sublabel,
+          img: cat.img,
+          accent: cat.accent,
+        }));
+        setCategories(fallbackMapped);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchCategories();
+  }, []);
 
   // Header entrance animation
   useEffect(() => {
@@ -268,7 +391,7 @@ export default function CategorySection() {
     el.addEventListener("scroll", updateScroll, { passive: true });
     updateScroll();
     return () => el.removeEventListener("scroll", updateScroll);
-  }, []);
+  }, [categories]); // Re-run when categories change
 
   const scrollBy = (dir) => {
     const el = trackRef.current;
@@ -276,6 +399,12 @@ export default function CategorySection() {
     // Scroll 2 cards at a time for better UX
     const scrollAmount = 340;
     el.scrollBy({ left: dir === "right" ? scrollAmount : -scrollAmount, behavior: "smooth" });
+  };
+
+  const handleCategoryClick = (category) => {
+    // Navigate to category page with the category name
+    const encodedName = encodeURIComponent(category.label);
+    navigate(`/category/${encodedName}`);
   };
 
   return (
@@ -296,7 +425,7 @@ export default function CategorySection() {
             <p className="text-[10px] font-black uppercase tracking-[0.22em] mb-1 text-[#0C0C0C]">
               Shop by
             </p>
-            <h2 
+            <h2
               className="font-black leading-none text-2xl md:text-3xl lg:text-4xl text-[#000] tracking-tight"
               style={{ fontFamily: "Georgia,'Times New Roman',serif" }}
             >
@@ -323,40 +452,49 @@ export default function CategorySection() {
 
         {/* ── HORIZONTAL SCROLL TRACK ── */}
         {/* Shows 2 cards on mobile (sm), 4 cards on medium and up (md) */}
-        <div
-          ref={trackRef}
-          className="flex gap-3 md:gap-4 overflow-x-auto scroll-smooth"
-          style={{
-            paddingLeft: "16px",
-            paddingRight: "16px",
-            paddingBottom: "12px",
-            scrollbarWidth: "none",
-            msOverflowStyle: "none",
-            WebkitOverflowScrolling: "touch",
-            scrollSnapType: "x mandatory",
-          }}
-        >
-          {/* Hide scrollbar in webkit */}
-          <style>{`
-            .category-track::-webkit-scrollbar { display: none; }
-          `}</style>
+        {loading ? (
+          <LoadingSkeleton />
+        ) : (
+          <div
+            ref={trackRef}
+            className="flex gap-3 md:gap-4 overflow-x-auto scroll-smooth category-track"
+            style={{
+              paddingLeft: "16px",
+              paddingRight: "16px",
+              paddingBottom: "12px",
+              scrollbarWidth: "none",
+              msOverflowStyle: "none",
+              WebkitOverflowScrolling: "touch",
+              scrollSnapType: "x mandatory",
+            }}
+          >
+            {/* Hide scrollbar in webkit */}
+            <style>{`
+              .category-track::-webkit-scrollbar { display: none; }
+            `}</style>
 
-          {CATEGORIES.map((cat, i) => (
-            <div
-              key={cat.id}
-              style={{ scrollSnapAlign: "start", flexShrink: 0 }}
-              className="cursor-pointer"
-              onClick={() => navigate(`/category/${cat.label}`)}
-            >
-              <CategoryCard cat={cat} index={i} />
-            </div>
-          ))}
+            {categories.map((cat, i) => (
+              <div
+                key={cat.id}
+                style={{ scrollSnapAlign: "start", flexShrink: 0 }}
+                className="cursor-pointer"
+                onClick={() => handleCategoryClick(cat)}
+              >
+                <CategoryCard cat={cat} index={i} />
+              </div>
+            ))}
 
-          {/* Trailing spacer for better edge scrolling */}
-          <div className="min-w-[4px] flex-shrink-0" />
-        </div>
+            {/* Trailing spacer for better edge scrolling */}
+            <div className="min-w-[4px] flex-shrink-0" />
+          </div>
+        )}
 
-        
+        {/* Error message (silent fallback, no UI change) */}
+        {error && !loading && categories.length === 0 && (
+          <div className="text-center text-red-500 text-sm mt-4">
+            Unable to load categories. Please try again later.
+          </div>
+        )}
 
         {/* ── MOBILE "View All" button below track ── */}
         <div className="flex justify-center mt-4 sm:hidden">

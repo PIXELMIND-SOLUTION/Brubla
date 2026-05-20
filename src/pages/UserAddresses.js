@@ -43,47 +43,7 @@ const Styles = () => (
   `}</style>
 );
 
-// ─────────────────────────────────────────────────────────────────────────────
-// SAMPLE ADDRESSES DATA
-// ─────────────────────────────────────────────────────────────────────────────
-const SAMPLE_ADDRESSES = [
-  {
-    id: "1",
-    type: "Home",
-    name: "Priya Sharma",
-    phone: "+91 98765 43210",
-    address: "123 Main Street, Apt 4B",
-    city: "Hyderabad",
-    state: "Telangana",
-    pincode: "500034",
-    landmark: "Near Central Park",
-    isDefault: true
-  },
-  {
-    id: "2",
-    type: "Office",
-    name: "Priya Sharma",
-    phone: "+91 98765 43211",
-    address: "456 Business Park, Floor 12",
-    city: "Hyderabad",
-    state: "Telangana",
-    pincode: "500081",
-    landmark: "Near Hitech City Metro",
-    isDefault: false
-  },
-  {
-    id: "3",
-    type: "Other",
-    name: "Priya Sharma",
-    phone: "+91 98765 43212",
-    address: "789 Family Complex",
-    city: "Mumbai",
-    state: "Maharashtra",
-    pincode: "400001",
-    landmark: "Near Dadar Station",
-    isDefault: false
-  }
-];
+
 
 // ─────────────────────────────────────────────────────────────────────────────
 // ADDRESS CARD COMPONENT - Light Theme
@@ -94,33 +54,33 @@ const AddressCard = ({ address, onEdit, onDelete, onSetDefault }) => {
   const handleDelete = async () => {
     if (window.confirm("Are you sure you want to delete this address?")) {
       setIsDeleting(true);
-      await onDelete(address.id);
+      await onDelete(address._id);
       setIsDeleting(false);
     }
   };
   
   const typeIcons = {
-    Home: Home,
-    Office: Building,
-    Other: Navigation
+    home: Home,
+    office: Building,
+    other: Navigation
   };
   
-  const Icon = typeIcons[address.type];
+  const Icon = typeIcons[address.type?.toLowerCase()] || Navigation;
   
   return (
     <div className="bg-white rounded-xl border border-gray-200 hover:border-gray-300 hover:shadow-md transition-all duration-300">
       <div className="p-4 sm:p-5">
         <div className="flex items-start gap-3">
           <div className={`w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 ${
-            address.type === "Home" ? "bg-gray-100" : 
-            address.type === "Office" ? "bg-gray-100" : "bg-gray-100"
+            address.type?.toLowerCase() === "home" ? "bg-gray-100" : 
+            address.type?.toLowerCase() === "office" ? "bg-gray-100" : "bg-gray-100"
           }`}>
             <Icon size={18} className="text-black" />
           </div>
           
           <div className="flex-1 min-w-0">
             <div className="flex flex-wrap items-center gap-2 mb-1">
-              <h3 className="font-bold text-gray-900 fs text-base">{address.type}</h3>
+              <h3 className="font-bold text-gray-900 fs text-base capitalize">{address.type}</h3>
               {address.isDefault && (
                 <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-black text-white">
                   Default
@@ -128,8 +88,8 @@ const AddressCard = ({ address, onEdit, onDelete, onSetDefault }) => {
               )}
             </div>
             
-            <p className="text-sm font-medium text-gray-800 fs">{address.name}</p>
-            <p className="text-xs text-gray-500 fs mt-0.5">{address.phone}</p>
+            <p className="text-sm font-medium text-gray-800 fs">{address.fullName}</p>
+            <p className="text-xs text-gray-500 fs mt-0.5">{address.mobile}</p>
             
             <div className="mt-2 space-y-0.5">
               <p className="text-sm text-gray-600 fs">{address.address}</p>
@@ -148,7 +108,7 @@ const AddressCard = ({ address, onEdit, onDelete, onSetDefault }) => {
         <div className="flex flex-wrap gap-2 mt-4 pt-3 border-t border-gray-100">
           {!address.isDefault && (
             <button
-              onClick={() => onSetDefault(address.id)}
+              onClick={() => onSetDefault(address._id, address)}
               className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-gray-100 text-gray-700 text-xs font-medium fs hover:bg-gray-200 transition-colors"
             >
               <Star size={12} />
@@ -181,9 +141,9 @@ const AddressCard = ({ address, onEdit, onDelete, onSetDefault }) => {
 // ─────────────────────────────────────────────────────────────────────────────
 const AddressModal = ({ isOpen, onClose, onSave, editingAddress }) => {
   const [formData, setFormData] = useState({
-    type: "Home",
-    name: "",
-    phone: "",
+    type: "home",
+    fullName: "",
+    mobile: "",
     address: "",
     city: "",
     state: "",
@@ -198,21 +158,21 @@ const AddressModal = ({ isOpen, onClose, onSave, editingAddress }) => {
   useEffect(() => {
     if (editingAddress) {
       setFormData({
-        type: editingAddress.type,
-        name: editingAddress.name,
-        phone: editingAddress.phone,
-        address: editingAddress.address,
-        city: editingAddress.city,
-        state: editingAddress.state,
-        pincode: editingAddress.pincode,
+        type: editingAddress.type?.toLowerCase() || "home",
+        fullName: editingAddress.fullName || "",
+        mobile: editingAddress.mobile || "",
+        address: editingAddress.address || "",
+        city: editingAddress.city || "",
+        state: editingAddress.state || "",
+        pincode: editingAddress.pincode || "",
         landmark: editingAddress.landmark || "",
-        isDefault: editingAddress.isDefault
+        isDefault: editingAddress.isDefault || false
       });
     } else {
       setFormData({
-        type: "Home",
-        name: "",
-        phone: "",
+        type: "home",
+        fullName: "",
+        mobile: "",
         address: "",
         city: "",
         state: "",
@@ -227,11 +187,11 @@ const AddressModal = ({ isOpen, onClose, onSave, editingAddress }) => {
   const validateForm = () => {
     const newErrors = {};
     
-    if (!formData.name.trim()) newErrors.name = "Name is required";
-    if (!formData.phone.trim()) {
-      newErrors.phone = "Phone number is required";
-    } else if (!/^[\+]?[(]?[0-9]{1,4}[)]?[-\s\.]?[0-9]{6,12}$/.test(formData.phone)) {
-      newErrors.phone = "Invalid phone number";
+    if (!formData.fullName.trim()) newErrors.fullName = "Full name is required";
+    if (!formData.mobile.trim()) {
+      newErrors.mobile = "Mobile number is required";
+    } else if (!/^[0-9]{10}$/.test(formData.mobile)) {
+      newErrors.mobile = "Invalid mobile number (10 digits)";
     }
     if (!formData.address.trim()) newErrors.address = "Address is required";
     if (!formData.city.trim()) newErrors.city = "City is required";
@@ -239,7 +199,7 @@ const AddressModal = ({ isOpen, onClose, onSave, editingAddress }) => {
     if (!formData.pincode.trim()) {
       newErrors.pincode = "Pincode is required";
     } else if (!/^\d{5,6}$/.test(formData.pincode)) {
-      newErrors.pincode = "Invalid pincode";
+      newErrors.pincode = "Invalid pincode (5-6 digits)";
     }
     
     setErrors(newErrors);
@@ -279,27 +239,27 @@ const AddressModal = ({ isOpen, onClose, onSave, editingAddress }) => {
           <div>
             <label className="block text-sm font-medium text-gray-700 fs mb-2">Address Type</label>
             <div className="flex gap-2">
-              {["Home", "Office", "Other"].map(type => (
+              {["home", "office", "other"].map(type => (
                 <button
                   key={type}
                   type="button"
-                  onClick={() => setFormData({ ...formData, type})}
+                  onClick={() => setFormData({ ...formData, type })}
                   className={`flex-1 flex items-center justify-center gap-2 py-2.5 rounded-lg text-sm font-medium fs transition-all ${
                     formData.type === type
                       ? "bg-black text-white shadow-md"
                       : "bg-gray-100 text-gray-600 hover:bg-gray-200"
                   }`}
                 >
-                  {type === "Home" && <Home size={14} />}
-                  {type === "Office" && <Building size={14} />}
-                  {type === "Other" && <Navigation size={14} />}
-                  {type}
+                  {type === "home" && <Home size={14} />}
+                  {type === "office" && <Building size={14} />}
+                  {type === "other" && <Navigation size={14} />}
+                  {type.charAt(0).toUpperCase() + type.slice(1)}
                 </button>
               ))}
             </div>
           </div>
           
-          {/* Name */}
+          {/* Full Name */}
           <div>
             <label className="block text-sm font-medium text-gray-700 fs mb-1.5">
               Full Name <span className="text-black">*</span>
@@ -308,41 +268,42 @@ const AddressModal = ({ isOpen, onClose, onSave, editingAddress }) => {
               <User size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
               <input
                 type="text"
-                value={formData.name}
-                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                value={formData.fullName}
+                onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
                 placeholder="Enter full name"
                 className={`w-full pl-10 pr-4 py-2.5 bg-gray-50 border rounded-lg text-gray-900 fs text-sm focus:border-black focus:ring-1 focus:ring-black transition-colors ${
-                  errors.name ? "border-red-500" : "border-gray-200"
+                  errors.fullName ? "border-red-500" : "border-gray-200"
                 }`}
               />
             </div>
-            {errors.name && (
+            {errors.fullName && (
               <p className="text-xs text-red-500 fs mt-1 flex items-center gap-1">
-                <AlertCircle size={10} /> {errors.name}
+                <AlertCircle size={10} /> {errors.fullName}
               </p>
             )}
           </div>
           
-          {/* Phone */}
+          {/* Mobile */}
           <div>
             <label className="block text-sm font-medium text-gray-700 fs mb-1.5">
-              Phone Number <span className="text-black">*</span>
+              Mobile Number <span className="text-black">*</span>
             </label>
             <div className="relative">
               <Phone size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
               <input
                 type="tel"
-                value={formData.phone}
-                onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                placeholder="+91 98765 43210"
+                value={formData.mobile}
+                onChange={(e) => setFormData({ ...formData, mobile: e.target.value })}
+                placeholder="9876543210"
+                maxLength={10}
                 className={`w-full pl-10 pr-4 py-2.5 bg-gray-50 border rounded-lg text-gray-900 fs text-sm focus:border-black focus:ring-1 focus:ring-black transition-colors ${
-                  errors.phone ? "border-red-500" : "border-gray-200"
+                  errors.mobile ? "border-red-500" : "border-gray-200"
                 }`}
               />
             </div>
-            {errors.phone && (
+            {errors.mobile && (
               <p className="text-xs text-red-500 fs mt-1 flex items-center gap-1">
-                <AlertCircle size={10} /> {errors.phone}
+                <AlertCircle size={10} /> {errors.mobile}
               </p>
             )}
           </div>
@@ -411,6 +372,7 @@ const AddressModal = ({ isOpen, onClose, onSave, editingAddress }) => {
               value={formData.pincode}
               onChange={(e) => setFormData({ ...formData, pincode: e.target.value })}
               placeholder="Pincode"
+              maxLength={6}
               className={`w-full px-4 py-2.5 bg-gray-50 border rounded-lg text-gray-900 fs text-sm focus:border-black focus:ring-1 focus:ring-black transition-colors ${
                 errors.pincode ? "border-red-500" : "border-gray-200"
               }`}
@@ -499,7 +461,7 @@ const StatCard = ({ icon: Icon, label, value, color }) => (
 );
 
 // ─────────────────────────────────────────────────────────────────────────────
-// MAIN PAGE - Light Theme
+// MAIN PAGE - Light Theme with API Integration
 // ─────────────────────────────────────────────────────────────────────────────
 export default function UserAddresses() {
   const navigate = useNavigate();
@@ -511,16 +473,197 @@ export default function UserAddresses() {
   const [editingAddress, setEditingAddress] = useState(null);
   const [toast, setToast] = useState(null);
   
-  // Load addresses
-  useEffect(() => {
-    const loadAddresses = async () => {
-      setLoading(true);
-      await new Promise(resolve => setTimeout(resolve, 800));
-      setAddresses(SAMPLE_ADDRESSES);
-      setFilteredAddresses(SAMPLE_ADDRESSES);
+  // Get userId from sessionStorage
+  const getUserId = () => {
+    try {
+      const user = JSON.parse(sessionStorage.getItem("user") || "{}");
+      return user?.id || null;
+    } catch {
+      return null;
+    }
+  };
+  
+  const userId = getUserId();
+  const API_BASE = "http://31.97.228.17:4077";
+  
+  // Helper function to show toast
+  const showToast = (message, type) => {
+    setToast({ message, type });
+    setTimeout(() => setToast(null), 3000);
+  };
+  
+  // Fetch all addresses
+  const fetchAddresses = async () => {
+    if (!userId) {
       setLoading(false);
+      showToast("User not found. Please login again.", "error");
+      return;
+    }
+    
+    setLoading(true);
+    try {
+      const response = await fetch(`${API_BASE}/api/users/all/${userId}`);
+      const data = await response.json();
+      
+      if (data.success && data.addresses) {
+        setAddresses(data.addresses);
+        setFilteredAddresses(data.addresses);
+      } else {
+        setAddresses([]);
+        setFilteredAddresses([]);
+      }
+    } catch (error) {
+      console.error("Failed to fetch addresses:", error);
+      showToast("Failed to load addresses", "error");
+      setAddresses([]);
+      setFilteredAddresses([]);
+    } finally {
+      setLoading(false);
+    }
+  };
+  
+  // Add new address
+  const addAddress = async (addressData) => {
+    if (!userId) {
+      showToast("User not found. Please login again.", "error");
+      return;
+    }
+    
+    try {
+      const response = await fetch(`${API_BASE}/api/users/add/${userId}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          addresses: [addressData]
+        }),
+      });
+      
+      const data = await response.json();
+      
+      if (data.success) {
+        showToast("Address added successfully!", "success");
+        await fetchAddresses(); // Refresh the list
+      } else {
+        showToast(data.message || "Failed to add address", "error");
+      }
+    } catch (error) {
+      console.error("Failed to add address:", error);
+      showToast("Failed to add address", "error");
+    }
+  };
+  
+  // Update address
+  const updateAddress = async (addressData, addressId) => {
+    if (!userId) {
+      showToast("User not found. Please login again.", "error");
+      return;
+    }
+    
+    try {
+      const response = await fetch(`${API_BASE}/api/users/update/${userId}/${addressId}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          addresses: [addressData]
+        }),
+      });
+      
+      const data = await response.json();
+      
+      if (data.success) {
+        showToast("Address updated successfully!", "success");
+        await fetchAddresses(); // Refresh the list
+      } else {
+        showToast(data.message || "Failed to update address", "error");
+      }
+    } catch (error) {
+      console.error("Failed to update address:", error);
+      showToast("Failed to update address", "error");
+    }
+  };
+  
+  // Delete address
+  const deleteAddress = async (addressId) => {
+    if (!userId) {
+      showToast("User not found. Please login again.", "error");
+      return;
+    }
+    
+    const addressToDelete = addresses.find(addr => addr._id === addressId);
+    if (addressToDelete?.isDefault) {
+      showToast("Cannot delete default address. Set another address as default first.", "error");
+      return;
+    }
+    
+    try {
+      const response = await fetch(`${API_BASE}/api/users/delete/${userId}/${addressId}`, {
+        method: "DELETE",
+      });
+      
+      const data = await response.json();
+      
+      if (data.success) {
+        showToast("Address deleted successfully!", "success");
+        await fetchAddresses(); // Refresh the list
+      } else {
+        showToast(data.message || "Failed to delete address", "error");
+      }
+    } catch (error) {
+      console.error("Failed to delete address:", error);
+      showToast("Failed to delete address", "error");
+    }
+  };
+  
+  // Set default address (update the address with isDefault=true)
+  const setDefaultAddress = async (addressId, address) => {
+    if (!userId) return;
+    
+    const updatedAddress = {
+      ...address,
+      isDefault: true
     };
-    loadAddresses();
+    
+    try {
+      const response = await fetch(`${API_BASE}/api/users/update/${userId}/${addressId}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          addresses: [updatedAddress]
+        }),
+      });
+      
+      const data = await response.json();
+      
+      if (data.success) {
+        showToast("Default address updated successfully!", "success");
+        await fetchAddresses(); // Refresh the list
+      } else {
+        showToast(data.message || "Failed to update default address", "error");
+      }
+    } catch (error) {
+      console.error("Failed to set default address:", error);
+      showToast("Failed to update default address", "error");
+    }
+  };
+  
+  // Handle save from modal
+  const handleSave = async (addressData) => {
+    if (editingAddress && editingAddress._id) {
+      await updateAddress(addressData, editingAddress._id);
+    } else {
+      await addAddress(addressData);
+    }
+  };
+  
+  // Load addresses on mount
+  useEffect(() => {
+    fetchAddresses();
   }, []);
   
   // Filter addresses based on search
@@ -530,101 +673,22 @@ export default function UserAddresses() {
     } else {
       const query = searchQuery.toLowerCase();
       const filtered = addresses.filter(addr => 
-        addr.name.toLowerCase().includes(query) ||
-        addr.address.toLowerCase().includes(query) ||
-        addr.city.toLowerCase().includes(query) ||
-        addr.state.toLowerCase().includes(query) ||
-        addr.pincode.includes(query) ||
-        addr.type.toLowerCase().includes(query)
+        addr.fullName?.toLowerCase().includes(query) ||
+        addr.address?.toLowerCase().includes(query) ||
+        addr.city?.toLowerCase().includes(query) ||
+        addr.state?.toLowerCase().includes(query) ||
+        addr.pincode?.includes(query) ||
+        addr.type?.toLowerCase().includes(query)
       );
       setFilteredAddresses(filtered);
     }
   }, [searchQuery, addresses]);
   
-  // Add new address
-  const addAddress = async (addressData) => {
-    const newAddress = {
-      ...addressData,
-      id: Date.now().toString()
-    };
-    
-    let updatedAddresses = [...addresses, newAddress];
-    
-    if (newAddress.isDefault) {
-      updatedAddresses = updatedAddresses.map(addr => ({
-        ...addr,
-        isDefault: addr.id === newAddress.id
-      }));
-    }
-    
-    setAddresses(updatedAddresses);
-    showToast("Address added successfully!", "success");
-  };
-  
-  // Update address
-  const updateAddress = async (addressData) => {
-    if (!editingAddress) return;
-    
-    let updatedAddresses = addresses.map(addr =>
-      addr.id === editingAddress.id
-        ? { ...addressData, id: addr.id }
-        : addr
-    );
-    
-    if (addressData.isDefault) {
-      updatedAddresses = updatedAddresses.map(addr => ({
-        ...addr,
-        isDefault: addr.id === editingAddress.id
-      }));
-    }
-    
-    setAddresses(updatedAddresses);
-    showToast("Address updated successfully!", "success");
-    setEditingAddress(null);
-  };
-  
-  // Delete address
-  const deleteAddress = async (id) => {
-    const addressToDelete = addresses.find(addr => addr.id === id);
-    if (addressToDelete?.isDefault) {
-      showToast("Cannot delete default address. Set another address as default first.", "error");
-      return;
-    }
-    
-    setAddresses(addresses.filter(addr => addr.id !== id));
-    showToast("Address deleted successfully!", "success");
-  };
-  
-  // Set default address
-  const setDefaultAddress = (id) => {
-    const updatedAddresses = addresses.map(addr => ({
-      ...addr,
-      isDefault: addr.id === id
-    }));
-    setAddresses(updatedAddresses);
-    showToast("Default address updated successfully!", "success");
-  };
-  
-  // Handle save from modal
-  const handleSave = async (addressData) => {
-    if (editingAddress) {
-      await updateAddress(addressData);
-    } else {
-      await addAddress(addressData);
-    }
-  };
-  
-  // Show toast
-  const showToast = (message, type) => {
-    setToast({ message, type });
-    setTimeout(() => setToast(null), 3000);
-  };
-  
   const stats = {
     total: addresses.length,
     default: addresses.filter(a => a.isDefault).length,
-    home: addresses.filter(a => a.type === "Home").length,
-    office: addresses.filter(a => a.type === "Office").length
+    home: addresses.filter(a => a.type?.toLowerCase() === "home").length,
+    office: addresses.filter(a => a.type?.toLowerCase() === "office").length
   };
   
   if (loading) {
@@ -726,7 +790,7 @@ export default function UserAddresses() {
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 sm:gap-4">
               {filteredAddresses.map(address => (
                 <AddressCard
-                  key={address.id}
+                  key={address._id}
                   address={address}
                   onEdit={(addr) => {
                     setEditingAddress(addr);

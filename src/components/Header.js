@@ -79,6 +79,13 @@ export const TagIcon = ({ c }) => (
     <Ic className={c}><path d="M20 13l-7 7-10-10V3h7l10 10z" /><circle cx="7.5" cy="7.5" r="1.5" /></Ic>
 );
 
+const LoaderIcon = ({ c = "w-4 h-4" }) => (
+    <svg className={`${c} animate-spin`} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+        <circle cx="12" cy="12" r="10" stroke="currentColor" strokeOpacity="0.25" />
+        <path d="M12 2a10 10 0 0 1 10 10" stroke="currentColor" strokeLinecap="round" />
+    </svg>
+);
+
 // ─────────────────────────────────────────────────────────────────────────────
 // FLOATING JOIN US BUTTON
 // ─────────────────────────────────────────────────────────────────────────────
@@ -345,26 +352,170 @@ const CITIES = [
     { pin: "600001", city: "Chennai" },
 ];
 
+// ─────────────────────────────────────────────────────────────────────────────
+// LOCATION SELECTOR COMPONENT
+// ─────────────────────────────────────────────────────────────────────────────
 const LocationSelector = () => {
     const [open, setOpen] = useState(false);
-    const [sel, setSel] = useState(0);
+    const [sel, setSel] = useState(() => {
+        // Try to load saved city selection from localStorage
+        const saved = localStorage.getItem("selectedCityIndex");
+        return saved !== null ? parseInt(saved) : 0;
+    });
     const [gpsLoading, setGps] = useState(false);
-    const [gpsLabel, setGpsLbl] = useState(null);
+    const [gpsLabel, setGpsLbl] = useState(() => {
+        return localStorage.getItem("gpsLocation") || null;
+    });
+    const [liveLocationId, setLiveLocationId] = useState(null);
     const ref = useRef(null);
 
-    useEffect(() => {
-        const fn = e => { if (ref.current && !ref.current.contains(e.target)) setOpen(false); };
-        document.addEventListener("mousedown", fn);
-        return () => document.removeEventListener("mousedown", fn);
-    }, []);
+    const getUserId = () => {
+        try {
+            const user = JSON.parse(sessionStorage.getItem("user") || "{}");
+            return user?.id || null;
+        } catch {
+            return null;
+        }
+    };
 
+    const userId = getUserId();
+    const API_BASE = "http://31.97.228.17:4077";
+
+    // Fetch existing live location from API on mount
+    useEffect(() => {
+        const fetchLiveLocation = async () => {
+            if (!userId) return;
+            
+            try {
+                const response = await fetch(`${API_BASE}/api/users/live-location/${userId}`);
+                const data = await response.json();
+                
+                if (data.success && data.liveLocation) {
+                    setLiveLocationId(data.liveLocation._id || null);
+                    // If there's an existing location, update the GPS label
+                    const { latitude, longitude } = data.liveLocation;
+                    if (latitude && longitude) {
+                        const locationStr = `${latitude.toFixed(3)}°N, ${longitude.toFixed(3)}°E`;
+                        setGpsLbl(locationStr);
+                        localStorage.setItem("gpsLocation", locationStr);
+                        setSel(-1);
+                    }
+                }
+            } catch (error) {
+                console.error("Failed to fetch live location:", error);
+            }
+        };
+        
+        fetchLiveLocation();
+    }, [userId]);
+
+    // Update or create live location in API
+    const updateLiveLocation = useCallback(async (latitude, longitude) => {
+        if (!userId) {
+            console.error("User not found");
+            return false;
+        }
+
+        try {
+            const response = await fetch(`${API_BASE}/api/users/live-location/${userId}`, {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ latitude, longitude }),
+            });
+
+            const data = await response.json();
+            
+            if (data.success) {
+                if (data.liveLocation?._id) {
+                    setLiveLocationId(data.liveLocation._id);
+                }
+                return true;
+            }
+            return false;
+        } catch (error) {
+            console.error("Failed to update live location:", error);
+            return false;
+        }
+    }, [userId]);
+
+    // Handle GPS location detection
     const handleGps = useCallback(() => {
-        if (!navigator.geolocation) { alert("Geolocation not supported"); return; }
+        if (!navigator.geolocation) { 
+            alert("Geolocation not supported"); 
+            return; 
+        }
+        
+        if (!userId) {
+            alert("Please login to use location services");
+            return;
+        }
+        
         setGps(true);
         navigator.geolocation.getCurrentPosition(
-            pos => { const mock = `${pos.coords.latitude.toFixed(3)}°N, ${pos.coords.longitude.toFixed(3)}°E`; setGpsLbl(mock); setSel(-1); setGps(false); setOpen(false); },
-            () => { setGps(false); alert("Please allow location access."); }
+            async (pos) => {
+                const { latitude, longitude } = pos.coords;
+                const locationStr = `${latitude.toFixed(3)}°N, ${longitude.toFixed(3)}°E`;
+                
+                // Update API with live location
+                const success = await updateLiveLocation(latitude, longitude);
+                
+                if (success) {
+                    setGpsLbl(locationStr);
+                    setSel(-1);
+                    localStorage.setItem("gpsLocation", locationStr);
+                    localStorage.removeItem("selectedCityIndex");
+                } else {
+                    alert("Failed to save location. Please try again.");
+                }
+                
+                setGps(false);
+                setOpen(false);
+            },
+            (error) => {
+                setGps(false);
+                let errorMessage = "Please allow location access.";
+                switch (error.code) {
+                    case error.PERMISSION_DENIED:
+                        errorMessage = "Location permission denied. Please enable location access.";
+                        break;
+                    case error.POSITION_UNAVAILABLE:
+                        errorMessage = "Location information unavailable.";
+                        break;
+                    case error.TIMEOUT:
+                        errorMessage = "Location request timed out.";
+                        break;
+                }
+                alert(errorMessage);
+            }
         );
+    }, [userId, updateLiveLocation]);
+
+    // Handle city selection
+    const handleCitySelect = useCallback((index) => {
+        setSel(index);
+        localStorage.setItem("selectedCityIndex", index.toString());
+        localStorage.removeItem("gpsLocation");
+        setOpen(false);
+    }, []);
+
+    // Close dropdown when clicking outside - FIXED VERSION
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            // Check if ref exists and event target is a valid node
+            if (ref.current && event.target && event.target) {
+                if (!ref.current.contains(event.target)) {
+                    setOpen(false);
+                }
+            } else if (event.target === null) {
+                // If target is null, close the dropdown
+                setOpen(false);
+            }
+        };
+        
+        document.addEventListener("mousedown", handleClickOutside);
+        return () => document.removeEventListener("mousedown", handleClickOutside);
     }, []);
 
     const loc = sel === -1 ? { pin: "GPS", city: gpsLabel || "Current" } : CITIES[sel];
@@ -372,10 +523,16 @@ const LocationSelector = () => {
 
     return (
         <div className="relative" ref={ref}>
-            <button onClick={() => setOpen(o => !o)} className="relative p-2 rounded-full transition-colors hover:bg-white/10" style={{ color: iconColor }} aria-label="Change location">
+            <button 
+                onClick={() => setOpen(o => !o)} 
+                className="relative p-2 rounded-full transition-colors hover:bg-white/10" 
+                style={{ color: iconColor }} 
+                aria-label="Change location"
+            >
                 <PinIcon c="w-5 h-5" />
                 <span className="absolute bottom-1.5 right-1.5 w-1.5 h-1.5 rounded-full" style={{ background: "#000" }} />
             </button>
+            
             {open && (
                 <div className="absolute top-full right-0 mt-2 w-60 rounded-2xl shadow-2xl z-[200] overflow-hidden" style={{ background: "#fff", border: "1px solid rgba(111,78,55,0.15)" }}>
                     <div className="px-4 pt-3 pb-2 flex items-center gap-2" style={{ borderBottom: "1px solid rgba(111,78,55,0.12)" }}>
@@ -385,21 +542,34 @@ const LocationSelector = () => {
                             <span className="text-xs font-bold" style={{ color: "#000" }}>{sel === -1 ? (gpsLabel || "Current Location") : `${loc.city} — ${loc.pin}`}</span>
                         </div>
                     </div>
-                    <button onClick={handleGps} className="w-full flex items-center gap-3 px-4 py-3 transition-colors hover:bg-[#f9f5f0]" style={{ borderBottom: "1px solid rgba(111,78,55,0.1)" }}>
+                    
+                    <button 
+                        onClick={handleGps} 
+                        className="w-full flex items-center gap-3 px-4 py-3 transition-colors hover:bg-[#f9f5f0]" 
+                        style={{ borderBottom: "1px solid rgba(111,78,55,0.1)" }}
+                        disabled={gpsLoading}
+                    >
                         <div className="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0" style={{ background: "linear-gradient(135deg,#000,#4a3520)" }}>
-                            {gpsLoading ? <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" /> : <GpsIcon c="w-4 h-4 text-white" />}
+                            {gpsLoading ? <LoaderIcon c="w-4 h-4 text-white" /> : <GpsIcon c="w-4 h-4 text-white" />}
                         </div>
                         <div className="flex flex-col items-start">
                             <span className="text-xs font-bold" style={{ color: "#000" }}>Use Current Location</span>
                             <span className="text-[10px]" style={{ color: "#7a6a5a" }}>Detect via GPS</span>
                         </div>
-                        {sel === -1 && <span className="ml-auto" style={{ color: "#010101" }}><CheckIcon /></span>}
+                        {sel === -1 && !gpsLoading && <span className="ml-auto" style={{ color: "#010101" }}><CheckIcon /></span>}
                     </button>
-                    <div className="px-4 pt-2.5 pb-1"><p className="text-[9px] font-black uppercase tracking-widest" style={{ color: "#7a6a5a" }}>Select City</p></div>
+                    
+                    {/* <div className="px-4 pt-2.5 pb-1">
+                        <p className="text-[9px] font-black uppercase tracking-widest" style={{ color: "#7a6a5a" }}>Select City</p>
+                    </div>
+                    
                     {CITIES.map((l, i) => (
-                        <button key={l.pin} onClick={() => { setSel(i); setOpen(false); }}
+                        <button 
+                            key={l.pin} 
+                            onClick={() => handleCitySelect(i)}
                             className={`w-full flex items-center gap-2.5 px-4 py-2.5 transition-colors ${i === sel ? "" : "hover:bg-[#f9f5f0]"}`}
-                            style={{ background: i === sel ? "#f9f5f0" : "transparent" }}>
+                            style={{ background: i === sel ? "#f9f5f0" : "transparent" }}
+                        >
                             <span style={{ color: "#000" }}><PinIcon c="w-3.5 h-3.5" /></span>
                             <div className="flex flex-col items-start">
                                 <span className="text-xs font-semibold" style={{ color: i === sel ? "#000" : "#000" }}>{l.city}</span>
@@ -407,7 +577,7 @@ const LocationSelector = () => {
                             </div>
                             {i === sel && <span className="ml-auto" style={{ color: "#000" }}><CheckIcon /></span>}
                         </button>
-                    ))}
+                    ))} */}
                 </div>
             )}
         </div>
