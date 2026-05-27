@@ -23,6 +23,7 @@ import { WeddingPlannerPage } from './pages/WeddingPlanner';
 import BrublaLogin from './components/Login';
 import SubCategoriesGrid from './components/SubCategoryGrid';
 import SubCategoryProductsPage from './pages/SubCategoryProductsPage';
+import NotFoundPage from './views/NotFoundPage';
 
 /* =========================
    PRIVATE ROUTE COMPONENT
@@ -215,6 +216,8 @@ function App() {
             </PrivateRoute>
           }
         />
+
+        <Route path="*" element={<NotFoundPage />} />
 
       </Routes>
     </>
