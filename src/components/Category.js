@@ -4,64 +4,7 @@ import { useNavigate } from "react-router-dom";
 // ─────────────────────────────────────────────────────────────────────────────
 // CATEGORY DATA (FALLBACK IF API FAILS)
 // ─────────────────────────────────────────────────────────────────────────────
-const FALLBACK_CATEGORIES = [
-  {
-    id: 1,
-    label: "Women's-Fashion",
-    sublabel: "432 styles",
-    img: "https://images.unsplash.com/photo-1483985988355-763728e1935b?w=800&q=80",
-    accent: "#000",
-  },
-  {
-    id: 2,
-    label: "Men's-Style",
-    sublabel: "860 styles",
-    img: "https://images.unsplash.com/photo-1490578474895-699cd4e2cf59?w=600&q=80",
-    accent: "#000",
-  },
-  {
-    id: 3,
-    label: "Sneakers",
-    sublabel: "210 styles",
-    img: "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=600&q=80",
-    accent: "#000",
-  },
-  {
-    id: 4,
-    label: "Jewelry",
-    sublabel: "380 items",
-    img: "https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=600&q=80",
-    accent: "#000",
-  },
-  {
-    id: 5,
-    label: "Home-Decor",
-    sublabel: "190 products",
-    img: "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=800&q=80",
-    accent: "#000",
-  },
-  {
-    id: 6,
-    label: "Beauty",
-    sublabel: "145 pieces",
-    img: "https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?w=600&q=80",
-    accent: "#000",
-  },
-  {
-    id: 7,
-    label: "Electronics",
-    sublabel: "260 pairs",
-    img: "https://images.unsplash.com/photo-1468495244123-6c6c332eeece?w=600&q=80",
-    accent: "#000",
-  },
-  {
-    id: 8,
-    label: "Sports-and-Fitness",
-    sublabel: "BUY 1 GET 1",
-    img: "https://images.unsplash.com/photo-1517836357463-d25dfeac3438?w=600&q=80",
-    accent: "#000",
-  },
-];
+const FALLBACK_CATEGORIES = [];
 
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -404,7 +347,7 @@ export default function CategorySection() {
   const handleCategoryClick = (category) => {
     // Navigate to category page with the category name
     const encodedName = encodeURIComponent(category.label);
-    navigate(`/category/${encodedName}`);
+    navigate(`/category/${category.id}`);
   };
 
   return (

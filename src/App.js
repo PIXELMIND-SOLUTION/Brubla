@@ -8,7 +8,7 @@ import SingleExclusiveProduct from './components/SingleExclusiveProduct';
 import ProfilePage from './components/ProfilePage';
 import ScrollToTop from './views/ScrollToTop';
 import CategoriesGrid from './components/Categories';
-import CategoryProductsPage from './pages/CategoryProductsPage';
+import CategoryProductsPage from './pages/SubCategoryProductsPage';
 import JoinUs from './pages/JoinUs';
 import ProductDetails from './pages/ProductDetails';
 import AllProducts from './pages/AllProducts';
@@ -21,6 +21,8 @@ import Collections from './pages/Collections';
 import SingleCollectionProducts from './pages/SingleCollectionProducts';
 import { WeddingPlannerPage } from './pages/WeddingPlanner';
 import BrublaLogin from './components/Login';
+import SubCategoriesGrid from './components/SubCategoryGrid';
+import SubCategoryProductsPage from './pages/SubCategoryProductsPage';
 
 /* =========================
    PRIVATE ROUTE COMPONENT
@@ -107,10 +109,19 @@ function App() {
         />
 
         <Route
-          path="/category/:name"
+          path="/category/:categoryId"
           element={
             <PrivateRoute>
-              <CategoryProductsPage />
+              <SubCategoriesGrid />
+            </PrivateRoute>
+          }
+        />
+
+        <Route
+          path="/category/subcategory/:subcategoryId"
+          element={
+            <PrivateRoute>
+              <SubCategoryProductsPage />
             </PrivateRoute>
           }
         />
