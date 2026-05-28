@@ -59,20 +59,20 @@ const toINR = (usd) => {
 // ─── Constants ────────────────────────────────────────────────────────────────
 const ALL_SIZES = ["XS", "S", "M", "L", "XL", "XXL", "XXXL"];
 const COLOR_GROUPS = [
-    { label: "Blues",    colors: ["#3b82f6", "#1d4ed8", "#93c5fd"] },
-    { label: "Browns",   colors: ["#92400e", "#b45309", "#d97706"] },
-    { label: "Greens",   colors: ["#16a34a", "#4ade80", "#166534"] },
+    { label: "Blues", colors: ["#3b82f6", "#1d4ed8", "#93c5fd"] },
+    { label: "Browns", colors: ["#92400e", "#b45309", "#d97706"] },
+    { label: "Greens", colors: ["#16a34a", "#4ade80", "#166534"] },
     { label: "Neutrals", colors: ["#374151", "#9ca3af", "#f3f4f6"] },
-    { label: "Purples",  colors: ["#7c3aed", "#a855f7", "#c4b5fd"] },
-    { label: "Reds",     colors: ["#dc2626", "#f87171", "#991b1b"] },
+    { label: "Purples", colors: ["#7c3aed", "#a855f7", "#c4b5fd"] },
+    { label: "Reds", colors: ["#dc2626", "#f87171", "#991b1b"] },
 ];
 
 // ─── URL helpers ──────────────────────────────────────────────────────────────
 function parseFiltersFromParams(searchParams) {
     return {
-        sizes:        searchParams.getAll("size"),
-        types:        searchParams.getAll("type"),
-        colors:       searchParams.getAll("color"),
+        sizes: searchParams.getAll("size"),
+        types: searchParams.getAll("type"),
+        colors: searchParams.getAll("color"),
         availability: searchParams.get("availability") || "all",
     };
 }
@@ -87,21 +87,38 @@ function updateUrlParams(searchParams, filters, setSearchParams) {
     setSearchParams(newParams, { replace: true });
 }
 
-// ─── BookmarkIcon ─────────────────────────────────────────────────────────────
-function BookmarkIcon({ saved, onToggle }) {
+// ─── HeartIcon ─────────────────────────────────────────────────────────────
+function HeartIcon({ saved, onToggle }) {
     return (
         <button
-            onClick={(e) => { e.stopPropagation(); onToggle(); }}
-            className="absolute top-3 right-3 z-10 w-8 h-8 flex items-center justify-center rounded-full transition-all duration-200"
-            style={{ background: "rgba(255,255,255,0.85)", backdropFilter: "blur(4px)" }}
-            aria-label="Save"
+            onClick={(e) => {
+                e.stopPropagation();
+                onToggle();
+            }}
+            className="
+                absolute top-3 right-3 z-10
+                w-8 h-8 flex items-center justify-center
+                rounded-full transition-all duration-200
+                hover:scale-110
+            "
+            style={{
+                background: "rgba(255,255,255,0.85)",
+                backdropFilter: "blur(4px)"
+            }}
+            aria-label="Wishlist"
         >
             <svg
-                width="16" height="16" viewBox="0 0 24 24"
-                fill={saved ? COFFEE : "none"} stroke={COFFEE}
-                strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill={saved ? "#ef4444" : "none"}
+                stroke={saved ? "#ef4444" : COFFEE}
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                className="transition-all duration-200"
             >
-                <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z" />
+                <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
             </svg>
         </button>
     );
@@ -110,16 +127,81 @@ function BookmarkIcon({ saved, onToggle }) {
 // ─── ProductCard ──────────────────────────────────────────────────────────────
 function ProductCard({ onClick, product }) {
     const [saved, setSaved] = useState(false);
-    const productImage = getProductImage(product);
+
+    const [currentImageIndex, setCurrentImageIndex] = useState(0);
+
+    // Get images priority:
+    // 1. mainImages
+    // 2. variant mainImage
+    // 3. variant images
+
+    let productImages = [];
+
+    if (product.mainImages?.length > 0) {
+
+        productImages = product.mainImages;
+
+    } else if (product.variants?.length > 0) {
+
+        // variant mainImage
+        const variantMainImages = product.variants
+            .map((v) => v.mainImage)
+            .filter(Boolean);
+
+        if (variantMainImages.length > 0) {
+
+            productImages = variantMainImages;
+
+        } else {
+
+            // fallback variant images
+            productImages = product.variants.flatMap(
+                (v) => v.images || []
+            );
+        }
+    }
+
+    // normalize URLs
+    productImages = productImages.map((img) =>
+        normaliseUrl(img)
+    );
+
+    // fallback image
+    if (productImages.length === 0) {
+
+        productImages = [
+            "https://placehold.co/600x800/e5e7eb/64748b?text=No+Image",
+        ];
+    }
+
+    // auto slide
+    useEffect(() => {
+
+        if (productImages.length <= 1) return;
+
+        const interval = setInterval(() => {
+
+            setCurrentImageIndex((prev) =>
+                (prev + 1) % productImages.length
+            );
+
+        }, 2000);
+
+        return () => clearInterval(interval);
+
+    }, [productImages.length]);
+
+    const productImage =
+        productImages[currentImageIndex];
 
     const discount =
         product.maxDiscount ||
         (product.displayActualPrice > product.displayPrice
             ? Math.round(
-                  ((product.displayActualPrice - product.displayPrice) /
-                      product.displayActualPrice) *
-                      100
-              )
+                ((product.displayActualPrice - product.displayPrice) /
+                    product.displayActualPrice) *
+                100
+            )
             : null);
 
     const inStock = product.totalStock > 0;
@@ -135,14 +217,18 @@ function ProductCard({ onClick, product }) {
                 <img
                     src={productImage}
                     alt={product.name}
-                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                    className="
+                      w-full h-full object-cover
+                      transition-all duration-700
+                      group-hover:scale-105
+                    "
                     onError={(e) => {
                         e.target.src =
                             "https://placehold.co/600x800/e5e7eb/64748b?text=No+Image";
                     }}
                 />
 
-                <BookmarkIcon saved={saved} onToggle={() => setSaved((s) => !s)} />
+                <HeartIcon saved={saved} onToggle={() => setSaved((s) => !s)} />
 
                 {/* Sold-out overlay */}
                 {!inStock && (
@@ -150,6 +236,24 @@ function ProductCard({ onClick, product }) {
                         <span className="text-xs font-semibold tracking-widest uppercase text-gray-500 border border-gray-400 px-3 py-1 rounded-full">
                             Sold Out
                         </span>
+                    </div>
+                )}
+
+                {/* Slider indicators */}
+                {productImages.length > 1 && (
+                    <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-1.5 z-10">
+                        {productImages.map((_, idx) => (
+                            <span
+                                key={idx}
+                                className={`
+                    transition-all duration-300 rounded-full
+                    ${idx === currentImageIndex
+                                        ? "w-5 h-1.5 bg-white"
+                                        : "w-1.5 h-1.5 bg-white/60"
+                                    }
+                `}
+                            />
+                        ))}
                     </div>
                 )}
 
@@ -164,7 +268,7 @@ function ProductCard({ onClick, product }) {
 
                 {/* Hover add-to-cart strip */}
                 {inStock && (
-                    <div className="absolute bottom-0 left-0 right-0 translate-y-full group-hover:translate-y-0 transition-transform duration-300">
+                    <div className="absolute z-20 bottom-0 left-0 right-0 translate-y-full group-hover:translate-y-0 transition-transform duration-300">
                         <button
                             onClick={(e) => {
                                 e.stopPropagation();
@@ -200,6 +304,45 @@ function ProductCard({ onClick, product }) {
                             </span>
                         )}
                     </div>
+
+                    {/* Sizes preview */}
+                    {product.availableSizes?.length > 0 && (
+                        <div className="flex gap-0.5">
+                            {product.availableSizes.slice(0, 3).map((s) => (
+                                <span key={s} className="text-[8px] text-gray-400 border border-gray-100 rounded px-1 py-0.5 bg-gray-50">{s}</span>
+                            ))}
+                            {product.availableSizes.length > 3 && (
+                                <span className="text-[8px] text-gray-400">+{product.availableSizes.length - 3}</span>
+                            )}
+                        </div>
+                    )}
+
+                    {/* Colour swatches */}
+                    {product.availableColors?.length > 0 && (
+                        <div className="flex items-center gap-1 mt-0.5">
+                            {product.availableColors.slice(0, 5).map((c) => {
+                                const lower = c.toLowerCase();
+                                const bg = lower === "white" ? "#f9fafb"
+                                    : lower === "black" ? "#111"
+                                        : lower === "red" ? "#ef4444"
+                                            : lower === "blue" ? "#3b82f6"
+                                                : lower === "green" ? "#22c55e"
+                                                    : lower === "yellow" ? "#eab308"
+                                                        : lower === "pink" ? "#ec4899"
+                                                            : lower === "gray" || lower === "grey" ? "#9ca3af"
+                                                                : "#d1d5db";
+                                return (
+                                    <span key={c} title={c}
+                                        className="w-3 h-3 rounded-full border border-gray-200 flex-shrink-0"
+                                        style={{ backgroundColor: bg }} />
+                                );
+                            })}
+                            {product.availableColors.length > 5 && (
+                                <span className="text-[8px] text-gray-400">+{product.availableColors.length - 5}</span>
+                            )}
+                        </div>
+                    )}
+
                     {product.subcategoryName && (
                         <p className="text-xs text-gray-400 mt-1 capitalize">
                             {product.subcategoryName}
@@ -274,18 +417,16 @@ function FilterDrawer({ open, onClose, filters, setFilters, onApply, availableSi
         <>
             {/* Backdrop */}
             <div
-                className={`fixed inset-0 z-40 transition-opacity duration-300 ${
-                    open ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
-                }`}
+                className={`fixed inset-0 z-40 transition-opacity duration-300 ${open ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
+                    }`}
                 style={{ background: "rgba(0,0,0,0.25)" }}
                 onClick={onClose}
             />
 
             {/* Drawer panel */}
             <div
-                className={`fixed top-0 right-0 h-full w-full max-w-sm bg-white z-50 shadow-2xl flex flex-col transition-transform duration-300 ease-in-out ${
-                    open ? "translate-x-0" : "translate-x-full"
-                }`}
+                className={`fixed top-0 right-0 h-full w-full max-w-sm bg-white z-50 shadow-2xl flex flex-col transition-transform duration-300 ease-in-out ${open ? "translate-x-0" : "translate-x-full"
+                    }`}
                 style={{ fontFamily: "'DM Sans', sans-serif" }}
             >
                 {/* Header */}
@@ -323,11 +464,10 @@ function FilterDrawer({ open, onClose, filters, setFilters, onApply, availableSi
                                 <button
                                     key={s}
                                     onClick={() => toggleArr("sizes", s)}
-                                    className={`px-3 py-1.5 rounded-full text-xs font-medium border transition-all duration-150 ${
-                                        filters.sizes.includes(s)
-                                            ? "bg-black text-white border-black"
-                                            : "bg-white text-gray-700 border-gray-200 hover:border-gray-400"
-                                    }`}
+                                    className={`px-3 py-1.5 rounded-full text-xs font-medium border transition-all duration-150 ${filters.sizes.includes(s)
+                                        ? "bg-black text-white border-black"
+                                        : "bg-white text-gray-700 border-gray-200 hover:border-gray-400"
+                                        }`}
                                 >
                                     {s}
                                 </button>
@@ -344,17 +484,16 @@ function FilterDrawer({ open, onClose, filters, setFilters, onApply, availableSi
                                     onClick={() =>
                                         setFilters((f) => ({ ...f, availability: v }))
                                     }
-                                    className={`px-4 py-1.5 rounded-full text-xs font-medium border transition-all duration-150 ${
-                                        filters.availability === v
-                                            ? "bg-black text-white border-black"
-                                            : "bg-white text-gray-700 border-gray-200 hover:border-gray-400"
-                                    }`}
+                                    className={`px-4 py-1.5 rounded-full text-xs font-medium border transition-all duration-150 ${filters.availability === v
+                                        ? "bg-black text-white border-black"
+                                        : "bg-white text-gray-700 border-gray-200 hover:border-gray-400"
+                                        }`}
                                 >
                                     {v === "all"
                                         ? "All"
                                         : v === "inStock"
-                                        ? "In stock"
-                                        : "Out of stock"}
+                                            ? "In stock"
+                                            : "Out of stock"}
                                 </button>
                             ))}
                         </div>
@@ -367,11 +506,10 @@ function FilterDrawer({ open, onClose, filters, setFilters, onApply, availableSi
                                 <button
                                     key={g.label}
                                     onClick={() => toggleArr("colors", g.label)}
-                                    className={`flex items-center gap-2 px-3 py-2 rounded-xl border transition-all duration-150 ${
-                                        filters.colors.includes(g.label)
-                                            ? "border-black bg-gray-50"
-                                            : "border-gray-200 hover:border-gray-400"
-                                    }`}
+                                    className={`flex items-center gap-2 px-3 py-2 rounded-xl border transition-all duration-150 ${filters.colors.includes(g.label)
+                                        ? "border-black bg-gray-50"
+                                        : "border-gray-200 hover:border-gray-400"
+                                        }`}
                                 >
                                     <div className="flex -space-x-1">
                                         {g.colors.map((c, i) => (
@@ -477,17 +615,17 @@ export default function AllProducts() {
     const navigate = useNavigate();
 
     // ── Data state ──
-    const [products, setProducts]   = useState([]);
-    const [loading, setLoading]     = useState(true);
-    const [error, setError]         = useState(null);
-    const [retryKey, setRetryKey]   = useState(0); // bump to re-fetch
+    const [products, setProducts] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+    const [retryKey, setRetryKey] = useState(0); // bump to re-fetch
 
     // ── UI state ──
     const [activeCategory, setActiveCategory] = useState("View all");
-    const [categories, setCategories]         = useState(["View all"]);
+    const [categories, setCategories] = useState(["View all"]);
     const [availableSizes, setAvailableSizes] = useState(ALL_SIZES);
 
-    const [filterOpen, setFilterOpen]   = useState(false);
+    const [filterOpen, setFilterOpen] = useState(false);
     const [tempFilters, setTempFilters] = useState({
         sizes: [], types: [], colors: [], availability: "all",
     });
@@ -505,7 +643,7 @@ export default function AllProducts() {
 
             try {
                 const controller = new AbortController();
-                const timeoutId  = setTimeout(() => controller.abort(), 15_000);
+                const timeoutId = setTimeout(() => controller.abort(), 15_000);
 
                 const response = await fetch(`${API_BASE}/api/admin/products`, {
                     signal: controller.signal,
@@ -586,24 +724,24 @@ export default function AllProducts() {
         const el = navRef.current;
         if (!el) return;
         let isDown = false, startX, scrollLeft;
-        const onDown  = (e) => { isDown = true; startX = e.pageX - el.offsetLeft; scrollLeft = el.scrollLeft; };
-        const onUp    = () => { isDown = false; };
+        const onDown = (e) => { isDown = true; startX = e.pageX - el.offsetLeft; scrollLeft = el.scrollLeft; };
+        const onUp = () => { isDown = false; };
         const onLeave = () => { isDown = false; };
-        const onMove  = (e) => {
+        const onMove = (e) => {
             if (!isDown) return;
             e.preventDefault();
             const x = e.pageX - el.offsetLeft;
             el.scrollLeft = scrollLeft - (x - startX);
         };
-        el.addEventListener("mousedown",  onDown);
-        el.addEventListener("mouseup",    onUp);
+        el.addEventListener("mousedown", onDown);
+        el.addEventListener("mouseup", onUp);
         el.addEventListener("mouseleave", onLeave);
-        el.addEventListener("mousemove",  onMove);
+        el.addEventListener("mousemove", onMove);
         return () => {
-            el.removeEventListener("mousedown",  onDown);
-            el.removeEventListener("mouseup",    onUp);
+            el.removeEventListener("mousedown", onDown);
+            el.removeEventListener("mouseup", onUp);
             el.removeEventListener("mouseleave", onLeave);
-            el.removeEventListener("mousemove",  onMove);
+            el.removeEventListener("mousemove", onMove);
         };
     }, []);
 
@@ -617,8 +755,8 @@ export default function AllProducts() {
 
         // Availability
         const inStock = p.totalStock > 0;
-        if (filters.availability === "inStock"    && !inStock) return false;
-        if (filters.availability === "outOfStock" &&  inStock) return false;
+        if (filters.availability === "inStock" && !inStock) return false;
+        if (filters.availability === "outOfStock" && inStock) return false;
 
         // Size
         if (filters.sizes.length > 0) {
@@ -717,11 +855,10 @@ export default function AllProducts() {
                                     <button
                                         key={cat}
                                         onClick={() => handleCategoryClick(cat)}
-                                        className={`flex-shrink-0 px-4 py-2 rounded-full text-xs font-semibold tracking-wide border transition-all duration-200 whitespace-nowrap ${
-                                            activeCategory === cat
-                                                ? "text-white border-transparent"
-                                                : "bg-white text-gray-700 border-gray-200 hover:border-gray-400"
-                                        }`}
+                                        className={`flex-shrink-0 px-4 py-2 rounded-full text-xs font-semibold tracking-wide border transition-all duration-200 whitespace-nowrap ${activeCategory === cat
+                                            ? "text-white border-transparent"
+                                            : "bg-white text-gray-700 border-gray-200 hover:border-gray-400"
+                                            }`}
                                         style={
                                             activeCategory === cat
                                                 ? { backgroundColor: COFFEE }
