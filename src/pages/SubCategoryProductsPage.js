@@ -790,7 +790,7 @@ export default function SubCategoryProductsPage() {
       // const token = sessionStorage.getItem("authToken");
 
       await axios.post(
-        `http://31.97.228.17:4077/api/users/wishlist/${userId}/add`,
+        `http://31.97.228.17:4077/api/users/wishlist/${userId}/toggle`,
         {
           productId,
         },

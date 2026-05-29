@@ -7,6 +7,7 @@ import {
 } from "lucide-react";
 import Header from "../components/Header";
 import SizeGuideModal from "../views/SizeGuide";
+import axios from "axios";
 
 const COFFEE = "#000";
 const API_BASE = "http://31.97.228.17:4077";
@@ -22,7 +23,7 @@ const normaliseUrl = (url) => {
 const getVariantImages = (variant) => {
     if (!variant) return [];
     const seen = new Set();
-    const out  = [];
+    const out = [];
     const push = (raw) => {
         const u = normaliseUrl(raw);
         if (u && !seen.has(u)) { seen.add(u); out.push(u); }
@@ -36,7 +37,7 @@ const getVariantImages = (variant) => {
 // selectedColor controls ordering (selected variant's images shown first)
 const getOrderedImages = (product, selectedColor = null) => {
     if (!product || !Array.isArray(product.variants)) return [];
-    const seen   = new Set();
+    const seen = new Set();
     const result = [];
 
     const push = (raw) => {
@@ -89,9 +90,9 @@ const getStockForColorSize = (variants = [], color, size) => {
 const getPriceForColor = (variants = [], color) => {
     const v = variants.find((x) => x.color === color);
     if (!v) return null;
-    const actual      = v.price ?? 0;
-    const discounted  = (v.discountPrice != null && v.discountPrice > 0) ? v.discountPrice : actual;
-    const pct         = actual > discounted
+    const actual = v.price ?? 0;
+    const discounted = (v.discountPrice != null && v.discountPrice > 0) ? v.discountPrice : actual;
+    const pct = actual > discounted
         ? Math.round(((actual - discounted) / actual) * 100)
         : 0;
     return { price: discounted, actualPrice: actual, discount: pct };
@@ -105,7 +106,7 @@ const toINR = (usd) => {
 // ─── Star Rating ──────────────────────────────────────────────────────────────
 const StarRating = ({ rating, size = "small" }) => {
     const px = size === "small" ? 13 : 16;
-    const n  = Number(rating) || 0;
+    const n = Number(rating) || 0;
     return (
         <div className="flex items-center gap-0.5">
             {[...Array(5)].map((_, i) => (
@@ -113,8 +114,8 @@ const StarRating = ({ rating, size = "small" }) => {
                     key={i} size={px}
                     className={
                         i < Math.floor(n) ? "text-amber-400 fill-amber-400"
-                        : i < n           ? "text-amber-400 fill-amber-400 opacity-50"
-                                          : "text-gray-200 fill-gray-200"
+                            : i < n ? "text-amber-400 fill-amber-400 opacity-50"
+                                : "text-gray-200 fill-gray-200"
                     }
                 />
             ))}
@@ -124,13 +125,13 @@ const StarRating = ({ rating, size = "small" }) => {
 
 // ─── Mobile Image Gallery ─────────────────────────────────────────────────────
 const MobileGallery = ({ images, productName, currentStock, tags, discount }) => {
-    const [idx, setIdx]           = useState(0);
-    const [fullscreen, setFs]     = useState(false);
+    const [idx, setIdx] = useState(0);
+    const [fullscreen, setFs] = useState(false);
 
     // Reset to first image when images array changes (colour switch)
     useEffect(() => { setIdx(0); }, [images]);
 
-    const go   = useCallback((n) => setIdx((n + images.length) % images.length), [images.length]);
+    const go = useCallback((n) => setIdx((n + images.length) % images.length), [images.length]);
     const prev = () => go(idx - 1);
     const next = () => go(idx + 1);
 
@@ -235,16 +236,16 @@ const DesignerCard = ({ product }) => {
         bio: "Brubla Premium offers high-quality fashion essentials with premium craftsmanship and modern style.",
         location: "Worldwide Shipping",
     } : {
-        name:      product.creatorDetails?.name      || product.createdBy    || "Brand Studio",
-        brand:     product.creatorDetails?.brandName || "Premium Brand",
-        avatar:    product.creatorDetails?.profileImage || "https://api.dicebear.com/7.x/adventurer/svg?seed=designer",
-        verified:  true,
-        rating:    product.creatorDetails?.rating    || 4.8,
+        name: product.creatorDetails?.name || product.createdBy || "Brand Studio",
+        brand: product.creatorDetails?.brandName || "Premium Brand",
+        avatar: product.creatorDetails?.profileImage || "https://api.dicebear.com/7.x/adventurer/svg?seed=designer",
+        verified: true,
+        rating: product.creatorDetails?.rating || 4.8,
         followers: product.creatorDetails?.followers || "12.5K",
-        products:  product.creatorDetails?.products  || 20,
-        joined:    product.creatorDetails?.joined    || new Date(product.createdAt).getFullYear().toString(),
-        bio:       product.creatorDetails?.bio       || product.description || "Premium quality products crafted with care.",
-        location:  product.creatorDetails?.location  || "Global Shipping",
+        products: product.creatorDetails?.products || 20,
+        joined: product.creatorDetails?.joined || new Date(product.createdAt).getFullYear().toString(),
+        bio: product.creatorDetails?.bio || product.description || "Premium quality products crafted with care.",
+        location: product.creatorDetails?.location || "Global Shipping",
     };
 
     return (
@@ -270,8 +271,7 @@ const DesignerCard = ({ product }) => {
                         </div>
                     </div>
                 </div>
-                <button onClick={() => setFollowing(!following)} className={`flex-shrink-0 px-3 py-1.5 rounded-full text-xs font-medium transition-all ${
-                    following ? "bg-gray-100 text-gray-700 border border-gray-200" : "bg-gray-900 text-white"}`}>
+                <button onClick={() => setFollowing(!following)} className={`flex-shrink-0 px-3 py-1.5 rounded-full text-xs font-medium transition-all ${following ? "bg-gray-100 text-gray-700 border border-gray-200" : "bg-gray-900 text-white"}`}>
                     {following ? "Following" : "Follow"}
                 </button>
             </div>
@@ -279,8 +279,8 @@ const DesignerCard = ({ product }) => {
             <div className="grid grid-cols-3 gap-2 mb-4 pb-4 border-b border-gray-100">
                 {[
                     { val: designer.followers, label: "Followers" },
-                    { val: designer.products,  label: "Products"  },
-                    { val: `${designer.joined}`, label: "Since"  },
+                    { val: designer.products, label: "Products" },
+                    { val: `${designer.joined}`, label: "Since" },
                 ].map(({ val, label }) => (
                     <div key={label} className="text-center">
                         <p className="text-base font-bold text-gray-900">{val}</p>
@@ -293,7 +293,7 @@ const DesignerCard = ({ product }) => {
 
             <div className="space-y-2 mb-4">
                 {[
-                    { Icon: MapPin,   text: designer.location },
+                    { Icon: MapPin, text: designer.location },
                     { Icon: Calendar, text: `Joined ${designer.joined}` },
                 ].map(({ Icon, text }) => (
                     <div key={text} className="flex items-center gap-2 text-sm text-gray-500">
@@ -351,7 +351,7 @@ function ErrorState({ message, onBack, onRetry }) {
 function ProductInfoPanel({
     product, colors, sizes,
     selectedColor, setSelectedColor,
-    selectedSize,  setSelectedSize,
+    selectedSize, setSelectedSize,
     currentStock,
     displayPrice, displayActualPrice, discount,
     quantity, setQuantity,
@@ -372,7 +372,7 @@ function ProductInfoPanel({
                     <span className="text-xs text-gray-400">{product.reviews?.length || 0} reviews</span>
                     {product.subcategoryName && (
                         <><span className="text-gray-200">|</span>
-                        <span className="text-xs text-gray-400">{product.subcategoryName}</span></>
+                            <span className="text-xs text-gray-400">{product.subcategoryName}</span></>
                     )}
                 </div>
             </div>
@@ -404,11 +404,10 @@ function ProductInfoPanel({
                     <div className="flex flex-wrap gap-2">
                         {colors.map((color) => (
                             <button key={color} onClick={() => setSelectedColor(color)}
-                                className={`px-4 py-1.5 rounded-full text-xs font-medium border-2 transition-all ${
-                                    selectedColor === color
-                                        ? "bg-gray-900 text-white border-gray-900"
-                                        : "bg-white text-gray-700 border-gray-200 hover:border-gray-400"
-                                }`}>
+                                className={`px-4 py-1.5 rounded-full text-xs font-medium border-2 transition-all ${selectedColor === color
+                                    ? "bg-gray-900 text-white border-gray-900"
+                                    : "bg-white text-gray-700 border-gray-200 hover:border-gray-400"
+                                    }`}>
                                 {color}
                             </button>
                         ))}
@@ -433,13 +432,12 @@ function ProductInfoPanel({
                             const stock = getStockForColorSize(product.variants, selectedColor, size);
                             return (
                                 <button key={size} onClick={() => setSelectedSize(size)} disabled={stock === 0}
-                                    className={`w-12 h-10 rounded-xl text-sm font-medium border-2 transition-all ${
-                                        selectedSize === size
-                                            ? "bg-gray-900 text-white border-gray-900"
-                                            : stock === 0
+                                    className={`w-12 h-10 rounded-xl text-sm font-medium border-2 transition-all ${selectedSize === size
+                                        ? "bg-gray-900 text-white border-gray-900"
+                                        : stock === 0
                                             ? "bg-gray-50 text-gray-300 border-gray-100 cursor-not-allowed relative overflow-hidden"
                                             : "bg-white text-gray-700 border-gray-200 hover:border-gray-500"
-                                    }`}>
+                                        }`}>
                                     {size}
                                     {stock === 0 && (
                                         <span className="absolute inset-0 flex items-center justify-center">
@@ -485,7 +483,20 @@ function ProductInfoPanel({
 
             {/* CTA buttons */}
             <div className="flex flex-col sm:flex-row gap-2.5">
-                <button onClick={handleAddToCart} disabled={currentStock === 0}
+                <button
+                    onClick={() => {
+
+                        const variant = product.variants.find(
+                            (v) => v.color === selectedColor
+                        );
+
+                        const size = variant?.sizes?.find(
+                            (s) => s.size === selectedSize
+                        );
+
+                        handleAddToCart(product, variant, size, quantity);
+
+                    }}
                     className="flex-1 py-3 rounded-2xl border-2 border-gray-300 text-xs font-bold tracking-widest text-gray-800 hover:border-gray-900 transition-all disabled:opacity-35 disabled:cursor-not-allowed uppercase">
                     Add to Bag
                 </button>
@@ -499,9 +510,9 @@ function ProductInfoPanel({
             {/* Delivery badges */}
             <div className="grid grid-cols-3 gap-2 pt-1">
                 {[
-                    { Icon: Truck,       title: "Free Delivery",  sub: "Above ₹999" },
-                    { Icon: RotateCcw,   title: "30-Day Return",  sub: "Easy exchange" },
-                    { Icon: ShieldCheck, title: "Secure Pay",     sub: "100% safe" },
+                    { Icon: Truck, title: "Free Delivery", sub: "Above ₹999" },
+                    { Icon: RotateCcw, title: "30-Day Return", sub: "Easy exchange" },
+                    { Icon: ShieldCheck, title: "Secure Pay", sub: "100% safe" },
                 ].map(({ Icon, title, sub }) => (
                     <div key={title} className="flex flex-col items-center text-center gap-1 bg-gray-50 rounded-xl p-2.5 border border-gray-100">
                         <Icon size={16} className="text-gray-500" />
@@ -516,21 +527,23 @@ function ProductInfoPanel({
 
 // ─── Main Component ───────────────────────────────────────────────────────────
 export default function ProductDetails() {
-    const { id }   = useParams();
+    const { id } = useParams();
     const navigate = useNavigate();
 
-    const [product,         setProduct]         = useState(null);
-    const [loading,         setLoading]         = useState(true);
-    const [error,           setError]           = useState(null);
-    const [retryKey,        setRetryKey]        = useState(0);
+    const [product, setProduct] = useState(null);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+    const [retryKey, setRetryKey] = useState(0);
 
-    const [selectedColor,   setSelectedColor]   = useState(null);
-    const [selectedSize,    setSelectedSize]    = useState(null);
-    const [quantity,        setQuantity]        = useState(1);
-    const [showFullDesc,    setShowFullDesc]    = useState(false);
-    const [isWishlisted,    setIsWishlisted]    = useState(false);
-    const [activeTab,       setActiveTab]       = useState("details");
-    const [isSizeOpen,      setIsSizeOpen]      = useState(false);
+    const [wishlist, setWishlist] = useState([]);
+
+    const [selectedColor, setSelectedColor] = useState(null);
+    const [selectedSize, setSelectedSize] = useState(null);
+    const [quantity, setQuantity] = useState(1);
+    const [showFullDesc, setShowFullDesc] = useState(false);
+    const [isWishlisted, setIsWishlisted] = useState(false);
+    const [activeTab, setActiveTab] = useState("details");
+    const [isSizeOpen, setIsSizeOpen] = useState(false);
     const [relatedProducts, setRelatedProducts] = useState([]);
 
     // Desktop gallery state — which image is "main"
@@ -545,8 +558,8 @@ export default function ProductDetails() {
             setLoading(true); setError(null);
             try {
                 const ctrl = new AbortController();
-                const tid  = setTimeout(() => ctrl.abort(), 15_000);
-                const res  = await fetch(`${API_BASE}/api/admin/products/${id}`, { signal: ctrl.signal });
+                const tid = setTimeout(() => ctrl.abort(), 15_000);
+                const res = await fetch(`${API_BASE}/api/admin/products/${id}`, { signal: ctrl.signal });
                 clearTimeout(tid);
 
                 if (!res.ok) throw new Error(`Server error ${res.status}: ${res.statusText}`);
@@ -556,13 +569,13 @@ export default function ProductDetails() {
 
                 if (!data?.product) throw new Error(data?.message || "Product not found.");
 
-                const p      = data.product;
+                const p = data.product;
                 const colors = getUniqueColors(p.variants);
-                const sizes  = getUniqueSizes(p.variants);
+                const sizes = getUniqueSizes(p.variants);
 
                 setProduct(p);
                 const firstColor = colors[0] ?? null;
-                const firstSize  = sizes[0]  ?? null;
+                const firstSize = sizes[0] ?? null;
                 setSelectedColor(firstColor);
                 setSelectedSize(firstSize);
 
@@ -583,6 +596,92 @@ export default function ProductDetails() {
         return () => { cancelled = true; };
     }, [id, retryKey]);
 
+    // Get userId from sessionStorage
+    const getUserId = () => {
+        try {
+            const user = JSON.parse(sessionStorage.getItem("user") || "{}");
+            return user?.id || null;
+        } catch {
+            return null;
+        }
+    };
+
+    const userId = getUserId();
+
+
+    const toggleWishlist = useCallback(async (productId) => {
+
+        try {
+
+            // optimistic update
+            setWishlist((prev) =>
+                prev.includes(productId)
+                    ? prev.filter((x) => x !== productId)
+                    : [...prev, productId]
+            );
+
+            // const token = sessionStorage.getItem("authToken");
+
+            await axios.post(
+                `http://31.97.228.17:4077/api/users/wishlist/${userId}/toggle`,
+                {
+                    productId,
+                },
+                // {
+                //   headers: {
+                //     Authorization: `Bearer ${token}`,
+                //   },
+                // }
+            );
+
+        } catch (err) {
+
+            console.log("Wishlist update error", err);
+
+        }
+
+    }, [userId]);
+
+    const handleAddToCart = async (
+        product,
+        variant,
+        size,
+        quantity
+    ) => {
+
+        console.log("Adding to cart:", { productId: product._id, variantId: variant?._id, sizeId: size?._id, quantity });
+
+        try {
+
+
+            if (!variant || !size) {
+                alert("Please select variant and size");
+                return;
+            }
+
+            await axios.post(
+                `http://31.97.228.17:4077/api/users/cart/${userId}/add`,
+                {
+                    productId: product._id,
+                    variantId: variant._id,
+                    sizeId: size._id,
+                    quantity: quantity ,
+                }
+            );
+
+            alert("Added to cart successfully!");
+
+        } catch (err) {
+
+            console.log("Cart Error:", err);
+
+            alert(
+                err?.response?.data?.message ||
+                "Failed to add to cart"
+            );
+        }
+    };
+
     // ── When colour changes, reset gallery to first image of that colour ──────
     useEffect(() => {
         if (!product || !selectedColor) return;
@@ -600,7 +699,7 @@ export default function ProductDetails() {
         let cancelled = false;
         const run = async () => {
             try {
-                const res  = await fetch(`${API_BASE}/api/admin/products`);
+                const res = await fetch(`${API_BASE}/api/admin/products`);
                 if (!res.ok) return;
                 const data = await res.json();
                 if (cancelled) return;
@@ -617,23 +716,23 @@ export default function ProductDetails() {
     }, [product]);
 
     // ── Derived ────────────────────────────────────────────────────────────────
-    const allImages     = product ? getOrderedImages(product, selectedColor) : [];
-    const colors        = product ? getUniqueColors(product.variants)        : [];
-    const sizes         = product ? getUniqueSizes(product.variants)         : [];
-    const variantPrice  = product && selectedColor ? getPriceForColor(product.variants, selectedColor) : null;
-    const displayPrice       = variantPrice?.price       ?? product?.displayPrice       ?? 0;
+    const allImages = product ? getOrderedImages(product, selectedColor) : [];
+    const colors = product ? getUniqueColors(product.variants) : [];
+    const sizes = product ? getUniqueSizes(product.variants) : [];
+    const variantPrice = product && selectedColor ? getPriceForColor(product.variants, selectedColor) : null;
+    const displayPrice = variantPrice?.price ?? product?.displayPrice ?? 0;
     const displayActualPrice = variantPrice?.actualPrice ?? product?.displayActualPrice ?? 0;
-    const discount           = variantPrice?.discount    ?? product?.maxDiscount        ?? 0;
-    const currentStock       = (product && selectedColor && selectedSize)
+    const discount = variantPrice?.discount ?? product?.maxDiscount ?? 0;
+    const currentStock = (product && selectedColor && selectedSize)
         ? getStockForColorSize(product.variants, selectedColor, selectedSize) : 0;
 
     // ── Handlers ───────────────────────────────────────────────────────────────
     const handleShare = () => {
-        if (navigator.share) navigator.share({ title: product?.name, url: window.location.href }).catch(() => {});
+        if (navigator.share) navigator.share({ title: product?.name, url: window.location.href }).catch(() => { });
         else { navigator.clipboard.writeText(window.location.href); alert("Link copied!"); }
     };
-    const handleAddToCart = () => alert(`Added ${quantity}× ${product?.name} (${selectedColor}, ${selectedSize}) to cart!`);
-    const handleBuyNow    = () => alert(`Proceeding to checkout with ${quantity}× ${product?.name}`);
+
+    const handleBuyNow = () => alert(`Proceeding to checkout with ${quantity}× ${product?.name}`);
 
     // ── Guards ─────────────────────────────────────────────────────────────────
     if (loading) return <LoadingState />;
@@ -649,6 +748,7 @@ export default function ProductDetails() {
         handleAddToCart, handleBuyNow,
         setIsSizeOpen,
     };
+
 
     // ─────────────────────────────────────────────────────────────────────────
     return (
@@ -675,9 +775,26 @@ export default function ProductDetails() {
                             <ChevronLeft size={18} /> <span className="hidden sm:inline">Back</span>
                         </button>
                         <div className="flex gap-2">
-                            <button onClick={() => setIsWishlisted((w) => !w)}
-                                className="p-2 rounded-full bg-white shadow-sm hover:shadow-md transition-shadow" aria-label="Wishlist">
-                                <Heart size={19} className={isWishlisted ? "fill-red-500 text-red-500" : "text-gray-500"} />
+                            <button
+                                onClick={() => toggleWishlist(product._id)}
+                                className="
+                                    p-2 rounded-full bg-white
+                                    shadow-sm hover:shadow-md
+                                    transition-all duration-200
+                                    hover:scale-105
+                                "
+                                aria-label="Wishlist"
+                            >
+
+                                <Heart
+                                    size={19}
+                                    className={
+                                        wishlist.includes(product._id)
+                                            ? "fill-red-500 text-red-500"
+                                            : "text-gray-500"
+                                    }
+                                />
+
                             </button>
                             <button onClick={handleShare}
                                 className="p-2 rounded-full bg-white shadow-sm hover:shadow-md transition-shadow" aria-label="Share">
@@ -737,9 +854,8 @@ export default function ProductDetails() {
                         <div className="w-[88px] sticky top-24 max-h-[calc(100vh-8rem)] overflow-y-auto flex flex-col gap-2.5 scrollbar-hide">
                             {allImages.slice(0, 10).map((img, i) => (
                                 <button key={i} onClick={() => setDesktopMain(img)}
-                                    className={`flex-shrink-0 w-full rounded-2xl overflow-hidden border-2 transition-all ${
-                                        desktopMain === img ? "border-gray-900 shadow-sm" : "border-transparent opacity-60 hover:opacity-100"
-                                    }`}
+                                    className={`flex-shrink-0 w-full rounded-2xl overflow-hidden border-2 transition-all ${desktopMain === img ? "border-gray-900 shadow-sm" : "border-transparent opacity-60 hover:opacity-100"
+                                        }`}
                                     style={{ aspectRatio: "4/5" }}>
                                     <img src={img} alt={`view ${i + 1}`} className="w-full h-full object-cover"
                                         onError={(e) => { e.target.src = "https://placehold.co/88x110/e5e7eb/64748b?text=?"; }} />
@@ -755,16 +871,15 @@ export default function ProductDetails() {
                     <div className="mt-10 sm:mt-14">
                         <div className="flex border-b border-gray-200 mb-6 overflow-x-auto scrollbar-hide">
                             {[
-                                { id: "details",  label: "Product Details" },
-                                { id: "designer", label: "Designer Info"   },
-                                { id: "reviews",  label: `Reviews (${product.reviews?.length || 0})` },
+                                { id: "details", label: "Product Details" },
+                                { id: "designer", label: "Designer Info" },
+                                { id: "reviews", label: `Reviews (${product.reviews?.length || 0})` },
                             ].map((t) => (
                                 <button key={t.id} onClick={() => setActiveTab(t.id)}
-                                    className={`pb-3 px-4 text-sm font-medium transition-all whitespace-nowrap ${
-                                        activeTab === t.id
-                                            ? "text-gray-900 border-b-2 border-gray-900"
-                                            : "text-gray-400 hover:text-gray-600"
-                                    }`}>
+                                    className={`pb-3 px-4 text-sm font-medium transition-all whitespace-nowrap ${activeTab === t.id
+                                        ? "text-gray-900 border-b-2 border-gray-900"
+                                        : "text-gray-400 hover:text-gray-600"
+                                        }`}>
                                     {t.label}
                                 </button>
                             ))}
@@ -807,12 +922,12 @@ export default function ProductDetails() {
                                         <h3 className="font-semibold text-gray-900 mb-3">Specifications</h3>
                                         <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
                                             {[
-                                                { label: "Subcategory",  value: product.subcategoryName || "Apparel" },
-                                                { label: "Total Stock",  value: `${product.totalStock ?? 0} units` },
-                                                { label: "Colors",       value: (product.availableColors || []).join(", ") || "Standard" },
-                                                { label: "Sizes",        value: (product.availableSizes  || []).join(", ") || "One Size" },
-                                                { label: "Variants",     value: `${product.variants?.length || 1} colour${(product.variants?.length || 1) > 1 ? "s" : ""}` },
-                                                { label: "Delivery",     value: product.deliveryAddresses?.length ? `${product.deliveryAddresses.length} cities` : "Multiple" },
+                                                { label: "Subcategory", value: product.subcategoryName || "Apparel" },
+                                                { label: "Total Stock", value: `${product.totalStock ?? 0} units` },
+                                                { label: "Colors", value: (product.availableColors || []).join(", ") || "Standard" },
+                                                { label: "Sizes", value: (product.availableSizes || []).join(", ") || "One Size" },
+                                                { label: "Variants", value: `${product.variants?.length || 1} colour${(product.variants?.length || 1) > 1 ? "s" : ""}` },
+                                                { label: "Delivery", value: product.deliveryAddresses?.length ? `${product.deliveryAddresses.length} cities` : "Multiple" },
                                             ].map(({ label, value }) => (
                                                 <div key={label} className="bg-white p-3 rounded-xl border border-gray-100">
                                                     <p className="text-[11px] text-gray-400 uppercase tracking-wide mb-0.5">{label}</p>

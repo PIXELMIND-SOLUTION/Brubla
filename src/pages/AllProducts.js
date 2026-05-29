@@ -1,6 +1,7 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
 import Header from "../components/Header";
+import axios from "axios";
 
 const COFFEE = "#000";
 const API_BASE = "http://31.97.228.17:4077";
@@ -126,7 +127,6 @@ function HeartIcon({ saved, onToggle }) {
 
 // ─── ProductCard ──────────────────────────────────────────────────────────────
 function ProductCard({ onClick, product }) {
-    const [saved, setSaved] = useState(false);
 
     const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
@@ -191,6 +191,54 @@ function ProductCard({ onClick, product }) {
 
     }, [productImages.length]);
 
+    // Get userId from sessionStorage
+    const getUserId = () => {
+        try {
+            const user = JSON.parse(sessionStorage.getItem("user") || "{}");
+            return user?.id || null;
+        } catch {
+            return null;
+        }
+    };
+
+    const userId = getUserId();
+
+    const [wishlist, setWishlist] = useState([]);
+
+
+    const toggleWishlist = useCallback(async (productId) => {
+
+        try {
+
+            // optimistic update
+            setWishlist((prev) =>
+                prev.includes(productId)
+                    ? prev.filter((x) => x !== productId)
+                    : [...prev, productId]
+            );
+
+            // const token = sessionStorage.getItem("authToken");
+
+            await axios.post(
+                `http://31.97.228.17:4077/api/users/wishlist/${userId}/toggle`,
+                {
+                    productId,
+                },
+                // {
+                //   headers: {
+                //     Authorization: `Bearer ${token}`,
+                //   },
+                // }
+            );
+
+        } catch (err) {
+
+            console.log("Wishlist update error", err);
+
+        }
+
+    }, [userId]);
+
     const productImage =
         productImages[currentImageIndex];
 
@@ -228,7 +276,10 @@ function ProductCard({ onClick, product }) {
                     }}
                 />
 
-                <HeartIcon saved={saved} onToggle={() => setSaved((s) => !s)} />
+                <HeartIcon
+                    saved={wishlist.includes(product._id)}
+                    onToggle={() => toggleWishlist(product._id)}
+                />
 
                 {/* Sold-out overlay */}
                 {!inStock && (
