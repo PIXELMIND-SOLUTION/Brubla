@@ -153,7 +153,7 @@ function ErrorState({ message, onRetry }) {
 }
 
 // ─── Product Card (Grid) ──────────────────────────────────────────────────────
-function ProductCard({ product, isWishlisted, onWishlistToggle }) {
+function ProductCard({ product, isWishlisted, onWishlistToggle, wishlist }) {
   const navigate = useNavigate();
   const discount = getDiscount(product);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
@@ -277,7 +277,14 @@ function ProductCard({ product, isWishlisted, onWishlistToggle }) {
         {/* Wishlist */}
         <button onClick={(e) => { e.stopPropagation(); onWishlistToggle(pid); }}
           className={`absolute top-2.5 right-2.5 w-7 h-7 flex items-center justify-center rounded-full transition-all duration-200 shadow-sm ${isWishlisted ? "bg-rose-50" : "bg-white/85 hover:bg-white"}`}>
-          <Heart size={12} className={isWishlisted ? "fill-rose-500 text-rose-500" : "text-gray-500"} />
+          <Heart
+            size={19}
+            className={
+              wishlist.includes(product._id)
+                ? "fill-red-500 text-red-500"
+                : "text-gray-500"
+            }
+          />
         </button>
 
         {/* Out of stock */}
@@ -327,20 +334,20 @@ function ProductCard({ product, isWishlisted, onWishlistToggle }) {
               <span className="text-gray-400 text-[10px] line-through">{toINR(product.displayActualPrice)}</span>
             )}
           </div>
-          
+
         </div>
 
         {/* Sizes preview */}
-          {product.availableSizes?.length > 0 && (
-            <div className="flex gap-0.5">
-              {product.availableSizes.slice(0, 3).map((s) => (
-                <span key={s} className="text-[8px] text-gray-400 border border-gray-100 rounded px-1 py-0.5 bg-gray-50">{s}</span>
-              ))}
-              {product.availableSizes.length > 3 && (
-                <span className="text-[8px] text-gray-400">+{product.availableSizes.length - 3}</span>
-              )}
-            </div>
-          )}
+        {product.availableSizes?.length > 0 && (
+          <div className="flex gap-0.5">
+            {product.availableSizes.slice(0, 3).map((s) => (
+              <span key={s} className="text-[8px] text-gray-400 border border-gray-100 rounded px-1 py-0.5 bg-gray-50">{s}</span>
+            ))}
+            {product.availableSizes.length > 3 && (
+              <span className="text-[8px] text-gray-400">+{product.availableSizes.length - 3}</span>
+            )}
+          </div>
+        )}
 
         {/* Colour swatches */}
         {product.availableColors?.length > 0 && (
@@ -373,7 +380,7 @@ function ProductCard({ product, isWishlisted, onWishlistToggle }) {
 }
 
 // ─── Product List Item ────────────────────────────────────────────────────────
-function ProductListItem({ product, isWishlisted, onWishlistToggle }) {
+function ProductListItem({ product, isWishlisted, onWishlistToggle, wishlist }) {
   const navigate = useNavigate();
   const discount = getDiscount(product);
   const img = getProductImage(product);
@@ -418,7 +425,14 @@ function ProductListItem({ product, isWishlisted, onWishlistToggle }) {
             </div>
             <button onClick={(e) => { e.stopPropagation(); onWishlistToggle(pid); }}
               className="flex-shrink-0 w-7 h-7 flex items-center justify-center rounded-full hover:bg-gray-50 transition-colors">
-              <Heart size={14} className={isWishlisted ? "fill-rose-500 text-rose-500" : "text-gray-400"} />
+              <Heart
+                size={19}
+                className={
+                  wishlist.includes(product._id)
+                    ? "fill-red-500 text-red-500"
+                    : "text-gray-500"
+                }
+              />
             </button>
           </div>
 
@@ -760,7 +774,9 @@ export default function SubCategoryProductsPage() {
         if (res.data.success) {
 
           setWishlist(
-            res.data.user.wishlist || []
+            (res.data.user.wishlist || []).map(
+              (item) => item.productId
+            )
           );
 
         }
@@ -948,6 +964,7 @@ export default function SubCategoryProductsPage() {
                   product={product}
                   isWishlisted={wishlist.includes(product._id || product.id)}
                   onWishlistToggle={toggleWishlist}
+                  wishlist={wishlist}
                 />
               ))}
             </div>
@@ -959,6 +976,7 @@ export default function SubCategoryProductsPage() {
                   product={product}
                   isWishlisted={wishlist.includes(product._id || product.id)}
                   onWishlistToggle={toggleWishlist}
+                  wishlist={wishlist}
                 />
               ))}
             </div>

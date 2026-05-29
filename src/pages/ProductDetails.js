@@ -608,6 +608,37 @@ export default function ProductDetails() {
 
     const userId = getUserId();
 
+    useEffect(() => {
+
+        const fetchWishlist = async () => {
+
+            try {
+
+                const res = await axios.get(
+                    `http://31.97.228.17:4077/api/users/${userId}`
+                );
+
+                if (res.data.success) {
+
+                    setWishlist(
+                        (res.data.user.wishlist || []).map(
+                            (item) => item.productId
+                        )
+                    );
+
+                }
+
+            } catch (err) {
+
+                console.log("Wishlist fetch error", err);
+
+            }
+        };
+
+        fetchWishlist();
+
+    }, []);
+
 
     const toggleWishlist = useCallback(async (productId) => {
 
@@ -665,7 +696,7 @@ export default function ProductDetails() {
                     productId: product._id,
                     variantId: variant._id,
                     sizeId: size._id,
-                    quantity: quantity ,
+                    quantity: quantity,
                 }
             );
 

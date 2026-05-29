@@ -203,6 +203,37 @@ function ProductCard({ onClick, product }) {
 
     const userId = getUserId();
 
+    useEffect(() => {
+
+    const fetchWishlist = async () => {
+
+      try {
+
+        const res = await axios.get(
+          `http://31.97.228.17:4077/api/users/${userId}`
+        );
+
+        if (res.data.success) {
+
+          setWishlist(
+            (res.data.user.wishlist || []).map(
+              (item) => item.productId
+            )
+          );
+
+        }
+
+      } catch (err) {
+
+        console.log("Wishlist fetch error", err);
+
+      }
+    };
+
+    fetchWishlist();
+
+  }, []);
+
     const [wishlist, setWishlist] = useState([]);
 
 
