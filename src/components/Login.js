@@ -1,10 +1,11 @@
-import { useState, useEffect, useRef, use } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 
 const letters = ["B", "R", "U", "B", "L", "A"];
 
 const BASE = "http://31.97.228.17:4077/api/users";
 const LOGIN_INIT = "http://31.97.228.17:4077/api/users/login";
+const MEDIA_API = "http://31.97.228.17:4077/api/users/login-screen/media";
 
 async function apiPost(url, body) {
   const res = await fetch(url, {
@@ -14,6 +15,13 @@ async function apiPost(url, body) {
   });
   const data = await res.json();
   if (!res.ok) throw new Error(data?.message || "Request failed");
+  return data;
+}
+
+async function fetchMedia() {
+  const res = await fetch(MEDIA_API);
+  const data = await res.json();
+  if (!res.ok) throw new Error(data?.message || "Failed to fetch media");
   return data;
 }
 
@@ -66,9 +74,8 @@ function AnimatedLetter({ char, index, phase }) {
     <span
       onMouseEnter={() => { setHovered(true); triggerGlitch(); }}
       onMouseLeave={() => setHovered(false)}
-      className={`relative inline-block font-black cursor-default rounded-sm transition-all duration-300 z-[1] hover:z-20 ${
-        hovered ? "text-black bg-white" : "text-white bg-transparent"
-      }`}
+      className={`relative inline-block font-black cursor-default rounded-sm transition-all duration-300 z-[1] hover:z-20 ${hovered ? "text-black bg-white" : "text-white bg-transparent"
+        }`}
       style={{
         fontSize: getFontSize(),
         letterSpacing: index === letters.length - 1 ? "0" : "-0.02em",
@@ -77,8 +84,8 @@ function AnimatedLetter({ char, index, phase }) {
           phase === "landing"
             ? "translateY(-80px) scale(1.3)"
             : hovered
-            ? "translateY(-10px) scale(1.18) rotate(-3deg)"
-            : "translateY(0px) scale(1)",
+              ? "translateY(-10px) scale(1.18) rotate(-3deg)"
+              : "translateY(0px) scale(1)",
         transition: `opacity 0.7s ease ${entryDelays[index]}s, transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), color 0.1s, background 0.1s`,
         animation:
           phase === "idle" && !hovered && !glitching
@@ -149,7 +156,6 @@ function OtpStep({ mobile, token, type, onSuccess, onBack }) {
     setError("");
     try {
       const data = await apiPost(verifyEndpoint, { mobile, token, otp });
-      // Store auth token/user from response
       if (data.token) sessionStorage.setItem("authToken", data.token);
       if (data.user) sessionStorage.setItem("user", JSON.stringify(data.user));
       onSuccess(data);
@@ -290,7 +296,6 @@ function FormView({ type, onBack, onOtpRequired }) {
           role: values.role,
         });
       }
-      // Expect { token, ... } back
       const otpToken = data.token || data.data?.token;
       if (!otpToken) throw new Error("No token received from server");
       onOtpRequired({ mobile: values.mobile, token: otpToken });
@@ -368,20 +373,45 @@ function FormView({ type, onBack, onOtpRequired }) {
   );
 }
 
-// ─── Success Screen ──────────────────────────────────────────────────
-// Removed - now navigates directly to /home
-
 // ─── Main Component ──────────────────────────────────────────────────
 export default function BrublaLogin() {
   const [phase, setPhase] = useState("landing");
-  // view: null | "login" | "register" | "otp" | "success"
   const [view, setView] = useState(null);
-  const [formType, setFormType] = useState(null); // "login" | "register"
-  const [otpData, setOtpData] = useState(null);   // { mobile, token }
+  const [formType, setFormType] = useState(null);
+  const [otpData, setOtpData] = useState(null);
   const [videoReady, setVideoReady] = useState(false);
   const [isNavigating, setIsNavigating] = useState(false);
+  const [mediaUrl, setMediaUrl] = useState(null);
+  const [mediaLoading, setMediaLoading] = useState(true);
+  const [mediaError, setMediaError] = useState(false);
 
   const navigate = useNavigate();
+
+  // Fetch media from API
+  useEffect(() => {
+    const loadMedia = async () => {
+      try {
+        const data = await fetchMedia();
+        if (data.success && data.data?.url) {
+          // Replace localhost with actual API base
+          let url = data.data.url;
+          if (url.includes("localhost:4077")) {
+            url = url.replace("localhost:4077", "31.97.228.17:4077");
+          }
+          setMediaUrl(url);
+        } else {
+          console.error("Invalid media response:", data);
+          setMediaError(true);
+        }
+      } catch (err) {
+        console.error("Failed to load media:", err);
+        setMediaError(true);
+      } finally {
+        setMediaLoading(false);
+      }
+    };
+    loadMedia();
+  }, []);
 
   useEffect(() => {
     const t = setTimeout(() => setPhase("idle"), 120);
@@ -396,9 +426,8 @@ export default function BrublaLogin() {
   const handleSuccess = (responseData) => {
     console.log("Auth success", responseData);
     setIsNavigating(true);
-    sessionStorage.setItem("authToken", responseData.jwtToken);
-    sessionStorage.setItem("user", JSON.stringify(responseData.user));
-    // Navigate to home page after a short delay for visual feedback
+    if (responseData.jwtToken) sessionStorage.setItem("authToken", responseData.jwtToken);
+    if (responseData.user) sessionStorage.setItem("user", JSON.stringify(responseData.user));
     setTimeout(() => {
       navigate('/home');
     }, 300);
@@ -422,13 +451,19 @@ export default function BrublaLogin() {
     return (
       <div className="min-h-screen bg-black flex items-center justify-center relative overflow-hidden">
         <div className="absolute inset-0">
-          <iframe
-            title="bg-video"
-            src="https://www.youtube.com/embed/yycVNcishrE?autoplay=1&mute=1&loop=1&playlist=yycVNcishrE&controls=0&showinfo=0&rel=0&modestbranding=1&playsinline=1&iv_load_policy=3"
-            allow="autoplay; fullscreen"
-            frameBorder="0"
-            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none w-[300vw] h-[170vw] sm:w-[220vw] sm:h-[125vw] md:w-[180vw] md:h-[101vw] lg:w-[140vw] lg:h-[78vw] xl:w-[120vw] xl:h-[67.5vw] min-w-full min-h-full"
-          />
+          {mediaUrl && (
+            <video
+              autoPlay
+              muted
+              loop
+              playsInline
+              className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none w-[300vw] h-[170vw] sm:w-[220vw] sm:h-[125vw] md:w-[180vw] md:h-[101vw] lg:w-[140vw] lg:h-[78vw] xl:w-[120vw] xl:h-[67.5vw] min-w-full min-h-full object-cover"
+              style={{ opacity: videoReady ? 1 : 0, transition: "opacity 1s" }}
+              onLoadedData={() => setVideoReady(true)}
+            >
+              <source src={mediaUrl} type="video/mp4" />
+            </video>
+          )}
           <div className="absolute inset-0 backdrop-grayscale backdrop-brightness-[0.45] backdrop-contrast-110" />
           <div className="absolute inset-0" style={{ background: "radial-gradient(ellipse at center, rgba(0,0,0,0.3) 0%, transparent 50%, rgba(0,0,0,0.75) 100%)" }} />
         </div>
@@ -492,17 +527,28 @@ export default function BrublaLogin() {
 
       <div className="min-h-screen bg-black flex flex-col items-center justify-center relative overflow-hidden p-3 sm:p-4 font-['Inter',_Helvetica_Neue,_Arial,_sans-serif]">
 
-        {/* Video background */}
+        {/* Video background - dynamically loaded from API */}
         <div className="absolute inset-0 overflow-hidden">
-          <iframe
-            title="bg-video"
-            src="https://www.youtube.com/embed/yycVNcishrE?autoplay=1&mute=1&loop=1&playlist=yycVNcishrE&controls=0&showinfo=0&rel=0&modestbranding=1&playsinline=1&iv_load_policy=3"
-            allow="autoplay; fullscreen"
-            frameBorder="0"
-            onLoad={() => setVideoReady(true)}
-            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none w-[300vw] h-[170vw] sm:w-[220vw] sm:h-[125vw] md:w-[180vw] md:h-[101vw] lg:w-[140vw] lg:h-[78vw] xl:w-[120vw] xl:h-[67.5vw] min-w-full min-h-full"
-            style={{ opacity: videoReady ? 1 : 0, transition: "opacity 1s" }}
-          />
+          {!mediaLoading && mediaUrl && !mediaError && (
+            <video
+              autoPlay
+              muted
+              loop
+              playsInline
+              className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none w-[300vw] h-[170vw] sm:w-[220vw] sm:h-[125vw] md:w-[180vw] md:h-[101vw] lg:w-[140vw] lg:h-[78vw] xl:w-[120vw] xl:h-[67.5vw] min-w-full min-h-full object-cover"
+              style={{ opacity: videoReady ? 1 : 0, transition: "opacity 1s" }}
+              onLoadedData={() => setVideoReady(true)}
+              onError={() => setMediaError(true)}
+            >
+              <source src={mediaUrl} type="video/mp4" />
+            </video>
+          )}
+          {!mediaLoading && mediaError && (
+            <div className="absolute inset-0 bg-gradient-to-br from-gray-900 via-gray-800 to-black" />
+          )}
+          {mediaLoading && (
+            <div className="absolute inset-0 bg-black" />
+          )}
           <div className="absolute inset-0 backdrop-grayscale backdrop-brightness-[0.45] backdrop-contrast-110" />
           <div className="absolute inset-0" style={{ background: "radial-gradient(ellipse at center, rgba(0,0,0,0.3) 0%, transparent 50%, rgba(0,0,0,0.75) 100%)" }} />
         </div>

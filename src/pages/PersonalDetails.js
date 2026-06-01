@@ -55,7 +55,7 @@ const SAMPLE_USER_DATA = {
   preferredLanguage: "English",
   newsletterEnabled: true,
   smsUpdates: true,
-  profilePicture: "https://www.pngall.com/wp-content/uploads/5/Profile-Male-PNG.png"
+  profilePicture: ""
 };
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -315,12 +315,41 @@ export default function PersonalDetails() {
               {/* Avatar */}
               <div className="relative">
                 <div className="absolute inset-0 rounded-full" style={{ margin: "-1.5px", background: "conic-gradient(#000 0deg, #333 120deg, #000 240deg, #333 360deg)", borderRadius: "50%", padding: "1.5px" }} />
-                <img 
-                  src={formData.profilePicture || "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=200&h=200&fit=crop&q=90&auto=format"} 
-                  alt={fullName}
-                  className="relative rounded-full object-cover bg-white"
-                  style={{ width: "clamp(80px, 15vw, 100px)", height: "clamp(80px, 15vw, 100px)", border: "3px solid white" }}
-                />
+                <div
+  className="
+    relative rounded-full overflow-hidden
+    flex items-center justify-center
+    bg-black text-white font-bold uppercase
+  "
+  style={{
+    width: "clamp(72px, 15vw, 96px)",
+    height: "clamp(72px, 15vw, 96px)",
+    border: "3px solid white"
+  }}
+>
+
+  {formData.profilePicture ? (
+
+    <img
+      src={formData.profilePicture}
+      alt={fullName}
+      className="w-full h-full object-cover"
+    />
+
+  ) : (
+
+    <span
+      className="fd"
+      style={{
+        fontSize: "clamp(24px, 5vw, 36px)"
+      }}
+    >
+      {formData.firstName?.charAt(0) || "U"}
+    </span>
+
+  )}
+
+</div>
                 {isEditing && (
                   <button className="absolute bottom-0 right-0 w-7 h-7 rounded-full flex items-center justify-center transition-all hover:scale-110 bg-black text-white border-2 border-white">
                     <Camera size={12} />

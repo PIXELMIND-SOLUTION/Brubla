@@ -701,6 +701,7 @@ export default function ProductDetails() {
             );
 
             alert("Added to cart successfully!");
+            navigate("/mycart");
 
         } catch (err) {
 

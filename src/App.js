@@ -24,6 +24,7 @@ import BrublaLogin from './components/Login';
 import SubCategoriesGrid from './components/SubCategoryGrid';
 import SubCategoryProductsPage from './pages/SubCategoryProductsPage';
 import NotFoundPage from './views/NotFoundPage';
+import WishlistPage from './pages/UserWishlist';
 
 /* =========================
    PRIVATE ROUTE COMPONENT
@@ -154,14 +155,14 @@ function App() {
           }
         />
 
-        <Route
+        {/* <Route
           path="/profile/personal-details"
           element={
             <PrivateRoute>
               <PersonalDetails />
             </PrivateRoute>
           }
-        />
+        /> */}
 
         <Route
           path="/profile/my-orders"
@@ -177,6 +178,15 @@ function App() {
           element={
             <PrivateRoute>
               <UserAddresses />
+            </PrivateRoute>
+          }
+        />
+
+        <Route 
+          path="/profile/wishlists"
+          element={
+            <PrivateRoute>
+              <WishlistPage />
             </PrivateRoute>
           }
         />
