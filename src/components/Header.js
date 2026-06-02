@@ -587,15 +587,7 @@ const LocationSelector = () => {
 // ─────────────────────────────────────────────────────────────────────────────
 // COLLECTIONS HOVER PANEL
 // ─────────────────────────────────────────────────────────────────────────────
-const collectionItems = [
-    { id: 1, title: "Global Collections", img: "https://images.unsplash.com/photo-1556906781-9a412961c28c?w=800&h=1200&fit=crop&q=80&auto=format" },
-    { id: 2, title: "Luxury Collections", img: "https://images.unsplash.com/photo-1539008835657-9e8e9680c956?w=800&h=1000&fit=crop&q=80&auto=format" },
-    { id: 3, title: "Originals by Brubla", img: "https://images.unsplash.com/photo-1617137968427-85924c800a22?w=800&h=1300&fit=crop&q=80&auto=format" },
-    { id: 4, title: "Indian Roots", img: "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=800&h=1400&fit=crop&q=80&auto=format" },
-    { id: 5, title: "Accessories Edit", img: "https://images.unsplash.com/photo-1611591437281-460bfbe1220a?w=800&h=1000&fit=crop&q=80&auto=format" },
-    { id: 6, title: "Street Style Edit", img: "https://images.unsplash.com/photo-1556821840-3a63f95609a7?w=800&h=1200&fit=crop&q=80&auto=format" },
-    { id: 7, title: "Sustainable Fashion", img: "https://images.unsplash.com/photo-1523381210434-271e8be1f52b?w=800&h=1150&fit=crop&q=80&auto=format" },
-];
+
 
 
 const CollectionsPanel = ({
@@ -605,6 +597,46 @@ const CollectionsPanel = ({
     navbarHeight,
 }) => {
     const navigate = useNavigate();
+
+    const [collectionItems, setCollectionItems] = useState([]);
+    const [loadingCollections, setLoadingCollections] = useState(true);
+
+    useEffect(() => {
+        fetchCollections();
+    }, []);
+
+    const fetchCollections = async () => {
+        try {
+            setLoadingCollections(true);
+
+            const response = await fetch(
+                "http://31.97.228.17:4077/api/users/collections"
+            );
+
+            const result = await response.json();
+
+            if (result.success) {
+                const formattedCollections = result.data
+                    .sort((a, b) => a.order - b.order)
+                    .map((item) => ({
+                        id: item._id,
+                        title: item.title,
+                        tag: item.tag,
+                        description: item.description,
+                        img: item.image.replace(
+                            "http://localhost:4077",
+                            "http://31.97.228.17:4077"
+                        ),
+                    }));
+
+                setCollectionItems(formattedCollections);
+            }
+        } catch (error) {
+            console.error("Collections Error:", error);
+        } finally {
+            setLoadingCollections(false);
+        }
+    };
 
     return (
         <div

@@ -3,353 +3,10 @@ import { FaEye } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 
 // ─────────────────────────────────────────────────────────────────────────────
-// PRODUCT DATA FOR EACH COLLECTION
+// API CONFIGURATION
 // ─────────────────────────────────────────────────────────────────────────────
-
-const GLOBAL_COLLECTION = [
-  {
-    id: 1,
-    name: "Italian Leather Jacket",
-    brand: "Brubla Global",
-    price: 12999,
-    originalPrice: 24999,
-    imgs: [
-      "https://images.unsplash.com/photo-1551028719-00167b16eac5?w=400&h=600&fit=crop&q=80&auto=format",
-      "https://images.unsplash.com/photo-1548624313-0396c75e4a63?w=400&h=600&fit=crop&q=80&auto=format",
-    ],
-  },
-  {
-    id: 2,
-    name: "Parisian Linen Blazer",
-    brand: "Brubla Global",
-    price: 8999,
-    originalPrice: 15999,
-    imgs: [
-      "https://images.unsplash.com/photo-1594938298603-c8148c4dae35?w=400&h=600&fit=crop&q=80&auto=format",
-      "https://images.unsplash.com/photo-1617137968427-85924c800a22?w=400&h=600&fit=crop&q=80&auto=format",
-    ],
-  },
-  {
-    id: 3,
-    name: "Tokyo Streetwear Hoodie",
-    brand: "Brubla Global",
-    price: 3499,
-    originalPrice: 6999,
-    imgs: [
-      "https://images.unsplash.com/photo-1556821840-3a63f95609a7?w=400&h=600&fit=crop&q=80&auto=format",
-      "https://images.unsplash.com/photo-1578768079046-ec1c1fb79c84?w=400&h=600&fit=crop&q=80&auto=format",
-    ],
-  },
-  {
-    id: 4,
-    name: "New York Tailored Trousers",
-    brand: "Brubla Global",
-    price: 4999,
-    originalPrice: 8999,
-    imgs: [
-      "https://images.unsplash.com/photo-1473966968600-fa801b869a1a?w=400&h=600&fit=crop&q=80&auto=format",
-      "https://images.unsplash.com/photo-1594938298603-c8148c4dae35?w=400&h=600&fit=crop&q=80&auto=format",
-    ],
-  },
-  {
-    id: 5,
-    name: "London Checkered Coat",
-    brand: "Brubla Global",
-    price: 11999,
-    originalPrice: 19999,
-    imgs: [
-      "https://images.unsplash.com/photo-1539533113208-f6df8cc8b543?w=400&h=600&fit=crop&q=80&auto=format",
-      "https://images.unsplash.com/photo-1548624313-0396c75e4a63?w=400&h=600&fit=crop&q=80&auto=format",
-    ],
-  },
-  {
-    id: 6,
-    name: "Milan Silk Scarf",
-    brand: "Brubla Global",
-    price: 2499,
-    originalPrice: 4499,
-    imgs: [
-      "https://images.unsplash.com/photo-1601924994987-69e26d50dc26?w=400&h=600&fit=crop&q=80&auto=format",
-      "https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=400&h=600&fit=crop&q=80&auto=format",
-    ],
-  },
-];
-
-const LUXURY_COLLECTION = [
-  {
-    id: 1,
-    name: "Hand-Embroidered Gown",
-    brand: "Brubla Atelier",
-    price: 45999,
-    originalPrice: 89999,
-    imgs: [
-      "https://images.unsplash.com/photo-1566174053879-31528523f8ae?w=400&h=600&fit=crop&q=80&auto=format",
-      "https://images.unsplash.com/photo-1539008835657-9e8e9680c956?w=400&h=600&fit=crop&q=80&auto=format",
-    ],
-  },
-  {
-    id: 2,
-    name: "Cashmere Wrap Coat",
-    brand: "Brubla Atelier",
-    price: 32999,
-    originalPrice: 59999,
-    imgs: [
-      "https://images.unsplash.com/photo-1544022613-e87ca75a784a?w=400&h=600&fit=crop&q=80&auto=format",
-      "https://images.unsplash.com/photo-1539533113208-f6df8cc8b543?w=400&h=600&fit=crop&q=80&auto=format",
-    ],
-  },
-  {
-    id: 3,
-    name: "Diamond-Embellished Clutch",
-    brand: "Brubla Atelier",
-    price: 18999,
-    originalPrice: 34999,
-    imgs: [
-      "https://images.unsplash.com/photo-1566150905458-1bf1fc113f0d?w=400&h=600&fit=crop&q=80&auto=format",
-      "https://images.unsplash.com/photo-1590874103328-eac38a683ce7?w=400&h=600&fit=crop&q=80&auto=format",
-    ],
-  },
-  {
-    id: 4,
-    name: "Silk Evening Gown",
-    brand: "Brubla Atelier",
-    price: 39999,
-    originalPrice: 74999,
-    imgs: [
-      "https://images.unsplash.com/photo-1496747611176-843222e1e57c?w=400&h=600&fit=crop&q=80&auto=format",
-      "https://images.unsplash.com/photo-1485230895905-ec40ba36b9bc?w=400&h=600&fit=crop&q=80&auto=format",
-    ],
-  },
-  {
-    id: 5,
-    name: "Pearl Necklace Set",
-    brand: "Brubla Atelier",
-    price: 24999,
-    originalPrice: 45999,
-    imgs: [
-      "https://images.unsplash.com/photo-1611591437281-460bfbe1220a?w=400&h=600&fit=crop&q=80&auto=format",
-      "https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?w=400&h=600&fit=crop&q=80&auto=format",
-    ],
-  },
-  {
-    id: 6,
-    name: "Velvet Tuxedo Blazer",
-    brand: "Brubla Atelier",
-    price: 27999,
-    originalPrice: 49999,
-    imgs: [
-      "https://images.unsplash.com/photo-1507679799987-c73779587ccf?w=400&h=600&fit=crop&q=80&auto=format",
-      "https://images.unsplash.com/photo-1469334031218-e382a71b716b?w=400&h=600&fit=crop&q=80&auto=format",
-    ],
-  },
-];
-
-const ORIGINALS_COLLECTION = [
-  {
-    id: 1,
-    name: "Signature Kurta Set",
-    brand: "Originals by Brubla",
-    price: 4999,
-    originalPrice: 9999,
-    imgs: [
-      "https://images.unsplash.com/photo-1617137968427-85924c800a22?w=400&h=600&fit=crop&q=80&auto=format",
-      "https://images.unsplash.com/photo-1594938298603-c8148c4dae35?w=400&h=600&fit=crop&q=80&auto=format",
-    ],
-  },
-  {
-    id: 2,
-    name: "Handblock Print Saree",
-    brand: "Originals by Brubla",
-    price: 8999,
-    originalPrice: 16999,
-    imgs: [
-      "https://images.unsplash.com/photo-1509631179647-0177331693ae?w=400&h=600&fit=crop&q=80&auto=format",
-      "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=400&h=600&fit=crop&q=80&auto=format",
-    ],
-  },
-  {
-    id: 3,
-    name: "Brubla Classic Shirt",
-    brand: "Originals by Brubla",
-    price: 2499,
-    originalPrice: 4999,
-    imgs: [
-      "https://images.unsplash.com/photo-1596755094514-f87e34085b2c?w=400&h=600&fit=crop&q=80&auto=format",
-      "https://images.unsplash.com/photo-1483985988355-763728e1935b?w=400&h=600&fit=crop&q=80&auto=format",
-    ],
-  },
-  {
-    id: 4,
-    name: "Embroidered Waistcoat",
-    brand: "Originals by Brubla",
-    price: 5999,
-    originalPrice: 10999,
-    imgs: [
-      "https://images.unsplash.com/photo-1503341504253-dff4815485f1?w=400&h=600&fit=crop&q=80&auto=format",
-      "https://images.unsplash.com/photo-1617137968427-85924c800a22?w=400&h=600&fit=crop&q=80&auto=format",
-    ],
-  },
-  {
-    id: 5,
-    name: "Dupatta Set",
-    brand: "Originals by Brubla",
-    price: 3499,
-    originalPrice: 6999,
-    imgs: [
-      "https://images.unsplash.com/photo-1617627143750-d86bc21e42bb?w=400&h=600&fit=crop&q=80&auto=format",
-      "https://images.unsplash.com/photo-1583391733956-3750e0b4e1cf?w=400&h=600&fit=crop&q=80&auto=format",
-    ],
-  },
-  {
-    id: 6,
-    name: "Brubla Bomber Jacket",
-    brand: "Originals by Brubla",
-    price: 4499,
-    originalPrice: 8499,
-    imgs: [
-      "https://images.unsplash.com/photo-1556821840-3a63f95609a7?w=400&h=600&fit=crop&q=80&auto=format",
-      "https://images.unsplash.com/photo-1578768079046-ec1c1fb79c84?w=400&h=600&fit=crop&q=80&auto=format",
-    ],
-  },
-];
-
-const INDIAN_ROOTS = [
-  {
-    id: 1,
-    name: "Banarasi Silk Saree",
-    brand: "Indian Roots",
-    price: 15999,
-    originalPrice: 29999,
-    imgs: [
-      "https://images.unsplash.com/photo-1583391733956-3750e0b4e1cf?w=400&h=600&fit=crop&q=80&auto=format",
-      "https://images.unsplash.com/photo-1617627143750-d86bc21e42bb?w=400&h=600&fit=crop&q=80&auto=format",
-    ],
-  },
-  {
-    id: 2,
-    name: "Handwoven Khadi Kurta",
-    brand: "Indian Roots",
-    price: 3499,
-    originalPrice: 6999,
-    imgs: [
-      "https://images.unsplash.com/photo-1594938298603-c8148c4dae35?w=400&h=600&fit=crop&q=80&auto=format",
-      "https://images.unsplash.com/photo-1617137968427-85924c800a22?w=400&h=600&fit=crop&q=80&auto=format",
-    ],
-  },
-  {
-    id: 3,
-    name: "Phulkari Dupatta",
-    brand: "Indian Roots",
-    price: 2499,
-    originalPrice: 4999,
-    imgs: [
-      "https://images.unsplash.com/photo-1617627143750-d86bc21e42bb?w=400&h=600&fit=crop&q=80&auto=format",
-      "https://images.unsplash.com/photo-1583391733956-3750e0b4e1cf?w=400&h=600&fit=crop&q=80&auto=format",
-    ],
-  },
-  {
-    id: 4,
-    name: "Bandhani Lehenga",
-    brand: "Indian Roots",
-    price: 12999,
-    originalPrice: 24999,
-    imgs: [
-      "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=400&h=600&fit=crop&q=80&auto=format",
-      "https://images.unsplash.com/photo-1509631179647-0177331693ae?w=400&h=600&fit=crop&q=80&auto=format",
-    ],
-  },
-  {
-    id: 5,
-    name: "Pashmina Shawl",
-    brand: "Indian Roots",
-    price: 8999,
-    originalPrice: 16999,
-    imgs: [
-      "https://images.unsplash.com/photo-1617137968427-85924c800a22?w=400&h=600&fit=crop&q=80&auto=format",
-      "https://images.unsplash.com/photo-1594938298603-c8148c4dae35?w=400&h=600&fit=crop&q=80&auto=format",
-    ],
-  },
-  {
-    id: 6,
-    name: "Jutti Footwear",
-    brand: "Indian Roots",
-    price: 1999,
-    originalPrice: 3999,
-    imgs: [
-      "https://images.unsplash.com/photo-1605810230434-7631ac76ec81?w=400&h=600&fit=crop&q=80&auto=format",
-      "https://images.unsplash.com/photo-1533867617858-e7b97e060509?w=400&h=600&fit=crop&q=80&auto=format",
-    ],
-  },
-];
-
-const WEDDING_COLLECTION = [
-  {
-    id: 1,
-    name: "Bridal Lehenga Set",
-    brand: "Brubla Weddings",
-    price: 45999,
-    originalPrice: 89999,
-    imgs: [
-      "https://images.unsplash.com/photo-1583391733956-3750e0b4e1cf?w=400&h=600&fit=crop&q=80&auto=format",
-      "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=400&h=600&fit=crop&q=80&auto=format",
-    ],
-  },
-  {
-    id: 2,
-    name: "Groom Sherwani",
-    brand: "Brubla Weddings",
-    price: 34999,
-    originalPrice: 64999,
-    imgs: [
-      "https://images.unsplash.com/photo-1503341504253-dff4815485f1?w=400&h=600&fit=crop&q=80&auto=format",
-      "https://images.unsplash.com/photo-1617137968427-85924c800a22?w=400&h=600&fit=crop&q=80&auto=format",
-    ],
-  },
-  {
-    id: 3,
-    name: "Bridesmaid Saree",
-    brand: "Brubla Weddings",
-    price: 12999,
-    originalPrice: 24999,
-    imgs: [
-      "https://images.unsplash.com/photo-1509631179647-0177331693ae?w=400&h=600&fit=crop&q=80&auto=format",
-      "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=400&h=600&fit=crop&q=80&auto=format",
-    ],
-  },
-  {
-    id: 4,
-    name: "Celebration Gown",
-    brand: "Brubla Weddings",
-    price: 19999,
-    originalPrice: 38999,
-    imgs: [
-      "https://images.unsplash.com/photo-1496747611176-843222e1e57c?w=400&h=600&fit=crop&q=80&auto=format",
-      "https://images.unsplash.com/photo-1485230895905-ec40ba36b9bc?w=400&h=600&fit=crop&q=80&auto=format",
-    ],
-  },
-  {
-    id: 5,
-    name: "Wedding Accessory Set",
-    brand: "Brubla Weddings",
-    price: 5999,
-    originalPrice: 11999,
-    imgs: [
-      "https://images.unsplash.com/photo-1611591437281-460bfbe1220a?w=400&h=600&fit=crop&q=80&auto=format",
-      "https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?w=400&h=600&fit=crop&q=80&auto=format",
-    ],
-  },
-  {
-    id: 6,
-    name: "Reception Blazer",
-    brand: "Brubla Weddings",
-    price: 15999,
-    originalPrice: 29999,
-    imgs: [
-      "https://images.unsplash.com/photo-1507679799987-c73779587ccf?w=400&h=600&fit=crop&q=80&auto=format",
-      "https://images.unsplash.com/photo-1469334031218-e382a71b716b?w=400&h=600&fit=crop&q=80&auto=format",
-    ],
-  },
-];
+const API_BASE_URL = "http://31.97.228.17:4077";
+const COLLECTIONS_API_URL = `${API_BASE_URL}/api/users/homepage/collections`;
 
 // ─────────────────────────────────────────────────────────────────────────────
 // ICONS
@@ -385,7 +42,7 @@ const ChevronIcon = ({ dir = "right", size = 12 }) => (
 );
 
 // ─────────────────────────────────────────────────────────────────────────────
-// PRODUCT CARD — editorial minimal style matching the reference
+// PRODUCT CARD
 // ─────────────────────────────────────────────────────────────────────────────
 const ProductCard = ({ product, index }) => {
   const [activeImg, setActiveImg] = useState(0);
@@ -393,8 +50,28 @@ const ProductCard = ({ product, index }) => {
   const [addedCart, setCart] = useState(false);
   const [visible, setVisible] = useState(false);
   const ref = useRef(null);
-
   const navigate = useNavigate();
+
+  // Get product images from variants or mainImages
+  const getProductImages = () => {
+    if (product.mainImages && product.mainImages.length > 0) {
+      return product.mainImages;
+    }
+    if (product.variants && product.variants.length > 0) {
+      const firstVariant = product.variants[0];
+      if (firstVariant.images && firstVariant.images.length > 0) {
+        return firstVariant.images;
+      }
+    }
+    // Fallback image
+    return ["https://images.unsplash.com/photo-1556906781-9a412961c28c?w=400&h=600&fit=crop&q=80&auto=format"];
+  };
+
+  const images = getProductImages();
+  const displayPrice = product.displayPrice || product.variants?.[0]?.discountPrice || product.variants?.[0]?.price || 0;
+  const originalPrice = product.displayActualPrice || product.variants?.[0]?.price || 0;
+  const productName = product.name || "Product";
+  const productId = product.id || product._id;
 
   useEffect(() => {
     const el = ref.current;
@@ -409,11 +86,22 @@ const ProductCard = ({ product, index }) => {
 
   const handleCart = (e) => {
     e.preventDefault();
+    e.stopPropagation();
     setCart(true);
     setTimeout(() => setCart(false), 1800);
   };
 
-  const totalImgs = product.imgs.length;
+  const handleWishlist = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setWish(w => !w);
+  };
+
+  const handleProductClick = () => {
+    navigate(`/product/${productId}`);
+  };
+
+  const totalImgs = images.length;
 
   return (
     <div
@@ -425,30 +113,31 @@ const ProductCard = ({ product, index }) => {
         visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4",
       ].join(" ")}
       style={{ transitionDelay: `${index * 0.06}s` }}
+      onClick={handleProductClick}
     >
-      {/* ── IMAGE CONTAINER ── */}
+      {/* IMAGE CONTAINER */}
       <div className="relative overflow-hidden rounded-xl bg-[#efefed] aspect-[3/4]">
 
         {/* Images */}
-        {product.imgs.map((src, i) => (
-            <img
-              key={i}
-              src={src}
-              alt={product.name}
-              className={[
-                "absolute inset-0 w-full h-full object-cover object-top",
-                "transition-opacity duration-500 ease-in-out",
-                activeImg === i ? "opacity-100" : "opacity-0",
-              ].join(" ")}
-              loading="lazy"
-              draggable={false}
-            />
+        {images.map((src, i) => (
+          <img
+            key={i}
+            src={src.startsWith('http') ? src : `${API_BASE_URL}${src}`}
+            alt={productName}
+            className={[
+              "absolute inset-0 w-full h-full object-cover object-top",
+              "transition-opacity duration-500 ease-in-out",
+              activeImg === i ? "opacity-100" : "opacity-0",
+            ].join(" ")}
+            loading="lazy"
+            draggable={false}
+          />
         ))}
 
-        {/* Invisible hover zones — split horizontally for image switching */}
+        {/* Invisible hover zones for image switching */}
         {totalImgs > 1 && (
           <div className="absolute inset-0 z-[5] flex pointer-events-auto">
-            {product.imgs.map((_, di) => (
+            {images.map((_, di) => (
               <div
                 key={di}
                 className="flex-1 h-full"
@@ -458,9 +147,9 @@ const ProductCard = ({ product, index }) => {
           </div>
         )}
 
-        {/* ── BOOKMARK ── top right */}
+        {/* BOOKMARK - top right */}
         <button
-          onClick={(e) => { e.preventDefault(); setWish(w => !w); }}
+          onClick={handleWishlist}
           className={[
             "absolute top-3 right-3 z-20",
             "w-8 h-8 flex items-center justify-center rounded-full",
@@ -474,10 +163,10 @@ const ProductCard = ({ product, index }) => {
           <BookmarkIcon filled={wishlisted} size={14} />
         </button>
 
-        {/* ── DOT INDICATORS ── bottom center */}
+        {/* DOT INDICATORS */}
         {totalImgs > 1 && (
           <div className="absolute bottom-3 left-0 right-0 z-10 flex items-center justify-center gap-1.5 pointer-events-none">
-            {product.imgs.map((_, di) => (
+            {images.map((_, di) => (
               <div
                 key={di}
                 className={[
@@ -492,22 +181,38 @@ const ProductCard = ({ product, index }) => {
         )}
       </div>
 
-      {/* ── INFO ROW ── */}
+      {/* INFO ROW */}
       <div className="mt-2.5 flex items-start justify-between gap-2 px-0.5">
         <div className="flex flex-col min-w-0 flex-1">
           <p className="text-[13px] font-normal text-[#1a1a1a] leading-snug truncate">
-            {product.name}
+            {productName}
           </p>
-          <p className="text-[12px] text-[#888] mt-0.5 font-normal">
-            RS. {product.price.toLocaleString()}
-          </p>
+          <div className="flex items-center gap-2 mt-0.5">
+            <p className="text-[12px] font-semibold text-[#1a1a1a]">
+              ₹{displayPrice.toLocaleString()}
+            </p>
+            {originalPrice > displayPrice && (
+              <>
+                <p className="text-[11px] text-[#888] line-through">
+                  ₹{originalPrice.toLocaleString()}
+                </p>
+                <p className="text-[11px] text-green-600 font-medium">
+                  {Math.round(((originalPrice - displayPrice) / originalPrice) * 100)}% off
+                </p>
+              </>
+            )}
+          </div>
         </div>
 
-        <button onClick={() => navigate(`/product/${product.id}`)} className="flex-shrink-0 w-8 h-8 border border-black flex items-center justify-center rounded-full bg-white text-[#000] hover:bg-[#1a1a1a] hover:text-white transition-colors duration-200" aria-label="Quick view">
-            <FaEye size={14} className="text-[#000] hover:text-[#fff] transition-colors duration-200"/>
+        <button 
+          onClick={(e) => { e.stopPropagation(); navigate(`/product/${productId}`); }} 
+          className="flex-shrink-0 w-8 h-8 border border-black flex items-center justify-center rounded-full bg-white text-[#000] hover:bg-[#1a1a1a] hover:text-white transition-colors duration-200" 
+          aria-label="Quick view"
+        >
+          <FaEye size={14} className="text-[#000] hover:text-[#fff] transition-colors duration-200"/>
         </button>
 
-        {/* + / ✓ button */}
+        {/* Add to cart button */}
         <button
           onClick={handleCart}
           className={[
@@ -547,7 +252,7 @@ const ScrollBtn = ({ dir, onClick, show }) => (
 // ─────────────────────────────────────────────────────────────────────────────
 // COLLECTION SECTION (reusable)
 // ─────────────────────────────────────────────────────────────────────────────
-const CollectionSection = ({ id, title, subtitle, products, bgColor = "#fff" }) => {
+const CollectionSection = ({ id, title, subtitle, products, bgColor = "#fff", image }) => {
   const [canLeft, setCanLeft] = useState(false);
   const [canRight, setCanRight] = useState(true);
   const [headerVis, setHdrVis] = useState(false);
@@ -555,7 +260,6 @@ const CollectionSection = ({ id, title, subtitle, products, bgColor = "#fff" }) 
   const headerRef = useRef(null);
   const navigate = useNavigate();
 
-  // Stable class name for webkit scrollbar hiding
   const trackClass = `track-${id}`;
 
   useEffect(() => {
@@ -588,9 +292,14 @@ const CollectionSection = ({ id, title, subtitle, products, bgColor = "#fff" }) 
     trackRef.current?.scrollBy({ left: dir === "right" ? 600 : -600, behavior: "smooth" });
   };
 
+  // Don't render section if no products
+  if (!products || products.length === 0) {
+    return null;
+  }
+
   return (
     <section
-      className="w-full p-10 md:py-12 overflow-hidden"
+      className="w-full py-10 md:py-12 overflow-hidden"
       style={{ background: bgColor }}
       aria-label={title}
     >
@@ -598,7 +307,7 @@ const CollectionSection = ({ id, title, subtitle, products, bgColor = "#fff" }) 
 
       <div className="max-w-9xl mx-auto">
 
-        {/* ── SECTION HEADER ── */}
+        {/* SECTION HEADER */}
         <div
           ref={headerRef}
           className={[
@@ -630,7 +339,7 @@ const CollectionSection = ({ id, title, subtitle, products, bgColor = "#fff" }) 
           </div>
         </div>
 
-        {/* ── PRODUCT SCROLL TRACK ── */}
+        {/* PRODUCT SCROLL TRACK */}
         <div
           ref={trackRef}
           className={`${trackClass} flex gap-3 overflow-x-auto pb-2`}
@@ -643,14 +352,14 @@ const CollectionSection = ({ id, title, subtitle, products, bgColor = "#fff" }) 
           }}
         >
           {products.map((p, i) => (
-            <div key={p.id} className="flex-shrink-0" style={{ scrollSnapAlign: "start" }}>
+            <div key={p.id || p._id} className="flex-shrink-0" style={{ scrollSnapAlign: "start" }}>
               <ProductCard product={p} index={i} />
             </div>
           ))}
           <div className="min-w-2 flex-shrink-0" />
         </div>
 
-        {/* ── MOBILE VIEW ALL ── */}
+        {/* MOBILE VIEW ALL */}
         <div className="sm:hidden flex justify-center mt-4 px-4">
           <button
             onClick={() => navigate(`/collections/${id}`)}
@@ -675,50 +384,147 @@ const Divider = () => (
 );
 
 // ─────────────────────────────────────────────────────────────────────────────
+// LOADING SKELETON
+// ─────────────────────────────────────────────────────────────────────────────
+const LoadingSkeleton = () => (
+  <div className="w-full bg-white">
+    {[1, 2, 3].map((i) => (
+      <div key={i} className="w-full py-10 md:py-12 overflow-hidden">
+        <div className="max-w-9xl mx-auto px-4 md:px-6 lg:px-8">
+          <div className="animate-pulse">
+            <div className="flex items-center justify-between mb-4">
+              <div>
+                <div className="h-3 w-24 bg-gray-200 rounded mb-2"></div>
+                <div className="h-5 w-40 bg-gray-200 rounded"></div>
+              </div>
+              <div className="flex gap-2">
+                <div className="w-8 h-8 bg-gray-200 rounded-full"></div>
+                <div className="w-8 h-8 bg-gray-200 rounded-full"></div>
+              </div>
+            </div>
+            <div className="flex gap-3 overflow-hidden">
+              {[1, 2, 3, 4].map((j) => (
+                <div key={j} className="flex-shrink-0 w-[200px]">
+                  <div className="bg-gray-200 rounded-xl aspect-[3/4]"></div>
+                  <div className="mt-2">
+                    <div className="h-3 bg-gray-200 rounded w-3/4 mb-1"></div>
+                    <div className="h-3 bg-gray-200 rounded w-1/2"></div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+    ))}
+  </div>
+);
+
+// ─────────────────────────────────────────────────────────────────────────────
 // MAIN EXPORT — All Collections
 // ─────────────────────────────────────────────────────────────────────────────
 export default function AllCollections() {
+  const [collections, setCollections] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  // Fetch collections and products from API
+  useEffect(() => {
+    const fetchCollections = async () => {
+      try {
+        setLoading(true);
+        const response = await fetch(COLLECTIONS_API_URL);
+        
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
+        const result = await response.json();
+        
+        if (result.success && Array.isArray(result.data)) {
+          // Sort by order and filter collections that have products
+          const sortedCollections = result.data
+            .sort((a, b) => (a.order || 0) - (b.order || 0))
+            .map((collection) => ({
+              id: collection._id,
+              title: collection.title,
+              tag: collection.tag,
+              description: collection.description,
+              image: collection.image,
+              order: collection.order,
+              products: collection.products || [],
+              subtitle: collection.tag === "summer" ? "SUMMER ESSENTIALS" : 
+                       collection.tag === "winter" ? "WINTER COLLECTION" : "NEW ARRIVALS",
+            }));
+          
+          setCollections(sortedCollections);
+        } else {
+          throw new Error('Invalid API response structure');
+        }
+      } catch (err) {
+        console.error('Error fetching collections:', err);
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchCollections();
+  }, []);
+
+  if (loading) {
+    return <LoadingSkeleton />;
+  }
+
+  if (error) {
+    return (
+      <div className="w-full bg-white min-h-screen flex items-center justify-center">
+        <div className="text-center px-4">
+          <p className="text-red-500 text-sm mb-4">Failed to load collections</p>
+          <button 
+            onClick={() => window.location.reload()} 
+            className="px-4 py-2 bg-black text-white rounded-lg hover:bg-gray-800 transition text-sm"
+          >
+            Try Again
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  // Filter collections that have products
+  const collectionsWithProducts = collections.filter(col => col.products && col.products.length > 0);
+
+  if (collectionsWithProducts.length === 0) {
+    return (
+      <div className="w-full bg-white min-h-screen flex items-center justify-center">
+        <div className="text-center px-4">
+          <p className="text-gray-500 text-sm">No collections available</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Collection backgrounds alternating
+  const getBgColor = (index) => {
+    return index % 2 === 0 ? "#fff" : "#fafaf9";
+  };
+
   return (
     <div className="w-full bg-white">
-      <CollectionSection
-        id="1"
-        title="Global Collections"
-        subtitle="WORLD-CLASS CRAFTSMANSHIP"
-        products={GLOBAL_COLLECTION}
-        bgColor="#fff"
-      />
-      <Divider />
-      <CollectionSection
-        id="2"
-        title="Luxury Collections"
-        subtitle="BESPOKE ELEGANCE"
-        products={LUXURY_COLLECTION}
-        bgColor="#fafaf9"
-      />
-      <Divider />
-      <CollectionSection
-        id="3"
-        title="Originals by Brubla"
-        subtitle="SIGNATURE STYLE"
-        products={ORIGINALS_COLLECTION}
-        bgColor="#fff"
-      />
-      <Divider />
-      <CollectionSection
-        id="4"
-        title="Indian Roots"
-        subtitle="TIMELESS TRADITIONS"
-        products={INDIAN_ROOTS}
-        bgColor="#fafaf9"
-      />
-      <Divider />
-      <CollectionSection
-        id="5"
-        title="Weddings & Celebrations"
-        subtitle="YOUR SPECIAL DAY"
-        products={WEDDING_COLLECTION}
-        bgColor="#fff"
-      />
+      {collectionsWithProducts.map((collection, idx) => (
+        <div key={collection.id}>
+          <CollectionSection
+            id={collection.id}
+            title={collection.title}
+            subtitle={collection.subtitle}
+            products={collection.products}
+            bgColor={getBgColor(idx)}
+            image={collection.image}
+          />
+          {idx < collectionsWithProducts.length - 1 && <Divider />}
+        </div>
+      ))}
     </div>
   );
 }

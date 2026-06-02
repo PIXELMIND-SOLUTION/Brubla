@@ -626,13 +626,12 @@ const SectionHead = ({ eyebrow, title, cta, onCta }) => {
 const QuickLinks = () => {
   const [ref, vis] = useVis(50);
   const items = [
-    { Icon: User, label: "My Profile", sub: "Complete your DNA", link: "/profile/personal-details" },
     { Icon: MapPin, label: "Addresses", sub: "Manage addresses", link: "/profile/saved-addresses" },
     { Icon: Truck, label: "My Orders", sub: "View all orders", link: "/profile/my-orders" },
     { Icon: Heart, label: "Wishlist", sub: "Saved items", link: "/profile/wishlists" },
   ];
   return (
-    <div ref={ref} className="grid grid-cols-4 gap-2 sm:gap-3"
+    <div ref={ref} className="grid grid-cols-3 gap-2 sm:gap-3"
       style={{ opacity: vis ? 1 : 0, animation: vis ? "fadeUp 0.55s ease both" : "none" }}>
       {items.map(({ Icon, label, sub, link }, i) => (
         <button key={i} onClick={() => window.location.href = link} className="flex flex-col items-center gap-1.5 sm:gap-2 py-3 sm:py-4 px-1 sm:px-2 rounded-xl sm:rounded-2xl transition-all duration-200 cursor-pointer active:scale-95 bg-white border border-gray-200 hover:border-black">
@@ -768,7 +767,6 @@ export default function ProfilePage() {
     {
       label: "Account",
       items: [
-        { icon: User, label: "Personal Details", sub: "Name, email, phone", link: "/profile/personal-details" },
         { icon: Location, label: "Saved Addresses", sub: `${user?.addresses?.length || 0} addresses saved`, link: "/profile/saved-addresses" },
         { icon: Heart, label: "My Wishlist", sub: `${user?.wishlist?.length || 0} items`, link: "/profile/wishlists" },
         { icon: Order, label: "My Orders", sub: `${user?.orders?.length || 0} orders placed`, link: "/profile/my-orders" },

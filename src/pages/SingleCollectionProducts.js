@@ -1,8 +1,33 @@
-import { useState, useEffect, useRef, useCallback } from "react";
+import { useState, useEffect, useRef, useCallback, useMemo } from "react";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
 import Header from "../components/Header";
+import axios from "axios";
+import { Heart, ShoppingBag, Star, X, Loader2, CheckCircle, AlertCircle, ChevronDown, SlidersHorizontal } from "lucide-react";
 
 const COFFEE = "#C9A96E";
+const API_BASE_URL = "http://31.97.228.17:4077";
+
+// ─── URL normaliser ────────────────────────────────────────────────────────────
+const normaliseUrl = (url) => {
+  if (!url || typeof url !== "string") return null;
+  return url.replace(/https?:\/\/localhost:4077/g, API_BASE_URL);
+};
+
+// ─── INR formatter ────────────────────────────────────────────────────────────
+const toINR = (usd) => {
+  if (!usd && usd !== 0) return "—";
+  return "₹" + (usd * 83).toLocaleString("en-IN", { maximumFractionDigits: 0 });
+};
+
+// ─── Get user ID ──────────────────────────────────────────────────────────────
+const getUserId = () => {
+  try {
+    const user = JSON.parse(sessionStorage.getItem("user") || "{}");
+    return user?.id || null;
+  } catch {
+    return null;
+  }
+};
 
 // Styles
 const Styles = () => (
@@ -76,615 +101,163 @@ const Styles = () => (
   `}</style>
 );
 
-// Product Data for Each Collection
-const COLLECTION_PRODUCTS = {
-  1: {
-    id: 1,
-    title: "Global Collections",
-    subtitle: "WORLD-CLASS CRAFTMANSHIP",
-    description: "Discover world-class craftsmanship inspired by fashion capitals — Paris, Milan, Tokyo, and New York. Each piece tells a story of global elegance.",
-    bgImage: "https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=1600&q=80",
-    products: [
-      {
-        id: 1,
-        name: "Italian Leather Jacket",
-        brand: "Brubla Global",
-        price: 12999,
-        originalPrice: 24999,
-        discount: 48,
-        rating: 4.9,
-        reviews: 234,
-        badge: "LIMITED",
-        isNew: true,
-        img: "https://images.unsplash.com/photo-1551028719-00167b16eac5?w=400&h=500&fit=crop&q=80&auto=format",
-        hoverImg: "https://images.unsplash.com/photo-1548624313-0396c75e4a63?w=400&h=500&fit=crop&q=80&auto=format",
-        colors: ["#1a1a1a", "#8B4513", "#2F4F4F"],
-        sizes: ["XS", "S", "M", "L", "XL"],
-      },
-      {
-        id: 2,
-        name: "Parisian Linen Blazer",
-        brand: "Brubla Global",
-        price: 8999,
-        originalPrice: 15999,
-        discount: 44,
-        rating: 4.8,
-        reviews: 189,
-        badge: "BESTSELLER",
-        isNew: false,
-        img: "https://images.unsplash.com/photo-1594938298603-c8148c4dae35?w=400&h=500&fit=crop&q=80&auto=format",
-        hoverImg: "https://images.unsplash.com/photo-1617137968427-85924c800a22?w=400&h=500&fit=crop&q=80&auto=format",
-        colors: ["#F5F0E8", "#1a1812", "#C9A96E"],
-        sizes: ["S", "M", "L", "XL"],
-      },
-      {
-        id: 3,
-        name: "Tokyo Streetwear Hoodie",
-        brand: "Brubla Global",
-        price: 3499,
-        originalPrice: 6999,
-        discount: 50,
-        rating: 4.7,
-        reviews: 567,
-        badge: "TRENDING",
-        isNew: true,
-        img: "https://images.unsplash.com/photo-1556821840-3a63f95609a7?w=400&h=500&fit=crop&q=80&auto=format",
-        hoverImg: "https://images.unsplash.com/photo-1578768079046-ec1c1fb79c84?w=400&h=500&fit=crop&q=80&auto=format",
-        colors: ["#2d2d2d", "#8B0000", "#2E8B57"],
-        sizes: ["S", "M", "L", "XL", "XXL"],
-      },
-      {
-        id: 4,
-        name: "New York Tailored Trousers",
-        brand: "Brubla Global",
-        price: 4999,
-        originalPrice: 8999,
-        discount: 44,
-        rating: 4.8,
-        reviews: 312,
-        badge: "PREMIUM",
-        isNew: false,
-        img: "https://images.unsplash.com/photo-1473966968600-fa801b869a1a?w=400&h=500&fit=crop&q=80&auto=format",
-        hoverImg: "https://images.unsplash.com/photo-1594938298603-c8148c4dae35?w=400&h=500&fit=crop&q=80&auto=format",
-        colors: ["#1a1812", "#2F4F4F", "#8B4513"],
-        sizes: ["28", "30", "32", "34", "36"],
-      },
-      {
-        id: 5,
-        name: "London Checkered Coat",
-        brand: "Brubla Global",
-        price: 11999,
-        originalPrice: 19999,
-        discount: 40,
-        rating: 4.9,
-        reviews: 178,
-        badge: "EXCLUSIVE",
-        isNew: true,
-        img: "https://images.unsplash.com/photo-1539533113208-f6df8cc8b543?w=400&h=500&fit=crop&q=80&auto=format",
-        hoverImg: "https://images.unsplash.com/photo-1548624313-0396c75e4a63?w=400&h=500&fit=crop&q=80&auto=format",
-        colors: ["#696969", "#1a1812", "#8B4513"],
-        sizes: ["S", "M", "L", "XL"],
-      },
-      {
-        id: 6,
-        name: "Milan Silk Scarf",
-        brand: "Brubla Global",
-        price: 2499,
-        originalPrice: 4499,
-        discount: 44,
-        rating: 4.8,
-        reviews: 892,
-        badge: "LOVED",
-        isNew: false,
-        img: "https://images.unsplash.com/photo-1601924994987-69e26d50dc26?w=400&h=500&fit=crop&q=80&auto=format",
-        hoverImg: "https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=400&h=500&fit=crop&q=80&auto=format",
-        colors: ["#C9A96E", "#8B0000", "#2E8B57"],
-        sizes: ["One Size"],
-      },
-      {
-        id: 7,
-        name: "Berlin Minimalist Bag",
-        brand: "Brubla Global",
-        price: 6999,
-        originalPrice: 12999,
-        discount: 46,
-        rating: 4.7,
-        reviews: 234,
-        badge: "NEW",
-        isNew: true,
-        img: "https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=400&h=500&fit=crop&q=80&auto=format",
-        hoverImg: "https://images.unsplash.com/photo-1590874103328-eac38a683ce7?w=400&h=500&fit=crop&q=80&auto=format",
-        colors: ["#1a1812", "#C9A96E"],
-        sizes: ["One Size"],
-      },
-      {
-        id: 8,
-        name: "Barcelona Linen Shirt",
-        brand: "Brubla Global",
-        price: 3999,
-        originalPrice: 7999,
-        discount: 50,
-        rating: 4.9,
-        reviews: 456,
-        badge: "SUMMER",
-        isNew: false,
-        img: "https://images.unsplash.com/photo-1596755094514-f87e34085b2c?w=400&h=500&fit=crop&q=80&auto=format",
-        hoverImg: "https://images.unsplash.com/photo-1483985988355-763728e1935b?w=400&h=500&fit=crop&q=80&auto=format",
-        colors: ["#F5F0E8", "#C9A96E", "#1a1812"],
-        sizes: ["S", "M", "L", "XL"],
-      },
-    ],
-  },
-  2: {
-    id: 2,
-    title: "Luxury Collections",
-    subtitle: "BESPOKE ELEGANCE",
-    description: "Experience the pinnacle of couture with hand-embroidered gowns, cashmere coats, and diamond-embellished accessories.",
-    bgImage: "https://images.unsplash.com/photo-1539109136881-3be0616acf4b?w=1600&q=80",
-    products: [
-      {
-        id: 1,
-        name: "Hand-Embroidered Gown",
-        brand: "Brubla Atelier",
-        price: 45999,
-        originalPrice: 89999,
-        discount: 49,
-        rating: 5.0,
-        reviews: 89,
-        badge: "COUTURE",
-        isNew: true,
-        img: "https://images.unsplash.com/photo-1566174053879-31528523f8ae?w=400&h=500&fit=crop&q=80&auto=format",
-        hoverImg: "https://images.unsplash.com/photo-1539008835657-9e8e9680c956?w=400&h=500&fit=crop&q=80&auto=format",
-        colors: ["#1a1812", "#C9A96E", "#8B0000"],
-        sizes: ["XS", "S", "M", "L"],
-      },
-      {
-        id: 2,
-        name: "Cashmere Wrap Coat",
-        brand: "Brubla Atelier",
-        price: 32999,
-        originalPrice: 59999,
-        discount: 45,
-        rating: 4.9,
-        reviews: 67,
-        badge: "LIMITED",
-        isNew: false,
-        img: "https://images.unsplash.com/photo-1544022613-e87ca75a784a?w=400&h=500&fit=crop&q=80&auto=format",
-        hoverImg: "https://images.unsplash.com/photo-1539533113208-f6df8cc8b543?w=400&h=500&fit=crop&q=80&auto=format",
-        colors: ["#F5F0E8", "#1a1812", "#8B4513"],
-        sizes: ["S", "M", "L", "XL"],
-      },
-      {
-        id: 3,
-        name: "Diamond-Embellished Clutch",
-        brand: "Brubla Atelier",
-        price: 18999,
-        originalPrice: 34999,
-        discount: 46,
-        rating: 4.9,
-        reviews: 123,
-        badge: "BESPOKE",
-        isNew: true,
-        img: "https://images.unsplash.com/photo-1566150905458-1bf1fc113f0d?w=400&h=500&fit=crop&q=80&auto=format",
-        hoverImg: "https://images.unsplash.com/photo-1590874103328-eac38a683ce7?w=400&h=500&fit=crop&q=80&auto=format",
-        colors: ["#C9A96E", "#1a1812"],
-        sizes: ["One Size"],
-      },
-      {
-        id: 4,
-        name: "Silk Evening Gown",
-        brand: "Brubla Atelier",
-        price: 39999,
-        originalPrice: 74999,
-        discount: 47,
-        rating: 5.0,
-        reviews: 56,
-        badge: "RUNWAY",
-        isNew: true,
-        img: "https://images.unsplash.com/photo-1496747611176-843222e1e57c?w=400&h=500&fit=crop&q=80&auto=format",
-        hoverImg: "https://images.unsplash.com/photo-1485230895905-ec40ba36b9bc?w=400&h=500&fit=crop&q=80&auto=format",
-        colors: ["#1a1812", "#8B0000", "#2E8B57"],
-        sizes: ["XS", "S", "M", "L"],
-      },
-      {
-        id: 5,
-        name: "Pearl Necklace Set",
-        brand: "Brubla Atelier",
-        price: 24999,
-        originalPrice: 45999,
-        discount: 46,
-        rating: 4.9,
-        reviews: 234,
-        badge: "HEIRLOOM",
-        isNew: false,
-        img: "https://images.unsplash.com/photo-1611591437281-460bfbe1220a?w=400&h=500&fit=crop&q=80&auto=format",
-        hoverImg: "https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?w=400&h=500&fit=crop&q=80&auto=format",
-        colors: ["#C9A96E", "#F5F0E8"],
-        sizes: ["One Size"],
-      },
-      {
-        id: 6,
-        name: "Velvet Tuxedo Blazer",
-        brand: "Brubla Atelier",
-        price: 27999,
-        originalPrice: 49999,
-        discount: 44,
-        rating: 4.8,
-        reviews: 89,
-        badge: "PREMIUM",
-        isNew: false,
-        img: "https://images.unsplash.com/photo-1507679799987-c73779587ccf?w=400&h=500&fit=crop&q=80&auto=format",
-        hoverImg: "https://images.unsplash.com/photo-1469334031218-e382a71b716b?w=400&h=500&fit=crop&q=80&auto=format",
-        colors: ["#1a1812", "#8B0000", "#2F4F4F"],
-        sizes: ["S", "M", "L", "XL"],
-      },
-    ],
-  },
-  3: {
-    id: 3,
-    title: "Originals by Brubla",
-    subtitle: "SIGNATURE STYLE",
-    description: "Our signature collection that embodies the essence of modern luxury. Timeless pieces crafted for the discerning individual.",
-    bgImage: "https://images.unsplash.com/photo-1445205170230-053b83016050?w=1600&q=80",
-    products: [
-      {
-        id: 1,
-        name: "Signature Kurta Set",
-        brand: "Originals by Brubla",
-        price: 4999,
-        originalPrice: 9999,
-        discount: 50,
-        rating: 4.9,
-        reviews: 1234,
-        badge: "ICONIC",
-        isNew: false,
-        img: "https://images.unsplash.com/photo-1617137968427-85924c800a22?w=400&h=500&fit=crop&q=80&auto=format",
-        hoverImg: "https://images.unsplash.com/photo-1594938298603-c8148c4dae35?w=400&h=500&fit=crop&q=80&auto=format",
-        colors: ["#C9A96E", "#1a1812", "#F5F0E8"],
-        sizes: ["S", "M", "L", "XL", "XXL"],
-      },
-      {
-        id: 2,
-        name: "Handblock Print Saree",
-        brand: "Originals by Brubla",
-        price: 8999,
-        originalPrice: 16999,
-        discount: 47,
-        rating: 4.8,
-        reviews: 892,
-        badge: "ARTISAN",
-        isNew: true,
-        img: "https://images.unsplash.com/photo-1509631179647-0177331693ae?w=400&h=500&fit=crop&q=80&auto=format",
-        hoverImg: "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=400&h=500&fit=crop&q=80&auto=format",
-        colors: ["#8B0000", "#C9A96E", "#1a1812"],
-        sizes: ["Free Size"],
-      },
-      {
-        id: 3,
-        name: "Brubla Classic Shirt",
-        brand: "Originals by Brubla",
-        price: 2499,
-        originalPrice: 4999,
-        discount: 50,
-        rating: 4.7,
-        reviews: 2156,
-        badge: "BESTSELLER",
-        isNew: false,
-        img: "https://images.unsplash.com/photo-1596755094514-f87e34085b2c?w=400&h=500&fit=crop&q=80&auto=format",
-        hoverImg: "https://images.unsplash.com/photo-1483985988355-763728e1935b?w=400&h=500&fit=crop&q=80&auto=format",
-        colors: ["#F5F0E8", "#1a1812", "#2F4F4F"],
-        sizes: ["XS", "S", "M", "L", "XL"],
-      },
-      {
-        id: 4,
-        name: "Embroidered Waistcoat",
-        brand: "Originals by Brubla",
-        price: 5999,
-        originalPrice: 10999,
-        discount: 45,
-        rating: 4.9,
-        reviews: 445,
-        badge: "HERITAGE",
-        isNew: true,
-        img: "https://images.unsplash.com/photo-1503341504253-dff4815485f1?w=400&h=500&fit=crop&q=80&auto=format",
-        hoverImg: "https://images.unsplash.com/photo-1617137968427-85924c800a22?w=400&h=500&fit=crop&q=80&auto=format",
-        colors: ["#C9A96E", "#1a1812", "#8B4513"],
-        sizes: ["S", "M", "L", "XL"],
-      },
-      {
-        id: 5,
-        name: "Dupatta Set",
-        brand: "Originals by Brubla",
-        price: 3499,
-        originalPrice: 6999,
-        discount: 50,
-        rating: 4.8,
-        reviews: 678,
-        badge: "TRENDING",
-        isNew: false,
-        img: "https://images.unsplash.com/photo-1617627143750-d86bc21e42bb?w=400&h=500&fit=crop&q=80&auto=format",
-        hoverImg: "https://images.unsplash.com/photo-1583391733956-3750e0b4e1cf?w=400&h=500&fit=crop&q=80&auto=format",
-        colors: ["#C9A96E", "#8B0000", "#2E8B57"],
-        sizes: ["Free Size"],
-      },
-      {
-        id: 6,
-        name: "Brubla Bomber Jacket",
-        brand: "Originals by Brubla",
-        price: 4499,
-        originalPrice: 8499,
-        discount: 47,
-        rating: 4.8,
-        reviews: 1234,
-        badge: "LIMITED",
-        isNew: true,
-        img: "https://images.unsplash.com/photo-1556821840-3a63f95609a7?w=400&h=500&fit=crop&q=80&auto=format",
-        hoverImg: "https://images.unsplash.com/photo-1578768079046-ec1c1fb79c84?w=400&h=500&fit=crop&q=80&auto=format",
-        colors: ["#1a1812", "#2F4F4F", "#8B4513"],
-        sizes: ["S", "M", "L", "XL", "XXL"],
-      },
-    ],
-  },
-  4: {
-    id: 4,
-    title: "Indian Roots",
-    subtitle: "TIMELESS TRADITIONS",
-    description: "Celebrate timeless traditions with our curated ethnic wear. From Banarasi silk to handwoven khadi, embrace your heritage in style.",
-    bgImage: "https://images.unsplash.com/photo-1535043883686-1eade1b1a0f8?w=1600&q=80",
-    products: [
-      {
-        id: 1,
-        name: "Banarasi Silk Saree",
-        brand: "Indian Roots",
-        price: 15999,
-        originalPrice: 29999,
-        discount: 47,
-        rating: 4.9,
-        reviews: 2341,
-        badge: "HERITAGE",
-        isNew: false,
-        img: "https://images.unsplash.com/photo-1583391733956-3750e0b4e1cf?w=400&h=500&fit=crop&q=80&auto=format",
-        hoverImg: "https://images.unsplash.com/photo-1617627143750-d86bc21e42bb?w=400&h=500&fit=crop&q=80&auto=format",
-        colors: ["#C9A96E", "#8B0000", "#1a1812"],
-        sizes: ["Free Size"],
-      },
-      {
-        id: 2,
-        name: "Handwoven Khadi Kurta",
-        brand: "Indian Roots",
-        price: 3499,
-        originalPrice: 6999,
-        discount: 50,
-        rating: 4.8,
-        reviews: 1876,
-        badge: "KHADI",
-        isNew: false,
-        img: "https://images.unsplash.com/photo-1594938298603-c8148c4dae35?w=400&h=500&fit=crop&q=80&auto=format",
-        hoverImg: "https://images.unsplash.com/photo-1617137968427-85924c800a22?w=400&h=500&fit=crop&q=80&auto=format",
-        colors: ["#F5F0E8", "#1a1812", "#C9A96E"],
-        sizes: ["S", "M", "L", "XL", "XXL"],
-      },
-      {
-        id: 3,
-        name: "Phulkari Dupatta",
-        brand: "Indian Roots",
-        price: 2499,
-        originalPrice: 4999,
-        discount: 50,
-        rating: 4.9,
-        reviews: 3456,
-        badge: "HANDCRAFTED",
-        isNew: true,
-        img: "https://images.unsplash.com/photo-1617627143750-d86bc21e42bb?w=400&h=500&fit=crop&q=80&auto=format",
-        hoverImg: "https://images.unsplash.com/photo-1583391733956-3750e0b4e1cf?w=400&h=500&fit=crop&q=80&auto=format",
-        colors: ["#C9A96E", "#8B0000", "#2E8B57"],
-        sizes: ["One Size"],
-      },
-      {
-        id: 4,
-        name: "Bandhani Lehenga",
-        brand: "Indian Roots",
-        price: 12999,
-        originalPrice: 24999,
-        discount: 48,
-        rating: 4.9,
-        reviews: 1234,
-        badge: "TRADITIONAL",
-        isNew: true,
-        img: "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=400&h=500&fit=crop&q=80&auto=format",
-        hoverImg: "https://images.unsplash.com/photo-1509631179647-0177331693ae?w=400&h=500&fit=crop&q=80&auto=format",
-        colors: ["#8B0000", "#C9A96E", "#1a1812"],
-        sizes: ["S", "M", "L", "XL"],
-      },
-      {
-        id: 5,
-        name: "Pashmina Shawl",
-        brand: "Indian Roots",
-        price: 8999,
-        originalPrice: 16999,
-        discount: 47,
-        rating: 4.9,
-        reviews: 2345,
-        badge: "CASHMERE",
-        isNew: false,
-        img: "https://images.unsplash.com/photo-1617137968427-85924c800a22?w=400&h=500&fit=crop&q=80&auto=format",
-        hoverImg: "https://images.unsplash.com/photo-1594938298603-c8148c4dae35?w=400&h=500&fit=crop&q=80&auto=format",
-        colors: ["#C9A96E", "#F5F0E8", "#1a1812"],
-        sizes: ["One Size"],
-      },
-      {
-        id: 6,
-        name: "Jutti Footwear",
-        brand: "Indian Roots",
-        price: 1999,
-        originalPrice: 3999,
-        discount: 50,
-        rating: 4.8,
-        reviews: 4567,
-        badge: "ARTISAN",
-        isNew: false,
-        img: "https://images.unsplash.com/photo-1605810230434-7631ac76ec81?w=400&h=500&fit=crop&q=80&auto=format",
-        hoverImg: "https://images.unsplash.com/photo-1533867617858-e7b97e060509?w=400&h=500&fit=crop&q=80&auto=format",
-        colors: ["#C9A96E", "#8B0000", "#1a1812"],
-        sizes: ["5", "6", "7", "8", "9"],
-      },
-    ],
-  },
-  5: {
-    id: 5,
-    title: "Accessories Edit",
-    subtitle: "PERFECT FINISHING",
-    description: "Complete your look with our curated accessories. Bags, jewelry, scarves, and more.",
-    bgImage: "https://images.unsplash.com/photo-1602173574767-37d01966c6a3?w=1600&q=80",
-    products: [
-      {
-        id: 1,
-        name: "Leather Handbag",
-        brand: "Accessories Edit",
-        price: 7999,
-        originalPrice: 15999,
-        discount: 50,
-        rating: 4.9,
-        reviews: 3456,
-        badge: "LUXURY",
-        isNew: true,
-        img: "https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=400&h=500&fit=crop&q=80&auto=format",
-        hoverImg: "https://images.unsplash.com/photo-1590874103328-eac38a683ce7?w=400&h=500&fit=crop&q=80&auto=format",
-        colors: ["#1a1812", "#C9A96E", "#8B4513"],
-        sizes: ["One Size"],
-      },
-      {
-        id: 2,
-        name: "Gold Plated Necklace",
-        brand: "Accessories Edit",
-        price: 2999,
-        originalPrice: 5999,
-        discount: 50,
-        rating: 4.8,
-        reviews: 4567,
-        badge: "TRENDING",
-        isNew: false,
-        img: "https://images.unsplash.com/photo-1611591437281-460bfbe1220a?w=400&h=500&fit=crop&q=80&auto=format",
-        hoverImg: "https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?w=400&h=500&fit=crop&q=80&auto=format",
-        colors: ["#C9A96E"],
-        sizes: ["One Size"],
-      },
-    ],
-  },
-  6: {
-    id: 6,
-    title: "Street Style Edit",
-    subtitle: "URBAN ESSENTIALS",
-    description: "Elevate your everyday look with our curated streetwear collection. Casual, cool, and effortlessly stylish.",
-    bgImage: "https://images.unsplash.com/photo-1441984904996-e0b6ba687e04?w=1600&q=80",
-    products: [
-      {
-        id: 1,
-        name: "Oversized Graphic Tee",
-        brand: "Street Edit",
-        price: 1899,
-        originalPrice: 3999,
-        discount: 52,
-        rating: 4.7,
-        reviews: 2345,
-        badge: "TRENDING",
-        isNew: true,
-        img: "https://images.unsplash.com/photo-1576566588028-4147f3842f27?w=400&h=500&fit=crop&q=80&auto=format",
-        hoverImg: "https://images.unsplash.com/photo-1556906781-9a412961c28c?w=400&h=500&fit=crop&q=80&auto=format",
-        colors: ["#1a1812", "#F5F0E8", "#8B0000"],
-        sizes: ["S", "M", "L", "XL", "XXL"],
-      },
-      {
-        id: 2,
-        name: "Cargo Pants",
-        brand: "Street Edit",
-        price: 2999,
-        originalPrice: 5999,
-        discount: 50,
-        rating: 4.8,
-        reviews: 1876,
-        badge: "BESTSELLER",
-        isNew: false,
-        img: "https://images.unsplash.com/photo-1516762689617-e1cffcef479d?w=400&h=500&fit=crop&q=80&auto=format",
-        hoverImg: "https://images.unsplash.com/photo-1594938298603-c8148c4dae35?w=400&h=500&fit=crop&q=80&auto=format",
-        colors: ["#2F4F4F", "#1a1812", "#8B4513"],
-        sizes: ["28", "30", "32", "34", "36"],
-      },
-      {
-        id: 3,
-        name: "Denim Jacket",
-        brand: "Street Edit",
-        price: 4499,
-        originalPrice: 8999,
-        discount: 50,
-        rating: 4.9,
-        reviews: 3456,
-        badge: "ICONIC",
-        isNew: false,
-        img: "https://images.unsplash.com/photo-1576871337632-b9aef4c17ab9?w=400&h=500&fit=crop&q=80&auto=format",
-        hoverImg: "https://images.unsplash.com/photo-1556821840-3a63f95609a7?w=400&h=500&fit=crop&q=80&auto=format",
-        colors: ["#1a1812", "#2F4F4F"],
-        sizes: ["S", "M", "L", "XL"],
-      },
-      {
-        id: 4,
-        name: "Sneakers",
-        brand: "Street Edit",
-        price: 5999,
-        originalPrice: 11999,
-        discount: 50,
-        rating: 4.8,
-        reviews: 4567,
-        badge: "LIMITED",
-        isNew: true,
-        img: "https://images.unsplash.com/photo-1549298916-b41d501d3772?w=400&h=500&fit=crop&q=80&auto=format",
-        hoverImg: "https://images.unsplash.com/photo-1605810230434-7631ac76ec81?w=400&h=500&fit=crop&q=80&auto=format",
-        colors: ["#F5F0E8", "#1a1812"],
-        sizes: ["6", "7", "8", "9", "10"],
-      },
-    ],
-  },
-  7: {
-    id: 7,
-    title: "Sustainable Fashion",
-    subtitle: "ECO-CONSCIOUS",
-    description: "Fashion that cares for the planet. Ethically sourced, sustainably produced, beautifully crafted.",
-    bgImage: "https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?w=1600&q=80",
-    products: [
-      {
-        id: 1,
-        name: "Organic Cotton Dress",
-        brand: "Sustainable",
-        price: 3999,
-        originalPrice: 7999,
-        discount: 50,
-        rating: 4.9,
-        reviews: 1234,
-        badge: "ECO",
-        isNew: true,
-        img: "https://images.unsplash.com/photo-1539008835657-9e8e9680c956?w=400&h=500&fit=crop&q=80&auto=format",
-        hoverImg: "https://images.unsplash.com/photo-1496747611176-843222e1e57c?w=400&h=500&fit=crop&q=80&auto=format",
-        colors: ["#F5F0E8", "#2E8B57", "#C9A96E"],
-        sizes: ["XS", "S", "M", "L"],
-      },
-      {
-        id: 2,
-        name: "Hemp Tote Bag",
-        brand: "Sustainable",
-        price: 1499,
-        originalPrice: 2999,
-        discount: 50,
-        rating: 4.8,
-        reviews: 2345,
-        badge: "ZERO WASTE",
-        isNew: false,
-        img: "https://images.unsplash.com/photo-1590874103328-eac38a683ce7?w=400&h=500&fit=crop&q=80&auto=format",
-        hoverImg: "https://images.unsplash.com/photo-1566150905458-1bf1fc113f0d?w=400&h=500&fit=crop&q=80&auto=format",
-        colors: ["#8B4513", "#F5F0E8"],
-        sizes: ["One Size"],
-      },
-    ],
-  }
+// Price filter buckets
+const PRICE_RANGES = [
+  { label: "Under ₹2,000", min: 0, max: 2000 },
+  { label: "₹2,000 – ₹5,000", min: 2000, max: 5000 },
+  { label: "₹5,000 – ₹10,000", min: 5000, max: 10000 },
+  { label: "Over ₹10,000", min: 10000, max: Infinity },
+];
+
+const SORT_OPTIONS = [
+  { value: "featured", label: "Featured" },
+  { value: "price_low", label: "Price: Low to High" },
+  { value: "price_high", label: "Price: High to Low" },
+  { value: "rating", label: "Top Rated" },
+  { value: "newest", label: "Newest First" },
+];
+
+// ─── Chip Component for Active Filters ─────────────────────────────────────────
+const Chip = ({ label, onRemove }) => (
+  <span className="inline-flex items-center gap-1 px-2.5 py-1 bg-white border border-gray-200 rounded-full text-[11px] text-gray-600 shadow-sm">
+    {label}
+    <button onClick={onRemove} className="hover:text-gray-900 ml-0.5">
+      <X size={9} />
+    </button>
+  </span>
+);
+
+// ─── Sort Dropdown ────────────────────────────────────────────────────────────
+const SortDropdown = ({ sortBy, setSortBy }) => {
+  const [open, setOpen] = useState(false);
+  const ref = useRef(null);
+
+  useEffect(() => {
+    const handler = (e) => { if (ref.current && !ref.current.contains(e.target)) setOpen(false); };
+    document.addEventListener("mousedown", handler);
+    return () => document.removeEventListener("mousedown", handler);
+  }, []);
+
+  return (
+    <div className="relative" ref={ref}>
+      <button onClick={() => setOpen(!open)}
+        className="flex items-center gap-1.5 px-3.5 py-2 bg-white border border-gray-200 hover:border-gray-300 rounded-full text-xs text-gray-600 shadow-sm transition-colors whitespace-nowrap">
+        <span className="hidden sm:inline text-gray-400">Sort:</span>
+        <span className="font-medium text-gray-700">{SORT_OPTIONS.find((o) => o.value === sortBy)?.label}</span>
+        <ChevronDown size={11} className={`text-gray-400 transition-transform duration-200 ${open ? "rotate-180" : ""}`} />
+      </button>
+      {open && (
+        <div className="absolute right-0 top-full mt-1.5 w-48 bg-white border border-gray-100 rounded-2xl overflow-hidden z-30 shadow-xl">
+          {SORT_OPTIONS.map((opt) => (
+            <button key={opt.value}
+              onClick={() => { setSortBy(opt.value); setOpen(false); }}
+              className={`w-full text-left px-4 py-2.5 text-xs transition-colors flex items-center justify-between ${sortBy === opt.value ? "text-white" : "text-gray-600 hover:bg-gray-50"}`}
+              style={sortBy === opt.value ? { backgroundColor: COFFEE } : {}}>
+              {opt.label}
+              {sortBy === opt.value && (
+                <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+                  <path d="M2 6L5 9L10 3" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+              )}
+            </button>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+};
+
+// ─── Filter Drawer ────────────────────────────────────────────────────────────
+const FilterDrawer = ({ selectedFilters, setSelectedFilters, onClose }) => {
+  const [local, setLocal] = useState({ ...selectedFilters });
+
+  const apply = () => { setSelectedFilters(local); onClose(); };
+  const reset = () => setLocal({ priceRange: null, minRating: null, inStockOnly: false, sortBy: "featured" });
+
+  const Radio = ({ checked, onClick }) => (
+    <span onClick={onClick}
+      className={`w-4 h-4 rounded-full border-2 flex items-center justify-center flex-shrink-0 cursor-pointer transition-all ${checked ? "border-black bg-black" : "border-gray-300 hover:border-gray-500"}`}>
+      {checked && <span className="w-1.5 h-1.5 rounded-full bg-white" />}
+    </span>
+  );
+
+  const Checkbox = ({ checked, onClick }) => (
+    <span onClick={onClick}
+      className={`w-4 h-4 rounded border-2 flex items-center justify-center flex-shrink-0 cursor-pointer transition-all ${checked ? "border-black bg-black" : "border-gray-300 hover:border-gray-500"}`}>
+      {checked && (
+        <svg width="8" height="6" viewBox="0 0 8 6" fill="none">
+          <path d="M1 3L3 5L7 1" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+        </svg>
+      )}
+    </span>
+  );
+
+  return (
+    <>
+      <div className="fixed inset-0 bg-black/40 backdrop-blur-sm z-50" onClick={onClose} />
+      <div className="fixed inset-y-0 right-0 w-full sm:w-80 bg-white border-l border-gray-100 z-50 flex flex-col shadow-2xl">
+        <div className="flex items-center justify-between px-5 py-4 border-b border-gray-100">
+          <h2 className="text-gray-800 font-semibold">Filters</h2>
+          <button onClick={onClose} className="p-1.5 rounded-full hover:bg-gray-100 transition-colors">
+            <X size={16} className="text-gray-400" />
+          </button>
+        </div>
+
+        <div className="flex-1 overflow-y-auto px-5 py-6 space-y-7">
+          <section>
+            <h3 className="text-[10px] text-gray-400 uppercase tracking-widest font-semibold mb-3">Price Range</h3>
+            <div className="space-y-2.5">
+              <label className="flex items-center gap-3 cursor-pointer">
+                <Radio checked={local.priceRange === null} onClick={() => setLocal({ ...local, priceRange: null })} />
+                <span className="text-sm text-gray-600">Any price</span>
+              </label>
+              {PRICE_RANGES.map((r) => (
+                <label key={r.label} className="flex items-center gap-3 cursor-pointer">
+                  <Radio checked={local.priceRange?.label === r.label} onClick={() => setLocal({ ...local, priceRange: r })} />
+                  <span className="text-sm text-gray-600">{r.label}</span>
+                </label>
+              ))}
+            </div>
+          </section>
+
+          <section>
+            <h3 className="text-[10px] text-gray-400 uppercase tracking-widest font-semibold mb-3">Rating</h3>
+            <div className="space-y-2.5">
+              <label className="flex items-center gap-3 cursor-pointer">
+                <Radio checked={local.minRating === null} onClick={() => setLocal({ ...local, minRating: null })} />
+                <span className="text-sm text-gray-600">Any rating</span>
+              </label>
+              {[4, 3, 2].map((v) => (
+                <label key={v} className="flex items-center gap-3 cursor-pointer">
+                  <Radio checked={local.minRating === v} onClick={() => setLocal({ ...local, minRating: v })} />
+                  <span className="text-sm text-gray-600 flex items-center gap-1">
+                    {v} <Star size={11} className="fill-amber-400 text-amber-400" /> &amp; above
+                  </span>
+                </label>
+              ))}
+            </div>
+          </section>
+
+          <section>
+            <h3 className="text-[10px] text-gray-400 uppercase tracking-widest font-semibold mb-3">Availability</h3>
+            <label className="flex items-center gap-3 cursor-pointer">
+              <Checkbox checked={local.inStockOnly} onClick={() => setLocal({ ...local, inStockOnly: !local.inStockOnly })} />
+              <span className="text-sm text-gray-600">In Stock Only</span>
+            </label>
+          </section>
+        </div>
+
+        <div className="px-5 py-4 border-t border-gray-100 flex gap-3">
+          <button onClick={reset} className="flex-1 py-2.5 rounded-2xl border border-gray-300 text-sm text-gray-600 hover:border-gray-500 transition-colors">
+            Reset
+          </button>
+          <button onClick={apply} className="flex-1 py-2.5 rounded-2xl text-sm font-semibold text-white transition-opacity hover:opacity-80" style={{ backgroundColor: COFFEE }}>
+            Apply
+          </button>
+        </div>
+      </div>
+    </>
+  );
 };
 
 // Star Rating Component
@@ -692,43 +265,350 @@ const StarRating = ({ rating }) => {
   const full = Math.floor(rating);
   const hasHalf = rating % 1 !== 0;
   const empty = 5 - Math.ceil(rating);
-  
+
   return (
     <div className="flex items-center gap-0.5" style={{ color: COFFEE }}>
       {Array.from({ length: full }).map((_, i) => (
-        <svg key={`f${i}`} width="12" height="12" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" strokeWidth={1.5}>
-          <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
-        </svg>
+        <Star key={`f${i}`} size={12} fill="currentColor" />
       ))}
       {hasHalf && (
-        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5}>
-          <defs>
-            <linearGradient id="halfGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-              <stop offset="50%" stopColor="currentColor" />
-              <stop offset="50%" stopColor="transparent" />
-            </linearGradient>
-          </defs>
-          <path fill="url(#halfGrad)" d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
-        </svg>
+        <div className="relative">
+          <Star size={12} className="text-gray-300" />
+          <div className="absolute inset-0 overflow-hidden w-1/2">
+            <Star size={12} fill={COFFEE} className="text-coffee" />
+          </div>
+        </div>
       )}
       {Array.from({ length: empty }).map((_, i) => (
-        <svg key={`e${i}`} width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5}>
-          <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
-        </svg>
+        <Star key={`e${i}`} size={12} className="text-gray-300" />
       ))}
     </div>
   );
 };
 
-// Product Card Component
-const ProductCard = ({ onClick, product, index }) => {
-  const [hovered, setHovered] = useState(false);
-  const [wishlisted, setWish] = useState(false);
-  const [addedCart, setCart] = useState(false);
-  const [visible, setVisible] = useState(false);
-  const ref = useRef(null);
+// ─── Variant Selection Modal ──────────────────────────────────────────────────
+const VariantSelectionModal = ({ isOpen, onClose, product, onConfirm, addingToCart }) => {
+  const [selectedVariant, setSelectedVariant] = useState(null);
+  const [selectedSize, setSelectedSize] = useState(null);
+  const [quantity, setQuantity] = useState(1);
+  const [productData, setProductData] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [stockError, setStockError] = useState(null);
 
+  useEffect(() => {
+    if (isOpen && product && product._id) {
+      fetchProductDetails();
+    }
+  }, [isOpen, product]);
+
+  const fetchProductDetails = async () => {
+    setLoading(true);
+    setStockError(null);
+    try {
+      const response = await axios.get(`${API_BASE_URL}/api/admin/products/${product._id}`);
+
+      if (response.data.success && response.data.product) {
+        const prod = response.data.product;
+        setProductData(prod);
+
+        if (prod.variants && prod.variants.length > 0) {
+          const firstVariant = prod.variants[0];
+          setSelectedVariant(firstVariant);
+          if (firstVariant.sizes && firstVariant.sizes.length > 0) {
+            setSelectedSize(firstVariant.sizes[0]);
+          }
+        }
+      }
+    } catch (error) {
+      console.error("Error fetching product details:", error);
+      setStockError("Failed to load product details");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleQuantityChange = (newQuantity) => {
+    if (newQuantity < 1) return;
+    if (selectedSize && newQuantity > selectedSize.stock) {
+      setStockError(`Only ${selectedSize.stock} items available in stock`);
+      return;
+    }
+    setStockError(null);
+    setQuantity(Math.min(newQuantity, selectedSize?.stock || 10));
+  };
+
+  const handleVariantSelect = (variant) => {
+    setSelectedVariant(variant);
+    if (variant.sizes && variant.sizes.length > 0) {
+      setSelectedSize(variant.sizes[0]);
+      setQuantity(1);
+      setStockError(null);
+    } else {
+      setSelectedSize(null);
+    }
+  };
+
+  const handleSizeSelect = (size) => {
+    setSelectedSize(size);
+    setQuantity(1);
+    setStockError(null);
+  };
+
+  const handleConfirm = () => {
+    if (!selectedVariant) {
+      alert("Please select a color/variant");
+      return;
+    }
+    if (selectedVariant.sizes && selectedVariant.sizes.length > 0 && !selectedSize) {
+      alert("Please select a size");
+      return;
+    }
+    if (selectedSize && quantity > selectedSize.stock) {
+      alert(`Only ${selectedSize.stock} items available in stock`);
+      return;
+    }
+
+    onConfirm({
+      variantId: selectedVariant._id,
+      sizeId: selectedSize?._id || null,
+      quantity: quantity,
+      variant: selectedVariant,
+      size: selectedSize,
+      price: selectedVariant.discountPrice || selectedVariant.price
+    });
+  };
+
+  const getPrice = () => {
+    if (selectedVariant) {
+      return selectedVariant.discountPrice || selectedVariant.price;
+    }
+    return product?.displayPrice || 0;
+  };
+
+  const getActualPrice = () => {
+    if (selectedVariant && selectedVariant.price) {
+      return selectedVariant.price;
+    }
+    return product?.displayActualPrice || 0;
+  };
+
+  const discountPercent = getActualPrice() > getPrice()
+    ? Math.round(((getActualPrice() - getPrice()) / getActualPrice()) * 100)
+    : 0;
+
+  if (!isOpen) return null;
+
+  return (
+    <div className="fixed inset-0 z-[999] flex items-center justify-center p-3 sm:p-4 bg-black/50 backdrop-blur-sm" onClick={onClose}>
+      <div className="relative w-full max-w-md max-h-[90vh] overflow-y-auto rounded-xl sm:rounded-2xl bg-white border border-gray-200 animate-scaleIn shadow-xl" onClick={e => e.stopPropagation()}>
+        <div className="sticky top-0 z-10 bg-white border-b border-gray-100 p-4 flex justify-between items-center">
+          <div>
+            <h2 className="text-lg font-bold text-gray-900">Select Options</h2>
+            <p className="text-xs text-gray-500 mt-0.5">{product?.name}</p>
+          </div>
+          <button onClick={onClose} className="p-1.5 rounded-lg hover:bg-gray-100 transition-colors">
+            <X size={18} className="text-gray-400" />
+          </button>
+        </div>
+
+        <div className="p-4 space-y-4">
+          {productData?.mainImages?.[0] && (
+            <div className="flex justify-center">
+              <img
+                src={normaliseUrl(productData.mainImages[0])}
+                alt={product?.name}
+                className="w-24 h-24 rounded-lg object-cover border border-gray-200"
+              />
+            </div>
+          )}
+
+          {loading ? (
+            <div className="flex justify-center py-8">
+              <Loader2 size={24} className="animate-spin text-black" />
+            </div>
+          ) : (
+            <>
+              {productData?.variants && productData.variants.length > 0 && (
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Select Color</label>
+                  <div className="flex flex-wrap gap-2">
+                    {productData.variants.map(variant => (
+                      <button
+                        key={variant._id}
+                        onClick={() => handleVariantSelect(variant)}
+                        className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${selectedVariant?._id === variant._id
+                            ? "bg-black text-white shadow-md"
+                            : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                          }`}
+                      >
+                        {variant.color}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {selectedVariant?.sizes && selectedVariant.sizes.length > 0 && (
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Select Size</label>
+                  <div className="flex flex-wrap gap-2">
+                    {selectedVariant.sizes.map(size => (
+                      <button
+                        key={size._id}
+                        onClick={() => handleSizeSelect(size)}
+                        disabled={size.stock === 0}
+                        className={`relative min-w-[52px] py-2 rounded-lg text-sm font-medium transition-all ${selectedSize?._id === size._id
+                            ? "bg-black text-white"
+                            : size.stock === 0
+                              ? "bg-gray-100 text-gray-400 cursor-not-allowed line-through"
+                              : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                          }`}
+                      >
+                        {size.size}
+                        {size.stock === 0 && (
+                          <span className="absolute -top-2 -right-2 text-[8px] bg-red-500 text-white px-1 rounded">
+                            OUT
+                          </span>
+                        )}
+                      </button>
+                    ))}
+                  </div>
+                  {selectedSize && selectedSize.stock > 0 && (
+                    <p className="text-xs text-green-600 mt-1 flex items-center gap-1">
+                      <CheckCircle size={10} />
+                      In Stock ({selectedSize.stock} available)
+                    </p>
+                  )}
+                </div>
+              )}
+
+              {selectedSize && selectedSize.stock > 0 && (
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Quantity</label>
+                  <div className="flex items-center gap-3">
+                    <button
+                      onClick={() => handleQuantityChange(quantity - 1)}
+                      className="w-8 h-8 rounded-lg bg-gray-100 text-gray-700 flex items-center justify-center hover:bg-gray-200"
+                    >
+                      -
+                    </button>
+                    <span className="w-12 text-center font-semibold">{quantity}</span>
+                    <button
+                      onClick={() => handleQuantityChange(quantity + 1)}
+                      className="w-8 h-8 rounded-lg bg-gray-100 text-gray-700 flex items-center justify-center hover:bg-gray-200"
+                    >
+                      +
+                    </button>
+                    <span className="text-xs text-gray-400">Max {selectedSize.stock}</span>
+                  </div>
+                  {stockError && (
+                    <p className="text-xs text-red-500 mt-1">{stockError}</p>
+                  )}
+                </div>
+              )}
+
+              <div className="bg-gray-50 rounded-lg p-3">
+                <div className="flex justify-between items-center">
+                  <span className="text-sm text-gray-600">Price:</span>
+                  <div className="text-right">
+                    <span className="font-bold text-black text-lg">
+                      {toINR(getPrice())}
+                    </span>
+                    {getActualPrice() > getPrice() && (
+                      <span className="text-xs text-gray-400 line-through ml-2">
+                        {toINR(getActualPrice())}
+                      </span>
+                    )}
+                  </div>
+                </div>
+                {discountPercent > 0 && (
+                  <div className="flex justify-between items-center mt-1">
+                    <span className="text-xs text-gray-500">Discount:</span>
+                    <span className="text-xs text-green-600 font-medium">
+                      {discountPercent}% off
+                    </span>
+                  </div>
+                )}
+                <div className="flex justify-between items-center mt-2 pt-2 border-t border-gray-200">
+                  <span className="text-sm font-semibold text-gray-900">Total:</span>
+                  <span className="text-xl font-bold text-black">
+                    {toINR(getPrice() * quantity)}
+                  </span>
+                </div>
+              </div>
+            </>
+          )}
+        </div>
+
+        <div className="sticky bottom-0 bg-white border-t border-gray-100 p-4 flex flex-col sm:flex-row gap-3">
+          <button
+            onClick={onClose}
+            className="flex-1 px-4 py-2.5 rounded-lg bg-gray-100 text-gray-700 font-medium text-sm hover:bg-gray-200 transition-colors"
+          >
+            Cancel
+          </button>
+          <button
+            onClick={handleConfirm}
+            disabled={addingToCart || loading || (selectedSize && selectedSize.stock === 0)}
+            className="flex-1 px-4 py-2.5 rounded-lg bg-black text-white font-semibold text-sm hover:bg-gray-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+            style={{ backgroundColor: COFFEE }}
+          >
+            {addingToCart ? <Loader2 size={16} className="animate-spin" /> : <ShoppingBag size={16} />}
+            {addingToCart ? "Adding..." : "Add to Cart"}
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// Product Card Component with Wishlist & Add to Cart
+const ProductCard = ({ product, index, wishlist, onWishlistToggle, onAddToCart }) => {
+  const [hovered, setHovered] = useState(false);
+  const [visible, setVisible] = useState(false);
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const ref = useRef(null);
   const navigate = useNavigate();
+
+  // Get product images
+  const getProductImages = () => {
+    const images = [];
+    if (product.mainImages && product.mainImages.length > 0) {
+      product.mainImages.forEach(img => images.push(normaliseUrl(img)));
+    }
+    if (product.variants && product.variants.length > 0) {
+      product.variants.forEach(variant => {
+        if (variant.images && variant.images.length > 0) {
+          variant.images.forEach(img => images.push(normaliseUrl(img)));
+        }
+      });
+    }
+    if (images.length === 0) {
+      images.push("https://placehold.co/600x800/e5e7eb/64748b?text=No+Image");
+    }
+    return [...new Set(images)];
+  };
+
+  const images = getProductImages();
+  const displayPrice = product.displayPrice || product.variants?.[0]?.discountPrice || product.variants?.[0]?.price || 0;
+  const originalPrice = product.displayActualPrice || product.variants?.[0]?.price || 0;
+  const discount = originalPrice > displayPrice ? Math.round(((originalPrice - displayPrice) / originalPrice) * 100) : 0;
+  const productName = product.name || "Product";
+  const productBrand = product.subcategoryName || "Brubla";
+  const rating = product.averageRating || 4.5;
+  const reviewCount = product.reviews?.length || 0;
+  const isNew = product.tags?.includes("new") || false;
+  const inStock = (product.totalStock ?? 1) > 0;
+  const isWishlisted = wishlist.includes(product._id);
+
+  // Auto-rotate images
+  useEffect(() => {
+    if (images.length <= 1) return;
+    const interval = setInterval(() => {
+      setCurrentImageIndex((prev) => (prev + 1) % images.length);
+    }, 3000);
+    return () => clearInterval(interval);
+  }, [images]);
 
   useEffect(() => {
     const el = ref.current;
@@ -741,18 +621,19 @@ const ProductCard = ({ onClick, product, index }) => {
     return () => obs.disconnect();
   }, []);
 
-  const handleCart = (e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    setCart(true);
-    setTimeout(() => setCart(false), 1800);
-  };
-
   const handleWishlist = (e) => {
     e.preventDefault();
     e.stopPropagation();
-    setWish(!wishlisted);
+    onWishlistToggle(product._id);
   };
+
+  const handleAddToCart = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    onAddToCart(product);
+  };
+
+  const currentImage = images[currentImageIndex] || images[0];
 
   return (
     <div
@@ -765,396 +646,160 @@ const ProductCard = ({ onClick, product, index }) => {
       }}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
-      onClick={onClick}
+      onClick={() => navigate(`/product/${product._id}`)}
     >
       <div className="relative rounded-xl overflow-hidden bg-white shadow-md hover:shadow-xl transition-all duration-300">
         {/* Image Container */}
         <div className="relative aspect-[3/4] overflow-hidden bg-gray-100">
           <img
-            src={product.img}
-            alt={product.name}
-            className="absolute inset-0 w-full h-full object-cover object-top transition-all duration-500"
+            src={currentImage}
+            alt={productName}
+            className="w-full h-full object-cover object-top transition-transform duration-700"
             style={{
-              opacity: hovered ? 0 : 1,
               transform: hovered ? "scale(1.05)" : "scale(1)",
             }}
             loading="lazy"
           />
-          <img
-            src={product.hoverImg}
-            alt={`${product.name} hover`}
-            className="absolute inset-0 w-full h-full object-cover object-top transition-all duration-500"
-            style={{
-              opacity: hovered ? 1 : 0,
-              transform: hovered ? "scale(1)" : "scale(1.05)",
-            }}
-            loading="lazy"
-          />
 
-          {/* Badge */}
-          <div className="absolute top-2 left-2 z-10">
-            <span
-              className="text-[8px] sm:text-[9px] font-black uppercase tracking-wider px-1.5 py-0.5 sm:px-2 sm:py-1 bg-black text-white rounded"
-            >
-              {product.badge}
-            </span>
-          </div>
+          {/* Image Dots */}
+          {images.length > 1 && (
+            <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-1.5 z-10">
+              {images.map((_, idx) => (
+                <span
+                  key={idx}
+                  className={`rounded-full transition-all duration-300 ${idx === currentImageIndex ? "w-4 h-1.5 bg-white" : "w-1.5 h-1.5 bg-white/60"
+                    }`}
+                />
+              ))}
+            </div>
+          )}
 
-          {/* Discount */}
-          <div className="absolute top-2 right-2 z-10">
-            <span
-              className="text-[8px] sm:text-[9px] font-black px-1 py-0.5 sm:px-1.5 sm:py-0.5 bg-coffee text-white rounded"
-              style={{ backgroundColor: COFFEE }}
-            >
-              {product.discount}% OFF
-            </span>
+          {/* Badges */}
+          <div className="absolute top-2 left-2 z-10 flex flex-col gap-1.5">
+            {isNew && (
+              <span className="text-[8px] sm:text-[9px] font-black uppercase tracking-wider px-1.5 py-0.5 sm:px-2 sm:py-1 bg-black text-white rounded">
+                NEW
+              </span>
+            )}
+            {discount > 0 && (
+              <span className="text-[8px] sm:text-[9px] font-black px-1 py-0.5 sm:px-1.5 sm:py-0.5 text-white rounded" style={{ backgroundColor: COFFEE }}>
+                {discount}% OFF
+              </span>
+            )}
           </div>
 
           {/* Wishlist Button */}
           <button
             onClick={handleWishlist}
-            className="absolute z-20 flex items-center justify-center transition-all duration-300 rounded-full bg-white shadow-md"
-            style={{
-              top: hovered ? "8px" : "6px",
-              right: "6px",
-              width: "28px",
-              height: "28px",
-              color: wishlisted ? "#e85d4a" : "#0C0C0C",
-            }}
+            className={`absolute top-2 right-2 z-20 flex items-center justify-center transition-all duration-300 rounded-full bg-white/85 hover:bg-white shadow-md w-7 h-7`}
           >
-            <svg width="13" height="13" viewBox="0 0 24 24" fill={wishlisted ? "currentColor" : "none"} stroke="currentColor" strokeWidth={2}>
-              <path d="M4.318 6.318a4.5 4.5 0 016.364 0L12 7.636l1.318-1.318a4.5 4.5 0 116.364 6.364L12 21.364 4.318 12.682a4.5 4.5 0 010-6.364z" />
-            </svg>
+            <Heart size={16} className={isWishlisted ? "fill-red-500 text-red-500" : "text-gray-600"} />
           </button>
 
-          {/* Quick View */}
-          <button
-            className="absolute bottom-0 left-0 right-0 z-20 flex items-center justify-center gap-1.5 transition-all duration-300 bg-black/85 text-white"
-            style={{
-              height: "34px",
-              fontSize: "9px",
-              fontWeight: 700,
-              letterSpacing: "0.08em",
-              transform: hovered ? "translateY(0)" : "translateY(100%)",
-            }}
-            onClick={() => navigate(`/product/${product.id}`)}
-          >
-            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
-              <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
-              <circle cx="12" cy="12" r="3" />
-            </svg>
-            QUICK VIEW
-          </button>
+          {/* Add to Cart Button (appears on hover) */}
+          {inStock && (
+            <button
+              onClick={handleAddToCart}
+              className="absolute bottom-0 left-0 right-0 z-20 flex items-center justify-center gap-1.5 transition-all duration-300 bg-black/85 text-white"
+              style={{
+                height: "36px",
+                fontSize: "10px",
+                fontWeight: 700,
+                letterSpacing: "0.08em",
+                transform: hovered ? "translateY(0)" : "translateY(100%)",
+                backgroundColor: COFFEE,
+              }}
+            >
+              <ShoppingBag size={12} />
+              ADD TO CART
+            </button>
+          )}
+
+          {!inStock && (
+            <div className="absolute inset-0 bg-white/75 flex items-center justify-center">
+              <span className="text-[10px] font-semibold text-gray-500 bg-white px-3 py-1 rounded-full border border-gray-200">
+                Out of Stock
+              </span>
+            </div>
+          )}
         </div>
 
         {/* Product Info */}
         <div className="p-2.5 sm:p-3">
           <p className="text-[8px] sm:text-[9px] font-bold uppercase tracking-wider mb-0.5 text-gray-500">
-            {product.brand}
+            {productBrand}
           </p>
-          <h3 className="font-bold text-gray-800 text-xs sm:text-sm mb-1 line-clamp-1">{product.name}</h3>
-          
+          <h3 className="font-bold text-gray-800 text-xs sm:text-sm mb-1 line-clamp-1">{productName}</h3>
+
           <div className="flex items-center justify-between mt-1.5 sm:mt-2">
             <div className="flex items-center gap-0.5 sm:gap-1">
-              <StarRating rating={product.rating} />
-              <span className="text-[8px] sm:text-[9px] font-semibold text-gray-500">({product.reviews})</span>
-            </div>
-            <button
-              onClick={handleCart}
-              className="flex items-center justify-center transition-all duration-300 active:scale-95 rounded-lg"
-              style={{
-                width: "28px",
-                height: "28px",
-                background: addedCart ? "#6fcf97" : "#000",
-                color: "#fff",
-              }}
-            >
-              {addedCart ? (
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}>
-                  <path d="M5 13l4 4L19 7" />
-                </svg>
-              ) : (
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
-                  <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z" />
-                  <line x1="3" y1="6" x2="21" y2="6" />
-                  <path d="M16 10a4 4 0 01-8 0" />
-                </svg>
+              <StarRating rating={rating} />
+              {reviewCount > 0 && (
+                <span className="text-[8px] sm:text-[9px] font-semibold text-gray-500">({reviewCount})</span>
               )}
-            </button>
+            </div>
           </div>
-          
+
           <div className="flex items-baseline gap-1.5 sm:gap-2 mt-1.5 sm:mt-2">
-            <span className="font-black text-gray-900 text-sm sm:text-base">₹{product.price.toLocaleString()}</span>
-            <span className="text-[9px] sm:text-[10px] line-through text-gray-400">₹{product.originalPrice.toLocaleString()}</span>
+            <span className="font-black text-gray-900 text-sm sm:text-base">{toINR(displayPrice)}</span>
+            {originalPrice > displayPrice && (
+              <span className="text-[9px] sm:text-[10px] line-through text-gray-400">{toINR(originalPrice)}</span>
+            )}
           </div>
+
+          {/* Available Colors */}
+          {product.availableColors?.length > 0 && (
+            <div className="flex items-center gap-1 mt-2">
+              {product.availableColors.slice(0, 5).map((c) => {
+                const lower = c.toLowerCase();
+                const bg = lower === "white" ? "#f3f4f6"
+                  : lower === "black" ? "#111"
+                    : lower === "red" ? "#ef4444"
+                      : lower === "blue" ? "#3b82f6"
+                        : lower === "green" ? "#22c55e"
+                          : "#d1d5db";
+                return (
+                  <span key={c} title={c}
+                    className="w-3 h-3 rounded-full border border-gray-200"
+                    style={{ backgroundColor: bg }} />
+                );
+              })}
+              {product.availableColors.length > 5 && (
+                <span className="text-[8px] text-gray-400">+{product.availableColors.length - 5}</span>
+              )}
+            </div>
+          )}
         </div>
       </div>
     </div>
   );
 };
 
-// Filter Sidebar Component (Mobile Drawer)
-const MobileFilterDrawer = ({ filters, onFilterChange, onClose, isOpen }) => {
-  const [priceRange, setPriceRange] = useState([filters.priceRange[0], filters.priceRange[1]]);
-  const [selectedSizes, setSelectedSizes] = useState(filters.sizes);
-  const [sortBy, setSortBy] = useState(filters.sortBy);
-
-  const sizes = ["XS", "S", "M", "L", "XL", "XXL", "28", "30", "32", "34", "36", "One Size", "Free Size"];
-  const sortOptions = [
-    { value: "featured", label: "Featured" },
-    { value: "price-low", label: "Price: Low to High" },
-    { value: "price-high", label: "Price: High to Low" },
-    { value: "rating", label: "Top Rated" },
-    { value: "newest", label: "Newest First" },
-  ];
-
-  const handleSizeToggle = (size) => {
-    setSelectedSizes(prev =>
-      prev.includes(size) ? prev.filter(s => s !== size) : [...prev, size]
-    );
-  };
-
-  const applyFilters = () => {
-    onFilterChange({ priceRange, sizes: selectedSizes, sortBy });
-    onClose();
-  };
-
-  const resetFilters = () => {
-    setPriceRange([0, 50000]);
-    setSelectedSizes([]);
-    setSortBy("featured");
-    onFilterChange({ priceRange: [0, 50000], sizes: [], sortBy: "featured" });
-  };
-
-  return (
-    <>
-      {/* Overlay */}
-      {isOpen && (
-        <div className="fixed inset-0 bg-black/60 z-40 lg:hidden" onClick={onClose} />
-      )}
-      
-      <div className={`
-        fixed top-0 right-0 h-full w-80 bg-white shadow-2xl z-50 transition-transform duration-300 lg:hidden
-        ${isOpen ? "translate-x-0" : "translate-x-full"}
-      `}>
-        <div className="p-4 sm:p-5 h-full overflow-y-auto">
-          <div className="flex items-center justify-between mb-4">
-            <h3 className="font-bold text-gray-900 text-lg">Filters</h3>
-            <button onClick={onClose} className="p-1.5 rounded-lg hover:bg-gray-100">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
-                <path d="M18 6L6 18M6 6l12 12" />
-              </svg>
-            </button>
-          </div>
-
-          {/* Sort By */}
-          <div className="mb-5">
-            <h4 className="font-semibold text-gray-800 text-sm mb-2.5">Sort By</h4>
-            <div className="space-y-1.5">
-              {sortOptions.map(option => (
-                <label key={option.value} className="flex items-center gap-2 cursor-pointer">
-                  <input
-                    type="radio"
-                    name="sort"
-                    value={option.value}
-                    checked={sortBy === option.value}
-                    onChange={(e) => setSortBy(e.target.value)}
-                    className="w-3.5 h-3.5"
-                    style={{ accentColor: COFFEE }}
-                  />
-                  <span className="text-sm text-gray-600">{option.label}</span>
-                </label>
-              ))}
-            </div>
-          </div>
-
-          {/* Price Range */}
-          <div className="mb-5">
-            <h4 className="font-semibold text-gray-800 text-sm mb-2.5">Price Range</h4>
-            <div className="flex items-center gap-2">
-              <input
-                type="number"
-                value={priceRange[0]}
-                onChange={(e) => setPriceRange([Number(e.target.value), priceRange[1]])}
-                className="w-full px-3 py-1.5 text-sm border border-gray-300 rounded-lg focus:outline-none focus:border-coffee"
-                placeholder="Min"
-                style={{ borderColor: priceRange[0] ? COFFEE : undefined }}
-              />
-              <span className="text-gray-400">-</span>
-              <input
-                type="number"
-                value={priceRange[1]}
-                onChange={(e) => setPriceRange([priceRange[0], Number(e.target.value)])}
-                className="w-full px-3 py-1.5 text-sm border border-gray-300 rounded-lg focus:outline-none focus:border-coffee"
-                placeholder="Max"
-                style={{ borderColor: priceRange[1] < 50000 ? COFFEE : undefined }}
-              />
-            </div>
-          </div>
-
-          {/* Sizes */}
-          <div className="mb-5">
-            <h4 className="font-semibold text-gray-800 text-sm mb-2.5">Size</h4>
-            <div className="flex flex-wrap gap-1.5">
-              {sizes.map(size => (
-                <button
-                  key={size}
-                  onClick={() => handleSizeToggle(size)}
-                  className={`px-2 py-1 text-[11px] rounded-md transition-all ${
-                    selectedSizes.includes(size)
-                      ? "text-white"
-                      : "bg-gray-100 text-gray-600 hover:bg-gray-200"
-                  }`}
-                  style={selectedSizes.includes(size) ? { backgroundColor: COFFEE } : {}}
-                >
-                  {size}
-                </button>
-              ))}
-            </div>
-          </div>
-
-          {/* Action Buttons */}
-          <div className="flex gap-3 pt-4 border-t border-gray-200">
-            <button
-              onClick={resetFilters}
-              className="flex-1 py-2 text-sm font-medium text-gray-600 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
-            >
-              Reset
-            </button>
-            <button
-              onClick={applyFilters}
-              className="flex-1 py-2 text-sm font-medium text-white rounded-lg transition-colors bg-black hover:bg-gray-800"
-            >
-              Apply
-            </button>
-          </div>
-        </div>
-      </div>
-    </>
-  );
-};
-
-// Desktop Filter Sidebar Component
-const DesktopFilterSidebar = ({ filters, onFilterChange }) => {
-  const [priceRange, setPriceRange] = useState([filters.priceRange[0], filters.priceRange[1]]);
-  const [selectedSizes, setSelectedSizes] = useState(filters.sizes);
-  const [sortBy, setSortBy] = useState(filters.sortBy);
-
-  const sizes = ["XS", "S", "M", "L", "XL", "XXL", "28", "30", "32", "34", "36", "One Size", "Free Size"];
-  const sortOptions = [
-    { value: "featured", label: "Featured" },
-    { value: "price-low", label: "Price: Low to High" },
-    { value: "price-high", label: "Price: High to Low" },
-    { value: "rating", label: "Top Rated" },
-    { value: "newest", label: "Newest First" },
-  ];
-
-  const handleSizeToggle = (size) => {
-    const newSizes = selectedSizes.includes(size)
-      ? selectedSizes.filter(s => s !== size)
-      : [...selectedSizes, size];
-    setSelectedSizes(newSizes);
-    onFilterChange({ priceRange, sizes: newSizes, sortBy });
-  };
-
-  const handlePriceChange = (newRange) => {
-    setPriceRange(newRange);
-    onFilterChange({ priceRange: newRange, sizes: selectedSizes, sortBy });
-  };
-
-  const handleSortChange = (newSort) => {
-    setSortBy(newSort);
-    onFilterChange({ priceRange, sizes: selectedSizes, sortBy: newSort });
-  };
-
-  const resetFilters = () => {
-    setPriceRange([0, 50000]);
-    setSelectedSizes([]);
-    setSortBy("featured");
-    onFilterChange({ priceRange: [0, 50000], sizes: [], sortBy: "featured" });
-  };
-
-  return (
-    <div className="w-64 flex-shrink-0">
-      <div className="sticky top-24">
-        <div className="flex items-center justify-between mb-4">
-          <h3 className="font-bold text-gray-800 text-base">Filters</h3>
-          <button
-            onClick={resetFilters}
-            className="text-xs text-gray-500 hover:text-coffee transition-colors"
-            style={{ color: COFFEE }}
-          >
-            Reset all
-          </button>
-        </div>
-
-        {/* Sort By */}
-        <div className="mb-6 pb-4 border-b border-gray-200">
-          <h4 className="font-semibold text-gray-700 text-sm mb-3">Sort By</h4>
-          <div className="space-y-2">
-            {sortOptions.map(option => (
-              <label key={option.value} className="flex items-center gap-2 cursor-pointer">
-                <input
-                  type="radio"
-                  name="sort-desktop"
-                  value={option.value}
-                  checked={sortBy === option.value}
-                  onChange={(e) => handleSortChange(e.target.value)}
-                  className="w-3.5 h-3.5"
-                  style={{ accentColor: COFFEE }}
-                />
-                <span className="text-sm text-gray-600">{option.label}</span>
-              </label>
-            ))}
-          </div>
-        </div>
-
-        {/* Price Range */}
-        <div className="mb-6 pb-4 border-b border-gray-200">
-          <h4 className="font-semibold text-gray-700 text-sm mb-3">Price Range</h4>
-          <div className="flex items-center gap-2">
-            <input
-              type="number"
-              value={priceRange[0]}
-              onChange={(e) => handlePriceChange([Number(e.target.value), priceRange[1]])}
-              className="w-full px-3 py-1.5 text-sm border border-gray-300 rounded-lg focus:outline-none focus:border-coffee"
-              placeholder="Min"
-            />
-            <span className="text-gray-400">-</span>
-            <input
-              type="number"
-              value={priceRange[1]}
-              onChange={(e) => handlePriceChange([priceRange[0], Number(e.target.value)])}
-              className="w-full px-3 py-1.5 text-sm border border-gray-300 rounded-lg focus:outline-none focus:border-coffee"
-              placeholder="Max"
-            />
-          </div>
-        </div>
-
-        {/* Sizes */}
-        <div className="mb-6">
-          <h4 className="font-semibold text-gray-700 text-sm mb-3">Size</h4>
-          <div className="flex flex-wrap gap-1.5">
-            {sizes.map(size => (
-              <button
-                key={size}
-                onClick={() => handleSizeToggle(size)}
-                className={`px-2 py-1 text-[11px] rounded-md transition-all ${
-                  selectedSizes.includes(size)
-                    ? "text-white"
-                    : "bg-gray-100 text-gray-600 hover:bg-gray-200"
-                }`}
-                style={selectedSizes.includes(size) ? { backgroundColor: COFFEE } : {}}
-              >
-                {size}
-              </button>
+// Loading Skeleton
+const LoadingSkeleton = () => (
+  <>
+    <Header />
+    <div className="min-h-screen bg-gray-50">
+      <div className="animate-pulse">
+        <div className="h-64 bg-gray-300"></div>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 sm:gap-4">
+            {[1, 2, 3, 4, 5, 6, 7, 8].map((i) => (
+              <div key={i} className="bg-white rounded-xl overflow-hidden border border-gray-100">
+                <div className="bg-gray-100 aspect-[3/4]" />
+                <div className="p-3 space-y-2">
+                  <div className="h-2 bg-gray-100 rounded w-1/2" />
+                  <div className="h-3 bg-gray-100 rounded w-3/4" />
+                  <div className="h-2 bg-gray-100 rounded w-1/3" />
+                </div>
+              </div>
             ))}
           </div>
         </div>
       </div>
     </div>
-  );
-};
+  </>
+);
 
 // Main Component
 export default function SingleCollectionProducts() {
@@ -1162,101 +807,218 @@ export default function SingleCollectionProducts() {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
   const [collection, setCollection] = useState(null);
+  const [products, setProducts] = useState([]);
   const [filteredProducts, setFilteredProducts] = useState([]);
-  const [isFilterOpen, setIsFilterOpen] = useState(false);
-  const [filters, setFilters] = useState({
-    priceRange: [0, 50000],
-    sizes: [],
-    sortBy: "featured"
-  });
   const [searchQuery, setSearchQuery] = useState("");
+  const [sortBy, setSortBy] = useState("featured");
+  const [isFilterOpen, setIsFilterOpen] = useState(false);
+  const [selectedFilters, setSelectedFilters] = useState({ priceRange: null, minRating: null, inStockOnly: false });
+  const [wishlist, setWishlist] = useState([]);
+  const [showVariantModal, setShowVariantModal] = useState(false);
+  const [selectedProduct, setSelectedProduct] = useState(null);
+  const [addingToCart, setAddingToCart] = useState(false);
+  const [toast, setToast] = useState(null);
 
+  const userId = getUserId();
+
+  // Show toast message
+  const showToast = (message, type) => {
+    setToast({ message, type });
+    setTimeout(() => setToast(null), 3000);
+  };
+
+  // Fetch collection from API
   useEffect(() => {
-    const loadCollection = async () => {
-      setLoading(true);
-      await new Promise(resolve => setTimeout(resolve, 500));
-      
-      const collectionData = COLLECTION_PRODUCTS[id];
-      if (collectionData) {
-        setCollection(collectionData);
-        setFilteredProducts(collectionData.products);
-      } else {
+    const fetchCollection = async () => {
+      try {
+        setLoading(true);
+        const response = await fetch(`${API_BASE_URL}/api/users/collections/${id}`);
+
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const result = await response.json();
+
+        if (result.success && result.data) {
+          const collectionData = result.data;
+          setCollection({
+            id: collectionData._id,
+            title: collectionData.title,
+            tag: collectionData.tag,
+            description: collectionData.description,
+            image: collectionData.image,
+            products: collectionData.products || [],
+            subtitle: collectionData.tag === "summer" ? "SUMMER ESSENTIALS" :
+              collectionData.tag === "winter" ? "WINTER COLLECTION" : "NEW ARRIVALS",
+          });
+          setProducts(collectionData.products || []);
+          setFilteredProducts(collectionData.products || []);
+        } else {
+          navigate("/collections");
+        }
+      } catch (err) {
+        console.error('Error fetching collection:', err);
         navigate("/collections");
+      } finally {
+        setLoading(false);
       }
-      setLoading(false);
     };
-    loadCollection();
+
+    if (id) {
+      fetchCollection();
+    }
   }, [id, navigate]);
 
-  // Apply filters and search
+  // Fetch wishlist
   useEffect(() => {
-    if (!collection) return;
+    const fetchWishlist = async () => {
+      if (!userId) return;
+      try {
+        const res = await axios.get(`${API_BASE_URL}/api/users/${userId}`);
+        if (res.data.success) {
+          setWishlist((res.data.user.wishlist || []).map((item) => item.productId));
+          console.log("Wishlist fetched:", res.data.user.wishlist);
+        }
+      } catch (err) {
+        console.log("Wishlist fetch error", err);
+      }
+    };
+    fetchWishlist();
+  }, [userId]);
 
-    let products = [...collection.products];
+  // Toggle wishlist
+  const toggleWishlist = useCallback(async (productId) => {
+    if (!userId) {
+      showToast("Please login to add to wishlist", "error");
+      return;
+    }
+    try {
+      const wasInWishlist = wishlist.includes(productId);
+      setWishlist((prev) =>
+        prev.includes(productId) ? prev.filter((x) => x !== productId) : [...prev, productId]
+      );
+      await axios.post(`${API_BASE_URL}/api/users/wishlist/${userId}/toggle`, { productId });
+      showToast(wasInWishlist ? "Removed from wishlist" : "Added to wishlist", "success");
+    } catch (err) {
+      console.log("Wishlist update error", err);
+      showToast("Failed to update wishlist", "error");
+    }
+  }, [userId, wishlist]);
+
+  // Add to cart with variant selection
+  const handleAddToCart = (product) => {
+    if (!userId) {
+      showToast("Please login to add to cart", "error");
+      return;
+    }
+    setSelectedProduct(product);
+    setShowVariantModal(true);
+  };
+
+  const addToCartWithVariant = async (product, variantData) => {
+    if (!userId) return;
+
+    setAddingToCart(true);
+    try {
+      const response = await axios.post(`${API_BASE_URL}/api/users/cart/${userId}/add`, {
+        productId: product._id,
+        variantId: variantData.variantId,
+        sizeId: variantData.sizeId,
+        quantity: variantData.quantity
+      });
+
+      if (response.data.success) {
+        showToast(`Added ${variantData.quantity} item(s) to cart!`, "success");
+        setShowVariantModal(false);
+      } else {
+        showToast(response.data.message || "Failed to add to cart", "error");
+      }
+    } catch (err) {
+      console.error("Error adding to cart:", err);
+      showToast(err.response?.data?.message || "Failed to add to cart", "error");
+    } finally {
+      setAddingToCart(false);
+    }
+  };
+
+  // Apply filters, search, and sort
+  useEffect(() => {
+    if (!products.length) return;
+
+    let filtered = [...products];
 
     // Search filter
     if (searchQuery.trim()) {
       const query = searchQuery.toLowerCase();
-      products = products.filter(p =>
-        p.name.toLowerCase().includes(query) ||
-        p.brand.toLowerCase().includes(query)
+      filtered = filtered.filter(p =>
+        p.name.toLowerCase().includes(query)
       );
     }
 
     // Price filter
-    products = products.filter(p =>
-      p.price >= filters.priceRange[0] && p.price <= filters.priceRange[1]
-    );
+    if (selectedFilters.priceRange) {
+      const { min, max } = selectedFilters.priceRange;
+      filtered = filtered.filter(p => {
+        const price = (p.displayPrice || p.variants?.[0]?.discountPrice || p.variants?.[0]?.price || 0) * 83;
+        return price >= min && price <= max;
+      });
+    }
 
-    // Size filter
-    if (filters.sizes.length > 0) {
-      products = products.filter(p =>
-        p.sizes.some(size => filters.sizes.includes(size))
-      );
+    // Rating filter
+    if (selectedFilters.minRating !== null) {
+      filtered = filtered.filter(p => (p.averageRating || 0) >= selectedFilters.minRating);
+    }
+
+    // In stock filter
+    if (selectedFilters.inStockOnly) {
+      filtered = filtered.filter(p => (p.totalStock ?? 1) > 0);
     }
 
     // Sort
-    switch (filters.sortBy) {
-      case "price-low":
-        products.sort((a, b) => a.price - b.price);
+    switch (sortBy) {
+      case "price_low":
+        filtered.sort((a, b) => {
+          const priceA = a.displayPrice || a.variants?.[0]?.discountPrice || a.variants?.[0]?.price || 0;
+          const priceB = b.displayPrice || b.variants?.[0]?.discountPrice || b.variants?.[0]?.price || 0;
+          return priceA - priceB;
+        });
         break;
-      case "price-high":
-        products.sort((a, b) => b.price - a.price);
+      case "price_high":
+        filtered.sort((a, b) => {
+          const priceA = a.displayPrice || a.variants?.[0]?.discountPrice || a.variants?.[0]?.price || 0;
+          const priceB = b.displayPrice || b.variants?.[0]?.discountPrice || b.variants?.[0]?.price || 0;
+          return priceB - priceA;
+        });
         break;
       case "rating":
-        products.sort((a, b) => b.rating - a.rating);
+        filtered.sort((a, b) => (b.averageRating || 0) - (a.averageRating || 0));
         break;
       case "newest":
-        products.sort((a, b) => (b.isNew ? 1 : 0) - (a.isNew ? 1 : 0));
+        filtered.sort((a, b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0));
         break;
       default:
-        products.sort((a, b) => b.id - a.id);
+        // featured - keep original order
+        break;
     }
 
-    setFilteredProducts(products);
-  }, [collection, searchQuery, filters]);
-
-  const handleFilterChange = (newFilters) => {
-    setFilters(newFilters);
-  };
+    setFilteredProducts(filtered);
+  }, [products, searchQuery, sortBy, selectedFilters]);
 
   const clearAllFilters = () => {
     setSearchQuery("");
-    setFilters({ priceRange: [0, 50000], sizes: [], sortBy: "featured" });
+    setSortBy("featured");
+    setSelectedFilters({ priceRange: null, minRating: null, inStockOnly: false });
   };
 
+  const activeFilterCount = [
+    selectedFilters.priceRange,
+    selectedFilters.minRating,
+    selectedFilters.inStockOnly
+  ].filter(Boolean).length + (searchQuery ? 1 : 0);
+
   if (loading) {
-    return (
-      <>
-        <Header />
-        <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-          <div className="text-center px-4">
-            <div className="w-10 h-10 rounded-full border-2 border-coffee border-t-transparent animate-spin mx-auto mb-3" style={{ borderColor: `${COFFEE} transparent ${COFFEE} transparent` }} />
-            <p className="text-gray-500 fs text-sm">Loading products...</p>
-          </div>
-        </div>
-      </>
-    );
+    return <LoadingSkeleton />;
   }
 
   if (!collection) return null;
@@ -1268,9 +1030,9 @@ export default function SingleCollectionProducts() {
         <Styles />
 
         {/* Hero Section with Background Image */}
-        <div 
+        <div
           className="relative overflow-hidden bg-cover bg-center bg-no-repeat"
-          style={{ backgroundImage: `linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.5)), url(${collection.bgImage})` }}
+          style={{ backgroundImage: `linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.5)), url(${collection.image})` }}
         >
           <div className="absolute inset-0 bg-black/30" />
           <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 md:py-20">
@@ -1285,10 +1047,10 @@ export default function SingleCollectionProducts() {
             </button>
 
             <div className="text-center">
-              <p className="text-[9px] sm:text-[10px] font-black uppercase tracking-[0.2em] text-coffee mb-2" style={{ color: COFFEE }}>
+              <p className="text-[9px] sm:text-[10px] font-black uppercase tracking-[0.2em] mb-2" style={{ color: COFFEE }}>
                 {collection.subtitle}
               </p>
-              <h1 
+              <h1
                 className="fd font-black text-white px-2"
                 style={{ fontSize: "clamp(28px, 8vw, 52px)" }}
               >
@@ -1299,7 +1061,7 @@ export default function SingleCollectionProducts() {
               </p>
               <div className="flex justify-center gap-6 mt-5 sm:mt-6">
                 <div>
-                  <p className="text-xl sm:text-2xl font-black text-coffee" style={{ color: COFFEE }}>{collection.products.length}</p>
+                  <p className="text-xl sm:text-2xl font-black" style={{ color: COFFEE }}>{products.length}</p>
                   <p className="text-[8px] sm:text-[9px] font-bold uppercase tracking-wide text-white/70">Products</p>
                 </div>
               </div>
@@ -1330,89 +1092,142 @@ export default function SingleCollectionProducts() {
                   onClick={() => setSearchQuery("")}
                   className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
                 >
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
-                    <path d="M18 6L6 18M6 6l12 12" />
-                  </svg>
+                  <X size={14} />
                 </button>
               )}
             </div>
-            
+
             <div className="flex items-center gap-2">
               <button
                 onClick={() => setIsFilterOpen(true)}
-                className="flex items-center justify-center gap-2 px-4 py-2 bg-white border border-gray-300 rounded-xl text-sm font-medium text-gray-700 hover:border-coffee transition-colors lg:hidden flex-1 sm:flex-none"
+                className="relative flex items-center gap-1.5 px-3.5 py-2 bg-white border border-gray-200 hover:border-gray-300 rounded-full text-xs text-gray-600 shadow-sm transition-colors"
               >
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
-                  <path d="M4 4h16v2.172a2 2 0 01-.586 1.414L15 12v7l-6 2v-9L4.586 7.586A2 2 0 014 6.172V4z" />
-                </svg>
-                Filters
-                {(filters.sizes.length > 0 || filters.priceRange[0] > 0 || filters.priceRange[1] < 50000) && (
-                  <span className="px-1.5 py-0.5 text-[10px] rounded-full text-white" style={{ backgroundColor: COFFEE }}>
-                    {filters.sizes.length + (filters.priceRange[0] > 0 || filters.priceRange[1] < 50000 ? 1 : 0)}
+                <SlidersHorizontal size={12} />
+                <span>Filters</span>
+                {activeFilterCount > 0 && (
+                  <span className="absolute -top-1 -right-1 w-4 h-4 flex items-center justify-center rounded-full text-[9px] font-bold text-white"
+                    style={{ backgroundColor: COFFEE }}>
+                    {activeFilterCount}
                   </span>
                 )}
               </button>
-            </div>
-          </div>
 
-          <div className="flex flex-col lg:flex-row gap-6 lg:gap-8">
-            {/* Desktop Sidebar */}
-            <DesktopFilterSidebar
-              filters={filters}
-              onFilterChange={handleFilterChange}
-            />
+              <SortDropdown sortBy={sortBy} setSortBy={setSortBy} />
 
-            {/* Products Grid */}
-            <div className="flex-1">
-              {filteredProducts.length === 0 ? (
-                <div className="text-center py-12 sm:py-16 bg-white rounded-2xl">
-                  <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-gray-100 flex items-center justify-center mx-auto mb-4">
-                    <svg width="28" height="28" className="sm:w-8 sm:h-8 text-gray-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5}>
-                      <circle cx="11" cy="11" r="8" />
-                      <path d="M21 21l-4.35-4.35" />
-                    </svg>
-                  </div>
-                  <h3 className="font-semibold text-gray-800 text-base sm:text-lg mb-1">No products found</h3>
-                  <p className="text-sm text-gray-500">Try adjusting your filters or search term</p>
-                  <button
-                    onClick={clearAllFilters}
-                    className="mt-4 px-5 py-2 text-sm font-medium rounded-lg transition-colors border border-coffee text-coffee hover:bg-coffee/10"
-                  >
-                    Clear all filters
-                  </button>
-                </div>
-              ) : (
-                <>
-                  <div className="flex justify-between items-center mb-4">
-                    <p className="text-xs sm:text-sm text-gray-500">Showing {filteredProducts.length} products</p>
-                    {(searchQuery || filters.sizes.length > 0 || filters.priceRange[0] > 0 || filters.priceRange[1] < 50000) && (
-                      <button
-                        onClick={clearAllFilters}
-                        className="text-xs text-coffee hover:underline"
-                        style={{ color: COFFEE }}
-                      >
-                        Clear all
-                      </button>
-                    )}
-                  </div>
-                  <div className="product-grid">
-                    {filteredProducts.map((product, idx) => (
-                      <ProductCard key={product.id} onClick={()=>navigate(`/product/${product.id}`)} product={product} index={idx} />
-                    ))}
-                  </div>
-                </>
+              {wishlist.length > 0 && (
+                <button
+                  onClick={() => navigate("/wishlist")}
+                  className="flex items-center gap-2 px-3 py-2 bg-white border border-gray-200 rounded-full text-xs font-medium text-gray-700 hover:border-coffee transition-colors"
+                >
+                  <Heart size={12} className="text-red-500" />
+                  <span className="hidden sm:inline">Wishlist</span>
+                  <span className="text-coffee">({wishlist.length})</span>
+                </button>
               )}
             </div>
           </div>
+
+          {/* Active Filters Chips */}
+          {activeFilterCount > 0 && (
+            <div className="flex flex-wrap items-center gap-2 mb-4 pb-3 border-b border-gray-100">
+              {searchQuery && (
+                <Chip label={`Search: "${searchQuery}"`} onRemove={() => setSearchQuery("")} />
+              )}
+              {selectedFilters.priceRange && (
+                <Chip label={selectedFilters.priceRange.label} onRemove={() => setSelectedFilters({ ...selectedFilters, priceRange: null })} />
+              )}
+              {selectedFilters.minRating && (
+                <Chip label={`${selectedFilters.minRating}★ & above`} onRemove={() => setSelectedFilters({ ...selectedFilters, minRating: null })} />
+              )}
+              {selectedFilters.inStockOnly && (
+                <Chip label="In Stock Only" onRemove={() => setSelectedFilters({ ...selectedFilters, inStockOnly: false })} />
+              )}
+              <button
+                onClick={clearAllFilters}
+                className="text-[10px] text-gray-400 hover:text-gray-700 underline underline-offset-2 transition-colors"
+              >
+                Clear all
+              </button>
+            </div>
+          )}
+
+          {/* Products Grid */}
+          <div className="flex-1">
+            {filteredProducts.length === 0 ? (
+              <div className="text-center py-12 sm:py-16 bg-white rounded-2xl">
+                <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-gray-100 flex items-center justify-center mx-auto mb-4">
+                  <svg width="28" height="28" className="sm:w-8 sm:h-8 text-gray-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5}>
+                    <circle cx="11" cy="11" r="8" />
+                    <path d="M21 21l-4.35-4.35" />
+                  </svg>
+                </div>
+                <h3 className="font-semibold text-gray-800 text-base sm:text-lg mb-1">No products found</h3>
+                <p className="text-sm text-gray-500">Try adjusting your filters or search term</p>
+                <button
+                  onClick={clearAllFilters}
+                  className="mt-4 px-5 py-2 text-sm font-medium rounded-lg transition-colors border border-coffee text-coffee hover:bg-coffee/10"
+                >
+                  Clear all filters
+                </button>
+              </div>
+            ) : (
+              <>
+                <div className="flex justify-between items-center mb-4">
+                  <p className="text-xs sm:text-sm text-gray-500">
+                    Showing {filteredProducts.length} of {products.length} products
+                  </p>
+                </div>
+                <div className="product-grid">
+                  {filteredProducts.map((product, idx) => (
+                    <ProductCard
+                      key={product._id || product.id}
+                      product={product}
+                      index={idx}
+                      wishlist={wishlist}
+                      onWishlistToggle={toggleWishlist}
+                      onAddToCart={handleAddToCart}
+                    />
+                  ))}
+                </div>
+              </>
+            )}
+          </div>
         </div>
 
-        {/* Mobile Filter Drawer - Only visible on mobile */}
-        <MobileFilterDrawer
-          filters={filters}
-          onFilterChange={handleFilterChange}
-          onClose={() => setIsFilterOpen(false)}
-          isOpen={isFilterOpen}
+        {/* Filter Drawer */}
+        {isFilterOpen && (
+          <FilterDrawer
+            selectedFilters={selectedFilters}
+            setSelectedFilters={setSelectedFilters}
+            onClose={() => setIsFilterOpen(false)}
+          />
+        )}
+
+        {/* Variant Selection Modal */}
+        <VariantSelectionModal
+          isOpen={showVariantModal}
+          onClose={() => {
+            setShowVariantModal(false);
+            setSelectedProduct(null);
+          }}
+          product={selectedProduct}
+          onConfirm={(variantData) => addToCartWithVariant(selectedProduct, variantData)}
+          addingToCart={addingToCart}
         />
+
+        {/* Toast Notification */}
+        {toast && (
+          <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 animate-scaleIn">
+            <div className={`flex items-center gap-3 px-4 py-3 rounded-xl shadow-lg ${toast.type === "success" ? "bg-black text-white" : "bg-red-500 text-white"
+              }`}>
+              {toast.type === "success" ? <CheckCircle size={18} /> : <AlertCircle size={18} />}
+              <p className="text-sm font-medium">{toast.message}</p>
+              <button onClick={() => setToast(null)} className="opacity-70 hover:opacity-100">
+                <X size={16} />
+              </button>
+            </div>
+          </div>
+        )}
       </div>
     </>
   );
