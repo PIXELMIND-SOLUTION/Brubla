@@ -385,11 +385,11 @@ const LocationSelector = () => {
     useEffect(() => {
         const fetchLiveLocation = async () => {
             if (!userId) return;
-            
+
             try {
                 const response = await fetch(`${API_BASE}/api/users/live-location/${userId}`);
                 const data = await response.json();
-                
+
                 if (data.success && data.liveLocation) {
                     setLiveLocationId(data.liveLocation._id || null);
                     // If there's an existing location, update the GPS label
@@ -405,7 +405,7 @@ const LocationSelector = () => {
                 console.error("Failed to fetch live location:", error);
             }
         };
-        
+
         fetchLiveLocation();
     }, [userId]);
 
@@ -426,7 +426,7 @@ const LocationSelector = () => {
             });
 
             const data = await response.json();
-            
+
             if (data.success) {
                 if (data.liveLocation?._id) {
                     setLiveLocationId(data.liveLocation._id);
@@ -442,25 +442,25 @@ const LocationSelector = () => {
 
     // Handle GPS location detection
     const handleGps = useCallback(() => {
-        if (!navigator.geolocation) { 
-            alert("Geolocation not supported"); 
-            return; 
+        if (!navigator.geolocation) {
+            alert("Geolocation not supported");
+            return;
         }
-        
+
         if (!userId) {
             alert("Please login to use location services");
             return;
         }
-        
+
         setGps(true);
         navigator.geolocation.getCurrentPosition(
             async (pos) => {
                 const { latitude, longitude } = pos.coords;
                 const locationStr = `${latitude.toFixed(3)}°N, ${longitude.toFixed(3)}°E`;
-                
+
                 // Update API with live location
                 const success = await updateLiveLocation(latitude, longitude);
-                
+
                 if (success) {
                     setGpsLbl(locationStr);
                     setSel(-1);
@@ -469,7 +469,7 @@ const LocationSelector = () => {
                 } else {
                     alert("Failed to save location. Please try again.");
                 }
-                
+
                 setGps(false);
                 setOpen(false);
             },
@@ -513,7 +513,7 @@ const LocationSelector = () => {
                 setOpen(false);
             }
         };
-        
+
         document.addEventListener("mousedown", handleClickOutside);
         return () => document.removeEventListener("mousedown", handleClickOutside);
     }, []);
@@ -523,16 +523,16 @@ const LocationSelector = () => {
 
     return (
         <div className="relative" ref={ref}>
-            <button 
-                onClick={() => setOpen(o => !o)} 
-                className="relative p-2 rounded-full transition-colors hover:bg-white/10" 
-                style={{ color: iconColor }} 
+            <button
+                onClick={() => setOpen(o => !o)}
+                className="relative p-2 rounded-full transition-colors hover:bg-white/10"
+                style={{ color: iconColor }}
                 aria-label="Change location"
             >
                 <PinIcon c="w-5 h-5" />
                 <span className="absolute bottom-1.5 right-1.5 w-1.5 h-1.5 rounded-full" style={{ background: "#000" }} />
             </button>
-            
+
             {open && (
                 <div className="absolute top-full right-0 mt-2 w-60 rounded-2xl shadow-2xl z-[200] overflow-hidden" style={{ background: "#fff", border: "1px solid rgba(111,78,55,0.15)" }}>
                     <div className="px-4 pt-3 pb-2 flex items-center gap-2" style={{ borderBottom: "1px solid rgba(111,78,55,0.12)" }}>
@@ -542,10 +542,10 @@ const LocationSelector = () => {
                             <span className="text-xs font-bold" style={{ color: "#000" }}>{sel === -1 ? (gpsLabel || "Current Location") : `${loc.city} — ${loc.pin}`}</span>
                         </div>
                     </div>
-                    
-                    <button 
-                        onClick={handleGps} 
-                        className="w-full flex items-center gap-3 px-4 py-3 transition-colors hover:bg-[#f9f5f0]" 
+
+                    <button
+                        onClick={handleGps}
+                        className="w-full flex items-center gap-3 px-4 py-3 transition-colors hover:bg-[#f9f5f0]"
                         style={{ borderBottom: "1px solid rgba(111,78,55,0.1)" }}
                         disabled={gpsLoading}
                     >
@@ -558,7 +558,7 @@ const LocationSelector = () => {
                         </div>
                         {sel === -1 && !gpsLoading && <span className="ml-auto" style={{ color: "#010101" }}><CheckIcon /></span>}
                     </button>
-                    
+
                     {/* <div className="px-4 pt-2.5 pb-1">
                         <p className="text-[9px] font-black uppercase tracking-widest" style={{ color: "#7a6a5a" }}>Select City</p>
                     </div>
@@ -942,7 +942,43 @@ const Header = () => {
     const [openMenu, setOpenMenu] = useState(false);
     const headerRef = useRef(null);
     const [navbarHeight, setNavbarHeight] = useState(100);
-    const cartCount = 3;
+    const [cartCount, setCartCount] = useState(0);
+
+    // Get userId from sessionStorage
+    const getUserId = () => {
+        try {
+            const user = JSON.parse(sessionStorage.getItem("user") || "{}");
+            return user?.id || null;
+        } catch {
+            return null;
+        }
+    };
+
+    const userId = getUserId();
+
+    useEffect(() => {
+        fetchCartCount();
+
+        const interval = setInterval(fetchCartCount, 2000);
+
+        return () => clearInterval(interval);
+    }, []);
+
+    const fetchCartCount = async () => {
+        try {
+            const res = await fetch(
+                `http://31.97.228.17:4077/api/users/cart/${userId}`
+            );
+
+            const data = await res.json();
+
+            if (data.success) {
+                setCartCount(data.cart.summary.totalItems);
+            }
+        } catch (error) {
+            console.error("Cart count error:", error);
+        }
+    };
 
     const navigate = useNavigate();
 
