@@ -1,6 +1,8 @@
+import { Heart } from "lucide-react";
 import { useState, useRef, useEffect, useCallback } from "react";
 import { FaEye } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 // ─────────────────────────────────────────────────────────────────────────────
 // API CONFIGURATION
@@ -42,36 +44,66 @@ const ChevronIcon = ({ dir = "right", size = 12 }) => (
 );
 
 // ─────────────────────────────────────────────────────────────────────────────
+// HELPER FUNCTIONS
+// ─────────────────────────────────────────────────────────────────────────────
+const normaliseUrl = (url) => {
+  if (!url || typeof url !== "string") return null;
+  return url.replace(/https?:\/\/localhost:4077/g, API_BASE_URL);
+};
+
+const toINR = (usd) => {
+  if (!usd && usd !== 0) return "—";
+  return "₹" + (usd * 83).toLocaleString("en-IN", { maximumFractionDigits: 0 });
+};
+
+const getUserId = () => {
+  try {
+    const user = JSON.parse(sessionStorage.getItem("user") || "{}");
+    return user?.id || null;
+  } catch {
+    return null;
+  }
+};
+
+// ─────────────────────────────────────────────────────────────────────────────
 // PRODUCT CARD
 // ─────────────────────────────────────────────────────────────────────────────
-const ProductCard = ({ product, index }) => {
+const ProductCard = ({ product, index, onWishlistToggle, isWishlisted, showToast }) => {
   const [activeImg, setActiveImg] = useState(0);
-  const [wishlisted, setWish] = useState(false);
+  const [wishlisted, setWish] = useState(isWishlisted);
   const [addedCart, setCart] = useState(false);
   const [visible, setVisible] = useState(false);
+  const [images, setImages] = useState([]);
   const ref = useRef(null);
   const navigate = useNavigate();
 
-  // Get product images from variants or mainImages
-  const getProductImages = () => {
+  // Get product images
+  useEffect(() => {
+    const productImages = [];
+    
+    if (product.mainImage) {
+      productImages.push(normaliseUrl(product.mainImage));
+    }
+    
     if (product.mainImages && product.mainImages.length > 0) {
-      return product.mainImages;
+      product.mainImages.forEach(img => productImages.push(normaliseUrl(img)));
     }
+    
     if (product.variants && product.variants.length > 0) {
-      const firstVariant = product.variants[0];
-      if (firstVariant.images && firstVariant.images.length > 0) {
-        return firstVariant.images;
-      }
+      product.variants.forEach(variant => {
+        if (variant.mainImage) productImages.push(normaliseUrl(variant.mainImage));
+        if (variant.images && variant.images.length > 0) {
+          variant.images.forEach(img => productImages.push(normaliseUrl(img)));
+        }
+      });
     }
-    // Fallback image
-    return ["https://images.unsplash.com/photo-1556906781-9a412961c28c?w=400&h=600&fit=crop&q=80&auto=format"];
-  };
-
-  const images = getProductImages();
-  const displayPrice = product.displayPrice || product.variants?.[0]?.discountPrice || product.variants?.[0]?.price || 0;
-  const originalPrice = product.displayActualPrice || product.variants?.[0]?.price || 0;
-  const productName = product.name || "Product";
-  const productId = product.id || product._id;
+    
+    if (productImages.length === 0) {
+      productImages.push("https://placehold.co/600x800/e5e7eb/64748b?text=No+Image");
+    }
+    
+    setImages([...new Set(productImages)]);
+  }, [product]);
 
   useEffect(() => {
     const el = ref.current;
@@ -89,19 +121,25 @@ const ProductCard = ({ product, index }) => {
     e.stopPropagation();
     setCart(true);
     setTimeout(() => setCart(false), 1800);
+    showToast?.("Added to cart!", "success");
   };
 
   const handleWishlist = (e) => {
     e.preventDefault();
     e.stopPropagation();
-    setWish(w => !w);
-  };
-
-  const handleProductClick = () => {
-    navigate(`/product/${productId}`);
+    setWish(!wishlisted);
+    onWishlistToggle?.(product._id);
   };
 
   const totalImgs = images.length;
+  const displayPrice = product.displayPrice || 0;
+  const originalPrice = product.displayActualPrice || 0;
+  const discount = originalPrice > displayPrice 
+    ? Math.round(((originalPrice - displayPrice) / originalPrice) * 100) 
+    : product.maxDiscount || 0;
+  const productName = product.name || "Product";
+  const productBrand = product.brand || product.subcategoryName || "Brubla";
+  const rating = product.averageRating || 0;
 
   return (
     <div
@@ -113,7 +151,7 @@ const ProductCard = ({ product, index }) => {
         visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4",
       ].join(" ")}
       style={{ transitionDelay: `${index * 0.06}s` }}
-      onClick={handleProductClick}
+      onClick={() => navigate(`/product/${product._id}`)}
     >
       {/* IMAGE CONTAINER */}
       <div className="relative overflow-hidden rounded-xl bg-[#efefed] aspect-[3/4]">
@@ -122,7 +160,7 @@ const ProductCard = ({ product, index }) => {
         {images.map((src, i) => (
           <img
             key={i}
-            src={src.startsWith('http') ? src : `${API_BASE_URL}${src}`}
+            src={src}
             alt={productName}
             className={[
               "absolute inset-0 w-full h-full object-cover object-top",
@@ -147,20 +185,22 @@ const ProductCard = ({ product, index }) => {
           </div>
         )}
 
-        {/* BOOKMARK - top right */}
+        {/* Discount Badge */}
+        {discount > 0 && (
+          <div className="absolute top-3 left-3 z-20">
+            <span className="bg-black text-white text-[10px] font-bold px-2 py-1 rounded-full">
+              {discount}% OFF
+            </span>
+          </div>
+        )}
+
+        {/* Wishlist Button */}
         <button
           onClick={handleWishlist}
-          className={[
-            "absolute top-3 right-3 z-20",
-            "w-8 h-8 flex items-center justify-center rounded-full",
-            "transition-all duration-200",
-            wishlisted
-              ? "bg-black text-white shadow-[0_2px_8px_rgba(0,0,0,0.25)]"
-              : "bg-white/75 backdrop-blur-sm text-[#1a1a1a] hover:bg-white shadow-[0_2px_8px_rgba(0,0,0,0.10)]",
-          ].join(" ")}
+          className="absolute top-2 right-2 z-20 flex items-center justify-center transition-all duration-300 rounded-full bg-white/85 hover:bg-white shadow-md w-7 h-7"
           aria-label="Save"
         >
-          <BookmarkIcon filled={wishlisted} size={14} />
+          <Heart size={16} className={isWishlisted ? "fill-red-500 text-red-500" : "text-gray-600"} />
         </button>
 
         {/* DOT INDICATORS */}
@@ -179,52 +219,50 @@ const ProductCard = ({ product, index }) => {
             ))}
           </div>
         )}
+
+        {/* Add to Cart Button on Hover */}
+        <button
+          onClick={handleCart}
+          className="absolute bottom-0 left-0 right-0 z-20 flex items-center justify-center gap-1.5 transition-all duration-300 bg-black text-white py-2 text-[10px] font-bold tracking-wide opacity-0 group-hover:opacity-100"
+        >
+          {addedCart ? <CheckIcon size={13} /> : <PlusIcon size={14} />}
+          {addedCart ? "Added!" : "Add to Cart"}
+        </button>
       </div>
 
       {/* INFO ROW */}
       <div className="mt-2.5 flex items-start justify-between gap-2 px-0.5">
         <div className="flex flex-col min-w-0 flex-1">
-          <p className="text-[13px] font-normal text-[#1a1a1a] leading-snug truncate">
+          <p className="text-[11px] text-gray-500 font-medium uppercase tracking-wide">
+            {productBrand}
+          </p>
+          <p className="text-[13px] font-medium text-[#1a1a1a] leading-snug truncate mt-0.5">
             {productName}
           </p>
-          <div className="flex items-center gap-2 mt-0.5">
-            <p className="text-[12px] font-semibold text-[#1a1a1a]">
-              ₹{displayPrice.toLocaleString()}
+          <div className="flex items-center gap-2 mt-1">
+            <p className="text-[14px] font-bold text-[#1a1a1a]">
+              {toINR(displayPrice)}
             </p>
             {originalPrice > displayPrice && (
-              <>
-                <p className="text-[11px] text-[#888] line-through">
-                  ₹{originalPrice.toLocaleString()}
-                </p>
-                <p className="text-[11px] text-green-600 font-medium">
-                  {Math.round(((originalPrice - displayPrice) / originalPrice) * 100)}% off
-                </p>
-              </>
+              <p className="text-[11px] text-[#888] line-through">
+                {toINR(originalPrice)}
+              </p>
             )}
           </div>
+          {rating > 0 && (
+            <div className="flex items-center gap-1 mt-1">
+              <span className="text-[10px] text-yellow-500">★</span>
+              <span className="text-[10px] text-gray-600">{rating.toFixed(1)}</span>
+            </div>
+          )}
         </div>
 
         <button 
-          onClick={(e) => { e.stopPropagation(); navigate(`/product/${productId}`); }} 
+          onClick={(e) => { e.stopPropagation(); navigate(`/product/${product._id}`); }} 
           className="flex-shrink-0 w-8 h-8 border border-black flex items-center justify-center rounded-full bg-white text-[#000] hover:bg-[#1a1a1a] hover:text-white transition-colors duration-200" 
           aria-label="Quick view"
         >
           <FaEye size={14} className="text-[#000] hover:text-[#fff] transition-colors duration-200"/>
-        </button>
-
-        {/* Add to cart button */}
-        <button
-          onClick={handleCart}
-          className={[
-            "flex-shrink-0 w-8 h-8 flex items-center justify-center",
-            "rounded-full border transition-all duration-300 active:scale-95 mt-0.5",
-            addedCart
-              ? "bg-black border-black text-white scale-[1.1]"
-              : "bg-white border-black text-[#1a1a1a] hover:border-[#1a1a1a]",
-          ].join(" ")}
-          aria-label="Add to cart"
-        >
-          {addedCart ? <CheckIcon className="text-white" size={13} /> : <PlusIcon className="text-[#000]" size={14} />}
         </button>
       </div>
     </div>
@@ -252,7 +290,7 @@ const ScrollBtn = ({ dir, onClick, show }) => (
 // ─────────────────────────────────────────────────────────────────────────────
 // COLLECTION SECTION (reusable)
 // ─────────────────────────────────────────────────────────────────────────────
-const CollectionSection = ({ id, title, subtitle, products, bgColor = "#fff", image }) => {
+const CollectionSection = ({ id, title, subtitle, products, bgColor = "#fff", image, wishlist, onWishlistToggle, showToast }) => {
   const [canLeft, setCanLeft] = useState(false);
   const [canRight, setCanRight] = useState(true);
   const [headerVis, setHdrVis] = useState(false);
@@ -299,7 +337,7 @@ const CollectionSection = ({ id, title, subtitle, products, bgColor = "#fff", im
 
   return (
     <section
-      className="w-full py-10 md:py-12 overflow-hidden"
+      className="w-full py-10 md:py-12 overflow-hidden group"
       style={{ background: bgColor }}
       aria-label={title}
     >
@@ -353,7 +391,13 @@ const CollectionSection = ({ id, title, subtitle, products, bgColor = "#fff", im
         >
           {products.map((p, i) => (
             <div key={p.id || p._id} className="flex-shrink-0" style={{ scrollSnapAlign: "start" }}>
-              <ProductCard product={p} index={i} />
+              <ProductCard 
+                product={p} 
+                index={i} 
+                isWishlisted={wishlist.includes(p._id)}
+                onWishlistToggle={onWishlistToggle}
+                showToast={showToast}
+              />
             </div>
           ))}
           <div className="min-w-2 flex-shrink-0" />
@@ -382,6 +426,40 @@ const Divider = () => (
     <div className="h-px bg-[#efefed]" />
   </div>
 );
+
+// ─────────────────────────────────────────────────────────────────────────────
+// TOAST COMPONENT
+// ─────────────────────────────────────────────────────────────────────────────
+const Toast = ({ message, type, onClose }) => {
+  useEffect(() => {
+    const timer = setTimeout(onClose, 3000);
+    return () => clearTimeout(timer);
+  }, [onClose]);
+
+  return (
+    <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 animate-fadeInUp">
+      <div className={`flex items-center gap-3 px-4 py-3 rounded-xl shadow-lg ${
+        type === "success" ? "bg-black text-white" : "bg-red-500 text-white"
+      }`}>
+        {type === "success" ? (
+          <CheckIcon size={18} />
+        ) : (
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
+            <circle cx="12" cy="12" r="10" />
+            <line x1="12" y1="8" x2="12" y2="12" />
+            <line x1="12" y1="16" x2="12.01" y2="16" />
+          </svg>
+        )}
+        <p className="text-sm font-medium">{message}</p>
+        <button onClick={onClose} className="opacity-70 hover:opacity-100">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
+            <path d="M18 6L6 18M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
+    </div>
+  );
+};
 
 // ─────────────────────────────────────────────────────────────────────────────
 // LOADING SKELETON
@@ -427,6 +505,14 @@ export default function AllCollections() {
   const [collections, setCollections] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [wishlist, setWishlist] = useState([]);
+  const [toast, setToast] = useState(null);
+  
+  const userId = getUserId();
+
+  const showToast = (message, type) => {
+    setToast({ message, type });
+  };
 
   // Fetch collections and products from API
   useEffect(() => {
@@ -442,7 +528,6 @@ export default function AllCollections() {
         const result = await response.json();
         
         if (result.success && Array.isArray(result.data)) {
-          // Sort by order and filter collections that have products
           const sortedCollections = result.data
             .sort((a, b) => (a.order || 0) - (b.order || 0))
             .map((collection) => ({
@@ -452,7 +537,15 @@ export default function AllCollections() {
               description: collection.description,
               image: collection.image,
               order: collection.order,
-              products: collection.products || [],
+              products: (collection.products || []).map(p => ({
+                ...p,
+                _id: p._id,
+                displayPrice: p.displayPrice,
+                displayActualPrice: p.displayActualPrice,
+                mainImages: p.mainImages || [],
+                variants: p.variants || [],
+                averageRating: p.averageRating || 0,
+              })),
               subtitle: collection.tag === "summer" ? "SUMMER ESSENTIALS" : 
                        collection.tag === "winter" ? "WINTER COLLECTION" : "NEW ARRIVALS",
             }));
@@ -471,6 +564,45 @@ export default function AllCollections() {
 
     fetchCollections();
   }, []);
+
+  // Fetch wishlist
+  useEffect(() => {
+    const fetchWishlist = async () => {
+      if (!userId) return;
+      try {
+        const res = await axios.get(`${API_BASE_URL}/api/users/${userId}`);
+        if (res.data.success) {
+          setWishlist((res.data.user.wishlist || []).map((item) => item.productId));
+        }
+      } catch (err) {
+        console.log("Wishlist fetch error", err);
+      }
+    };
+    fetchWishlist();
+  }, [userId]);
+
+  // Toggle wishlist
+  const toggleWishlist = useCallback(async (productId) => {
+    if (!userId) {
+      showToast("Please login to add to wishlist", "error");
+      return;
+    }
+    try {
+      const wasInWishlist = wishlist.includes(productId);
+      setWishlist((prev) =>
+        prev.includes(productId) ? prev.filter((x) => x !== productId) : [...prev, productId]
+      );
+      await axios.post(`${API_BASE_URL}/api/users/wishlist/${userId}/toggle`, { productId });
+      showToast(wasInWishlist ? "Removed from wishlist" : "Added to wishlist", "success");
+    } catch (err) {
+      console.log("Wishlist update error", err);
+      showToast("Failed to update wishlist", "error");
+      // Revert on error
+      setWishlist((prev) =>
+        prev.includes(productId) ? prev.filter((x) => x !== productId) : [...prev, productId]
+      );
+    }
+  }, [userId, wishlist]);
 
   if (loading) {
     return <LoadingSkeleton />;
@@ -492,7 +624,6 @@ export default function AllCollections() {
     );
   }
 
-  // Filter collections that have products
   const collectionsWithProducts = collections.filter(col => col.products && col.products.length > 0);
 
   if (collectionsWithProducts.length === 0) {
@@ -505,13 +636,31 @@ export default function AllCollections() {
     );
   }
 
-  // Collection backgrounds alternating
   const getBgColor = (index) => {
     return index % 2 === 0 ? "#fff" : "#fafaf9";
   };
 
   return (
     <div className="w-full bg-white">
+      <style>{`
+        @keyframes fadeInUp {
+          from {
+            opacity: 0;
+            transform: translateY(20px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+        .animate-fadeInUp {
+          animation: fadeInUp 0.3s ease-out;
+        }
+        .group:hover .group-hover\\:opacity-100 {
+          opacity: 1;
+        }
+      `}</style>
+      
       {collectionsWithProducts.map((collection, idx) => (
         <div key={collection.id}>
           <CollectionSection
@@ -521,10 +670,21 @@ export default function AllCollections() {
             products={collection.products}
             bgColor={getBgColor(idx)}
             image={collection.image}
+            wishlist={wishlist}
+            onWishlistToggle={toggleWishlist}
+            showToast={showToast}
           />
           {idx < collectionsWithProducts.length - 1 && <Divider />}
         </div>
       ))}
+      
+      {toast && (
+        <Toast 
+          message={toast.message} 
+          type={toast.type} 
+          onClose={() => setToast(null)} 
+        />
+      )}
     </div>
   );
 }

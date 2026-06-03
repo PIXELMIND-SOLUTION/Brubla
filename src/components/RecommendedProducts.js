@@ -1,120 +1,18 @@
 import { useState, useRef, useEffect, useCallback } from "react";
 import { FaEye } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import { Heart } from "lucide-react";
 
 // ─────────────────────────────────────────────────────────────────────────────
-// PRODUCT DATA
+// API CONFIGURATION
 // ─────────────────────────────────────────────────────────────────────────────
-const PRODUCTS = [
-  {
-    id: 1,
-    name: "Linen Kurta",
-    brand: "NewMe Originals",
-    price: 899,
-    originalPrice: 1799,
-    wishlist: false,
-    imgs: [
-      "https://images.unsplash.com/photo-1617137968427-85924c800a22?w=400&h=600&fit=crop&q=80&auto=format",
-      "https://images.unsplash.com/photo-1594938298603-c8148c4dae35?w=400&h=600&fit=crop&q=80&auto=format",
-    ],
-  },
-  {
-    id: 2,
-    name: "Silk Blend Saree",
-    brand: "Heritage Weaves",
-    price: 2499,
-    originalPrice: 4999,
-    wishlist: false,
-    imgs: [
-      "https://images.unsplash.com/photo-1509631179647-0177331693ae?w=400&h=600&fit=crop&q=80&auto=format",
-      "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=400&h=600&fit=crop&q=80&auto=format",
-    ],
-  },
-  {
-    id: 3,
-    name: "Casual Co-ord Set",
-    brand: "Studio NM",
-    price: 1199,
-    originalPrice: 2199,
-    wishlist: false,
-    imgs: [
-      "https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=400&h=600&fit=crop&q=80&auto=format",
-      "https://images.unsplash.com/photo-1483985988355-763728e1935b?w=400&h=600&fit=crop&q=80&auto=format",
-    ],
-  },
-  {
-    id: 4,
-    name: "Oxford Sneakers",
-    brand: "StepOut",
-    price: 1599,
-    originalPrice: 2999,
-    wishlist: false,
-    imgs: [
-      "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=400&h=600&fit=crop&q=80&auto=format",
-      "https://images.unsplash.com/photo-1560769629-975ec94e6a86?w=400&h=600&fit=crop&q=80&auto=format",
-    ],
-  },
-  {
-    id: 5,
-    name: "Premium Blazer",
-    brand: "NewMe Atelier",
-    price: 3299,
-    originalPrice: 5999,
-    wishlist: false,
-    imgs: [
-      "https://images.unsplash.com/photo-1469334031218-e382a71b716b?w=400&h=600&fit=crop&q=80&auto=format",
-      "https://images.unsplash.com/photo-1512436991641-6745cdb1723f?w=400&h=600&fit=crop&q=80&auto=format",
-    ],
-  },
-  {
-    id: 6,
-    name: "Floral Maxi Dress",
-    brand: "Bloom Studio",
-    price: 1399,
-    originalPrice: 2499,
-    wishlist: false,
-    imgs: [
-      "https://images.unsplash.com/photo-1485230895905-ec40ba36b9bc?w=400&h=600&fit=crop&q=80&auto=format",
-      "https://images.unsplash.com/photo-1496747611176-843222e1e57c?w=400&h=600&fit=crop&q=80&auto=format",
-    ],
-  },
-  {
-    id: 7,
-    name: "Ethnic Jacket",
-    brand: "Craft House",
-    price: 2199,
-    originalPrice: 3999,
-    wishlist: false,
-    imgs: [
-      "https://images.unsplash.com/photo-1503341504253-dff4815485f1?w=400&h=600&fit=crop&q=80&auto=format",
-      "https://images.unsplash.com/photo-1617137968427-85924c800a22?w=400&h=600&fit=crop&q=80&auto=format",
-    ],
-  },
-  {
-    id: 8,
-    name: "Skincare Ritual Kit",
-    brand: "Glow Lab",
-    price: 999,
-    originalPrice: 1799,
-    wishlist: false,
-    imgs: [
-      "https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?w=400&h=600&fit=crop&q=80&auto=format",
-      "https://images.unsplash.com/photo-1556228578-0d85b1a4d571?w=400&h=600&fit=crop&q=80&auto=format",
-    ],
-  },
-];
+const API_BASE_URL = "http://31.97.228.17:4077";
+const RECOMMENDED_API_URL = `${API_BASE_URL}/api/users/recommended`;
 
 // ─────────────────────────────────────────────────────────────────────────────
 // ICONS
 // ─────────────────────────────────────────────────────────────────────────────
-const BookmarkIcon = ({ filled, size = 16 }) => (
-  <svg width={size} height={size} viewBox="0 0 24 24"
-    fill={filled ? "currentColor" : "none"} stroke="currentColor"
-    strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round">
-    <path d="M19 21l-7-5-7 5V5a2 2 0 012-2h10a2 2 0 012 2z" />
-  </svg>
-);
-
 const PlusIcon = ({ size = 16 }) => (
   <svg width={size} height={size} viewBox="0 0 24 24" fill="none"
     stroke="currentColor" strokeWidth={1.8} strokeLinecap="round">
@@ -138,16 +36,100 @@ const ChevronIcon = ({ dir = "right", size = 14 }) => (
 );
 
 // ─────────────────────────────────────────────────────────────────────────────
+// HELPER FUNCTIONS
+// ─────────────────────────────────────────────────────────────────────────────
+const normaliseUrl = (url) => {
+  if (!url || typeof url !== "string") return null;
+  return url.replace(/https?:\/\/localhost:4077/g, API_BASE_URL);
+};
+
+const toINR = (usd) => {
+  if (!usd && usd !== 0) return "—";
+  return "₹" + (usd * 83).toLocaleString("en-IN", { maximumFractionDigits: 0 });
+};
+
+const getUserId = () => {
+  try {
+    const user = JSON.parse(sessionStorage.getItem("user") || "{}");
+    return user?.id || null;
+  } catch {
+    return null;
+  }
+};
+
+// ─────────────────────────────────────────────────────────────────────────────
+// TOAST COMPONENT
+// ─────────────────────────────────────────────────────────────────────────────
+const Toast = ({ message, type, onClose }) => {
+  useEffect(() => {
+    const timer = setTimeout(onClose, 3000);
+    return () => clearTimeout(timer);
+  }, [onClose]);
+
+  return (
+    <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 animate-fadeInUp">
+      <div className={`flex items-center gap-3 px-4 py-3 rounded-xl shadow-lg ${
+        type === "success" ? "bg-black text-white" : "bg-red-500 text-white"
+      }`}>
+        {type === "success" ? (
+          <CheckIcon size={18} />
+        ) : (
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
+            <circle cx="12" cy="12" r="10" />
+            <line x1="12" y1="8" x2="12" y2="12" />
+            <line x1="12" y1="16" x2="12.01" y2="16" />
+          </svg>
+        )}
+        <p className="text-sm font-medium">{message}</p>
+        <button onClick={onClose} className="opacity-70 hover:opacity-100">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
+            <path d="M18 6L6 18M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
+    </div>
+  );
+};
+
+// ─────────────────────────────────────────────────────────────────────────────
 // PRODUCT CARD
 // ─────────────────────────────────────────────────────────────────────────────
-const ProductCard = ({ product, index }) => {
+const ProductCard = ({ product, index, onWishlistToggle, isWishlisted, showToast }) => {
   const [activeImg, setActiveImg] = useState(0);
-  const [wishlisted, setWish] = useState(product.wishlist);
+  const [wishlisted, setWish] = useState(isWishlisted);
   const [addedCart, setCart] = useState(false);
   const [visible, setVisible] = useState(false);
+  const [images, setImages] = useState([]);
   const ref = useRef(null);
-
   const navigate = useNavigate();
+
+  // Get product images
+  useEffect(() => {
+    const productImages = [];
+    
+    if (product.mainImage) {
+      productImages.push(normaliseUrl(product.mainImage));
+    }
+    
+    if (product.mainImages && product.mainImages.length > 0) {
+      product.mainImages.forEach(img => productImages.push(normaliseUrl(img)));
+    }
+    
+    if (product.variants && product.variants.length > 0) {
+      product.variants.forEach(variant => {
+        if (variant.mainImage) productImages.push(normaliseUrl(variant.mainImage));
+        if (variant.images && variant.images.length > 0) {
+          variant.images.forEach(img => productImages.push(normaliseUrl(img)));
+        }
+      });
+    }
+    
+    if (productImages.length === 0) {
+      productImages.push("https://placehold.co/600x800/e5e7eb/64748b?text=No+Image");
+    }
+    
+    setImages([...new Set(productImages)]);
+  }, [product]);
 
   useEffect(() => {
     const el = ref.current;
@@ -162,11 +144,28 @@ const ProductCard = ({ product, index }) => {
 
   const handleCart = (e) => {
     e.preventDefault();
+    e.stopPropagation();
     setCart(true);
     setTimeout(() => setCart(false), 1800);
+    showToast?.("Added to cart!", "success");
   };
 
-  const totalImgs = product.imgs.length;
+  const handleWishlist = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setWish(!wishlisted);
+    onWishlistToggle?.(product._id);
+  };
+
+  const totalImgs = images.length;
+  const displayPrice = product.displayPrice || 0;
+  const originalPrice = product.displayActualPrice || 0;
+  const discount = originalPrice > displayPrice 
+    ? Math.round(((originalPrice - displayPrice) / originalPrice) * 100) 
+    : product.maxDiscount || 0;
+  const productName = product.name || "Product";
+  const productBrand = product.brand || product.subcategoryName || "Brubla";
+  const rating = product.averageRating || 0;
 
   return (
     <div
@@ -178,16 +177,17 @@ const ProductCard = ({ product, index }) => {
         visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4",
       ].join(" ")}
       style={{ transitionDelay: `${index * 0.06}s` }}
+      onClick={() => navigate(`/product/${product._id}`)}
     >
-      {/* ── IMAGE CONTAINER ── */}
-      <div className="relative overflow-hidden rounded-xl bg-[#efefed] aspect-[3/4]">
+      {/* IMAGE CONTAINER */}
+      <div className="relative overflow-hidden rounded-xl bg-[#efefed] aspect-[3/4] group">
 
-        {/* Images — switch on hover zone */}
-        {product.imgs.map((src, i) => (
+        {/* Images */}
+        {images.map((src, i) => (
           <img
             key={i}
             src={src}
-            alt={product.name}
+            alt={productName}
             className={[
               "absolute inset-0 w-full h-full object-cover object-top",
               "transition-opacity duration-500 ease-in-out",
@@ -198,10 +198,10 @@ const ProductCard = ({ product, index }) => {
           />
         ))}
 
-        {/* Invisible hover zones — split image horizontally for hover-switch */}
+        {/* Invisible hover zones for image switching */}
         {totalImgs > 1 && (
           <div className="absolute inset-0 z-[5] flex pointer-events-auto">
-            {product.imgs.map((_, di) => (
+            {images.map((_, di) => (
               <div
                 key={di}
                 className="flex-1 h-full"
@@ -211,26 +211,28 @@ const ProductCard = ({ product, index }) => {
           </div>
         )}
 
-        {/* ── BOOKMARK ── top right */}
+        {/* Discount Badge */}
+        {discount > 0 && (
+          <div className="absolute top-3 left-3 z-20">
+            <span className="bg-black text-white text-[10px] font-bold px-2 py-1 rounded-full">
+              {discount}% OFF
+            </span>
+          </div>
+        )}
+
+        {/* Wishlist Button */}
         <button
-          onClick={(e) => { e.preventDefault(); setWish(w => !w); }}
-          className={[
-            "absolute top-3 right-3 z-20",
-            "w-8 h-8 flex items-center justify-center rounded-full",
-            "transition-all duration-200",
-            wishlisted
-              ? "bg-black text-white shadow-[0_2px_8px_rgba(0,0,0,0.25)]"
-              : "bg-white/75 backdrop-blur-sm text-[#1a1a1a] hover:bg-white shadow-[0_2px_8px_rgba(0,0,0,0.10)]",
-          ].join(" ")}
+          onClick={handleWishlist}
+          className="absolute top-2 right-2 z-20 flex items-center justify-center transition-all duration-300 rounded-full bg-white/85 hover:bg-white shadow-md w-7 h-7"
           aria-label="Save"
         >
-          <BookmarkIcon filled={wishlisted} size={14} />
+          <Heart size={16} className={isWishlisted ? "fill-red-500 text-red-500" : "text-gray-600"} />
         </button>
 
-        {/* ── DOT INDICATORS ── bottom center */}
+        {/* DOT INDICATORS */}
         {totalImgs > 1 && (
           <div className="absolute bottom-3 left-0 right-0 z-10 flex items-center justify-center gap-1.5 pointer-events-none">
-            {product.imgs.map((_, di) => (
+            {images.map((_, di) => (
               <div
                 key={di}
                 className={[
@@ -243,36 +245,50 @@ const ProductCard = ({ product, index }) => {
             ))}
           </div>
         )}
-      </div>
 
-      {/* ── INFO ROW ── */}
-      <div className="mt-2.5 flex items-start justify-between gap-2 px-0.5">
-        <div className="flex flex-col min-w-0 flex-1">
-          <p className="text-[13px] font-normal text-[#1a1a1a] leading-snug truncate">
-            {product.name}
-          </p>
-          <p className="text-[12px] text-[#888] mt-0.5 font-normal">
-            RS. {product.price.toLocaleString()}
-          </p>
-        </div>
-
-        <button onClick={() => navigate(`/product/${product.id}`)} className="flex-shrink-0 w-8 h-8 border border-black flex items-center justify-center rounded-full bg-white text-[#000] hover:bg-[#000] hover:text-white transition-colors duration-200" aria-label="Quick view">
-          <FaEye size={14} className="text-[#000] hover:text-[#fff] transition-colors duration-200" />
-        </button>
-
-        {/* + / ✓ button */}
+        {/* Add to Cart Button on Hover */}
         <button
           onClick={handleCart}
-          className={[
-            "flex-shrink-0 w-8 h-8 flex items-center justify-center",
-            "rounded-full border transition-all duration-300 active:scale-95 mt-0.5",
-            addedCart
-              ? "bg-black border-black text-white scale-[1.1]"
-              : "bg-white border-[#ccc] text-[#1a1a1a] hover:border-[#1a1a1a]",
-          ].join(" ")}
-          aria-label="Add to cart"
+          className="absolute bottom-0 left-0 right-0 z-20 flex items-center justify-center gap-1.5 transition-all duration-300 bg-black text-white py-2 text-[10px] font-bold tracking-wide opacity-0 group-hover:opacity-100"
         >
           {addedCart ? <CheckIcon size={13} /> : <PlusIcon size={14} />}
+          {addedCart ? "Added!" : "Add to Cart"}
+        </button>
+      </div>
+
+      {/* INFO ROW */}
+      <div className="mt-2.5 flex items-start justify-between gap-2 px-0.5">
+        <div className="flex flex-col min-w-0 flex-1">
+          <p className="text-[11px] text-gray-500 font-medium uppercase tracking-wide">
+            {productBrand}
+          </p>
+          <p className="text-[13px] font-medium text-[#1a1a1a] leading-snug truncate mt-0.5">
+            {productName}
+          </p>
+          <div className="flex items-center gap-2 mt-1">
+            <p className="text-[14px] font-bold text-[#1a1a1a]">
+              {toINR(displayPrice)}
+            </p>
+            {originalPrice > displayPrice && (
+              <p className="text-[11px] text-[#888] line-through">
+                {toINR(originalPrice)}
+              </p>
+            )}
+          </div>
+          {rating > 0 && (
+            <div className="flex items-center gap-1 mt-1">
+              <span className="text-[10px] text-yellow-500">★</span>
+              <span className="text-[10px] text-gray-600">{rating.toFixed(1)}</span>
+            </div>
+          )}
+        </div>
+
+        <button 
+          onClick={(e) => { e.stopPropagation(); navigate(`/product/${product._id}`); }} 
+          className="flex-shrink-0 w-8 h-8 border border-black flex items-center justify-center rounded-full bg-white text-[#000] hover:bg-[#000] hover:text-white transition-colors duration-200" 
+          aria-label="Quick view"
+        >
+          <FaEye size={14} className="text-[#000] hover:text-[#fff] transition-colors duration-200" />
         </button>
       </div>
     </div>
@@ -298,16 +314,136 @@ const ScrollBtn = ({ dir, onClick, show }) => (
 );
 
 // ─────────────────────────────────────────────────────────────────────────────
+// LOADING SKELETON
+// ─────────────────────────────────────────────────────────────────────────────
+const LoadingSkeleton = () => (
+  <div className="w-full p-10 md:py-12 bg-white overflow-hidden">
+    <div className="max-w-9xl mx-auto">
+      <div className="px-4 md:px-6 lg:px-8 mb-4 md:mb-5">
+        <div className="h-6 w-48 bg-gray-200 rounded animate-pulse"></div>
+      </div>
+      <div className="flex gap-3 overflow-hidden px-4 md:px-6 lg:px-8">
+        {[1, 2, 3, 4].map((i) => (
+          <div key={i} className="flex-shrink-0 w-[200px]">
+            <div className="bg-gray-200 rounded-xl aspect-[3/4] animate-pulse"></div>
+            <div className="mt-2.5 space-y-2">
+              <div className="h-3 bg-gray-200 rounded w-1/2 animate-pulse"></div>
+              <div className="h-4 bg-gray-200 rounded w-3/4 animate-pulse"></div>
+              <div className="h-3 bg-gray-200 rounded w-1/3 animate-pulse"></div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </div>
+);
+
+// ─────────────────────────────────────────────────────────────────────────────
 // MAIN EXPORT
 // ─────────────────────────────────────────────────────────────────────────────
 export default function RecommendedProducts() {
+  const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [wishlist, setWishlist] = useState([]);
   const [canLeft, setCanLeft] = useState(false);
   const [canRight, setCanRight] = useState(true);
   const [headerVis, setHdrVis] = useState(false);
+  const [toast, setToast] = useState(null);
   const trackRef = useRef(null);
   const headerRef = useRef(null);
   const navigate = useNavigate();
 
+  const userId = getUserId();
+
+  const showToast = (message, type) => {
+    setToast({ message, type });
+  };
+
+  // Fetch recommended products
+  useEffect(() => {
+    const fetchRecommendedProducts = async () => {
+      try {
+        setLoading(true);
+        const response = await fetch(RECOMMENDED_API_URL);
+        
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
+        const result = await response.json();
+        
+        if (result.success && Array.isArray(result.data)) {
+          const transformedProducts = result.data.map((product) => ({
+            _id: product._id,
+            id: product._id,
+            name: product.name,
+            description: product.description,
+            displayPrice: product.displayPrice,
+            displayActualPrice: product.displayActualPrice,
+            maxDiscount: product.maxDiscount,
+            mainImage: normaliseUrl(product.mainImage),
+            mainImages: product.mainImages || [product.mainImage],
+            averageRating: product.averageRating,
+            brand: product.brand || product.subcategoryName || "Recommended",
+            variants: product.variants || [],
+          }));
+          
+          setProducts(transformedProducts);
+        } else {
+          throw new Error('Invalid API response structure');
+        }
+      } catch (err) {
+        console.error('Error fetching recommended products:', err);
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchRecommendedProducts();
+  }, []);
+
+  // Fetch wishlist
+  useEffect(() => {
+    const fetchWishlist = async () => {
+      if (!userId) return;
+      try {
+        const res = await axios.get(`${API_BASE_URL}/api/users/${userId}`);
+        if (res.data.success) {
+          setWishlist((res.data.user.wishlist || []).map((item) => item.productId));
+        }
+      } catch (err) {
+        console.log("Wishlist fetch error", err);
+      }
+    };
+    fetchWishlist();
+  }, [userId]);
+
+  // Toggle wishlist
+  const toggleWishlist = useCallback(async (productId) => {
+    if (!userId) {
+      showToast("Please login to add to wishlist", "error");
+      return;
+    }
+    try {
+      const wasInWishlist = wishlist.includes(productId);
+      setWishlist((prev) =>
+        prev.includes(productId) ? prev.filter((x) => x !== productId) : [...prev, productId]
+      );
+      await axios.post(`${API_BASE_URL}/api/users/wishlist/${userId}/toggle`, { productId });
+      showToast(wasInWishlist ? "Removed from wishlist" : "Added to wishlist", "success");
+    } catch (err) {
+      console.log("Wishlist update error", err);
+      showToast("Failed to update wishlist", "error");
+      // Revert on error
+      setWishlist((prev) =>
+        prev.includes(productId) ? prev.filter((x) => x !== productId) : [...prev, productId]
+      );
+    }
+  }, [userId, wishlist]);
+
+  // Scroll handling
   useEffect(() => {
     const el = headerRef.current;
     if (!el) return;
@@ -338,13 +474,41 @@ export default function RecommendedProducts() {
     trackRef.current?.scrollBy({ left: dir === "right" ? 600 : -600, behavior: "smooth" });
   };
 
+  // Don't render if no products or error
+  if (error && products.length === 0) {
+    return null;
+  }
+
+  if (loading) {
+    return <LoadingSkeleton />;
+  }
+
+  if (products.length === 0) {
+    return null;
+  }
+
   return (
     <section className="w-full p-10 md:py-12 bg-white overflow-hidden" aria-label="Recommended Products">
-      <style>{`.prod-track::-webkit-scrollbar{display:none}`}</style>
+      <style>{`
+        .prod-track::-webkit-scrollbar { display: none; }
+        @keyframes fadeInUp {
+          from {
+            opacity: 0;
+            transform: translateY(20px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+        .animate-fadeInUp {
+          animation: fadeInUp 0.3s ease-out;
+        }
+      `}</style>
 
       <div className="max-w-9xl mx-auto">
 
-        {/* ── HEADER ── */}
+        {/* HEADER */}
         <div
           ref={headerRef}
           className={[
@@ -354,13 +518,22 @@ export default function RecommendedProducts() {
             headerVis ? "opacity-100 translate-y-0" : "opacity-0 translate-y-3",
           ].join(" ")}
         >
-          <h2 className="text-[14px] font-medium text-[#1a1a1a] tracking-wide">
-            Recommended for you
-          </h2>
+          <div>
+            <h2 className="text-[14px] font-medium text-[#1a1a1a] tracking-wide">
+              Recommended for you
+            </h2>
+            <p className="text-[11px] text-gray-400 mt-0.5">
+              Personalized picks based on your preferences
+            </p>
+          </div>
 
           <div className="flex items-center gap-1.5">
-            <ScrollBtn dir="left" onClick={() => scrollBy("left")} show={canLeft} />
-            <ScrollBtn dir="right" onClick={() => scrollBy("right")} show={canRight} />
+            {products.length > 4 && (
+              <>
+                <ScrollBtn dir="left" onClick={() => scrollBy("left")} show={canLeft} />
+                <ScrollBtn dir="right" onClick={() => scrollBy("right")} show={canRight} />
+              </>
+            )}
             <button
               onClick={() => navigate("/products")}
               className="hidden sm:flex items-center gap-0.5 text-[12px] text-[#999] hover:text-[#1a1a1a] transition-colors duration-200 ml-2"
@@ -371,7 +544,7 @@ export default function RecommendedProducts() {
           </div>
         </div>
 
-        {/* ── PRODUCT TRACK ── */}
+        {/* PRODUCT TRACK */}
         <div
           ref={trackRef}
           className="prod-track flex gap-3 overflow-x-auto"
@@ -384,15 +557,21 @@ export default function RecommendedProducts() {
             scrollSnapType: "x mandatory",
           }}
         >
-          {PRODUCTS.map((p, i) => (
-            <div key={p.id} className="flex-shrink-0" style={{ scrollSnapAlign: "start" }}>
-              <ProductCard product={p} index={i} />
+          {products.map((p, i) => (
+            <div key={p._id} className="flex-shrink-0" style={{ scrollSnapAlign: "start" }}>
+              <ProductCard 
+                product={p} 
+                index={i} 
+                isWishlisted={wishlist.includes(p._id)}
+                onWishlistToggle={toggleWishlist}
+                showToast={showToast}
+              />
             </div>
           ))}
           <div className="min-w-2 flex-shrink-0" />
         </div>
 
-        {/* ── MOBILE VIEW ALL ── */}
+        {/* MOBILE VIEW ALL */}
         <div className="sm:hidden flex justify-center mt-5 px-4">
           <button
             onClick={() => navigate("/products")}
@@ -403,6 +582,15 @@ export default function RecommendedProducts() {
         </div>
 
       </div>
+
+      {/* Toast Notification */}
+      {toast && (
+        <Toast 
+          message={toast.message} 
+          type={toast.type} 
+          onClose={() => setToast(null)} 
+        />
+      )}
     </section>
   );
 }
