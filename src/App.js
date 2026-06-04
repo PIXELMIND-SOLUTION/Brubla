@@ -25,6 +25,7 @@ import SubCategoriesGrid from './components/SubCategoryGrid';
 import SubCategoryProductsPage from './pages/SubCategoryProductsPage';
 import NotFoundPage from './views/NotFoundPage';
 import WishlistPage from './pages/UserWishlist';
+import SearchResultsPage from './pages/SearchPage';
 
 /* =========================
    PRIVATE ROUTE COMPONENT
@@ -223,6 +224,15 @@ function App() {
           element={
             <PrivateRoute>
               <WeddingPlannerPage />
+            </PrivateRoute>
+          }
+        />
+
+        <Route
+          path="/search"
+          element={
+            <PrivateRoute>
+              <SearchResultsPage />
             </PrivateRoute>
           }
         />

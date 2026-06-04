@@ -228,6 +228,7 @@ const SUGGESTIONS = [
 const SearchOverlay = ({ open, onClose }) => {
     const [q, setQ] = useState("");
     const inputRef = useRef(null);
+    const navigate = useNavigate();
 
     useEffect(() => {
         if (open) { setTimeout(() => inputRef.current?.focus(), 80); document.body.style.overflow = "hidden"; }
@@ -240,6 +241,26 @@ const SearchOverlay = ({ open, onClose }) => {
         document.addEventListener("keydown", fn);
         return () => document.removeEventListener("keydown", fn);
     }, [onClose]);
+
+    // Handle Enter key press
+    const handleKeyPress = (e) => {
+        if (e.key === "Enter" && q.trim().length > 0) {
+            onClose();
+            navigate(`/search?q=${encodeURIComponent(q.trim())}`);
+        }
+    };
+
+    // Handle suggestion click
+    const handleSuggestionClick = (suggestion) => {
+        onClose();
+        navigate(`/search?q=${encodeURIComponent(suggestion.label)}`);
+    };
+
+    // Handle recent/trending/popular click
+    const handleTermClick = (term) => {
+        onClose();
+        navigate(`/search?q=${encodeURIComponent(term)}`);
+    };
 
     const filtered = q.length > 0 ? SUGGESTIONS.filter(s => s.label.toLowerCase().includes(q.toLowerCase())) : [];
 
@@ -256,10 +277,16 @@ const SearchOverlay = ({ open, onClose }) => {
                     <div className="flex-1 flex items-center gap-2.5 rounded-full px-4 py-2.5"
                         style={{ background: "#fff", border: "1.5px solid #000", boxShadow: "0 0 0 3px rgba(111,78,55,0.08)" }}>
                         <SearchIcon c="w-4 h-4 flex-shrink-0 opacity-50" />
-                        <input ref={inputRef} type="text" placeholder="Search products, brands, categories…"
-                            value={q} onChange={e => setQ(e.target.value)}
+                        <input 
+                            ref={inputRef} 
+                            type="text" 
+                            placeholder="Search products, brands, categories…"
+                            value={q} 
+                            onChange={e => setQ(e.target.value)}
+                            onKeyPress={handleKeyPress}
                             className="bg-transparent text-sm outline-none flex-1 min-w-0 placeholder:opacity-40"
-                            style={{ color: "#000", caretColor: "#000" }} />
+                            style={{ color: "#000", caretColor: "#000" }} 
+                        />
                         {q && <button onClick={() => setQ("")} className="flex-shrink-0 opacity-50 hover:opacity-90 transition-opacity"><CloseIcon c="w-4 h-4" /></button>}
                     </div>
                 </div>
@@ -270,20 +297,48 @@ const SearchOverlay = ({ open, onClose }) => {
                                 <>
                                     <p className="text-[9px] font-black uppercase tracking-widest mb-2" style={{ color: "#000" }}>Suggestions</p>
                                     {filtered.map(s => (
-                                        <button key={s.label} className="w-full flex items-center justify-between py-2.5 px-1 rounded-xl transition-colors hover:bg-[#f9f5f0]" onClick={onClose}>
+                                        <button 
+                                            key={s.label} 
+                                            className="w-full flex items-center justify-between py-2.5 px-1 rounded-xl transition-colors hover:bg-[#f9f5f0]" 
+                                            onClick={() => handleSuggestionClick(s)}
+                                        >
                                             <div className="flex items-center gap-3">
-                                                <div className="w-7 h-7 rounded-full flex items-center justify-center flex-shrink-0" style={{ background: "#fff" }}><SearchIcon c="w-3.5 h-3.5 opacity-50" /></div>
+                                                <div className="w-7 h-7 rounded-full flex items-center justify-center flex-shrink-0" style={{ background: "#f9f5f0" }}><SearchIcon c="w-3.5 h-3.5 opacity-50" /></div>
                                                 <span className="text-sm font-medium" style={{ color: "#000" }}>{s.label}</span>
                                             </div>
                                             <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full" style={{ background: "#f9f5f0", color: "#7a6a5a" }}>{s.tag}</span>
                                         </button>
                                     ))}
+                                    {/* Direct search option */}
+                                    {q.trim().length > 0 && !filtered.some(s => s.label.toLowerCase() === q.toLowerCase()) && (
+                                        <button 
+                                            className="w-full flex items-center justify-between py-2.5 px-1 rounded-xl transition-colors hover:bg-[#f9f5f0] mt-2 border-t border-[rgba(111,78,55,0.1)] pt-4"
+                                            onClick={() => handleTermClick(q.trim())}
+                                        >
+                                            <div className="flex items-center gap-3">
+                                                <div className="w-7 h-7 rounded-full flex items-center justify-center flex-shrink-0" style={{ background: "#f9f5f0" }}><SearchIcon c="w-3.5 h-3.5 opacity-50" /></div>
+                                                <span className="text-sm font-medium" style={{ color: "#000" }}>
+                                                    Search for "<span style={{ color: "#7a6a5a" }}>{q}</span>"
+                                                </span>
+                                            </div>
+                                            <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full" style={{ background: "#f9f5f0", color: "#7a6a5a" }}>
+                                                Enter ↵
+                                            </span>
+                                        </button>
+                                    )}
                                 </>
                             ) : (
                                 <div className="flex flex-col items-center justify-center py-10 gap-2">
                                     <SearchIcon c="w-10 h-10 opacity-20" />
-                                    <p className="text-sm font-medium" style={{ color: "#7a6a5a" }}>No results for "<span style={{ color: "#000" }}>{q}</span>"</p>
+                                    <p className="text-sm font-medium" style={{ color: "#000" }}>No results for "<span style={{ color: "#7a6a5a" }}>{q}</span>"</p>
                                     <p className="text-xs" style={{ color: "#7a6a5a" }}>Try searching for something else</p>
+                                    <button 
+                                        onClick={() => handleTermClick(q.trim())}
+                                        className="mt-4 px-4 py-2 rounded-full text-xs font-semibold transition-all hover:scale-105"
+                                        style={{ background: "#000", color: "#fff" }}
+                                    >
+                                        Search for "{q}"
+                                    </button>
                                 </div>
                             )}
                         </div>
@@ -294,12 +349,16 @@ const SearchOverlay = ({ open, onClose }) => {
                                 <div className="pt-5">
                                     <div className="flex items-center justify-between mb-2">
                                         <p className="text-[9px] font-black uppercase tracking-widest" style={{ color: "#000" }}>Recent</p>
-                                        <button className="text-[10px] font-semibold" style={{ color: "#000" }}>Clear all</button>
+                                        <button className="text-[10px] font-semibold" style={{ color: "#7a6a5a" }}>Clear all</button>
                                     </div>
                                     <div className="flex flex-wrap gap-2">
                                         {RECENT.map(r => (
-                                            <button key={r} className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium transition-colors hover:bg-[#f0ebe4]"
-                                                style={{ background: "#fff", color: "#000", border: "1px solid rgba(0, 0, 0, 1)" }} onClick={onClose}>
+                                            <button 
+                                                key={r} 
+                                                className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium transition-colors hover:bg-[#f0ebe4]"
+                                                style={{ background: "#fff", color: "#333", border: "1px solid rgba(111,78,55,0.15)" }} 
+                                                onClick={() => handleTermClick(r)}
+                                            >
                                                 <ClockIcon c="w-3 h-3 opacity-40" />{r}
                                             </button>
                                         ))}
@@ -313,9 +372,12 @@ const SearchOverlay = ({ open, onClose }) => {
                                 </div>
                                 <div className="flex flex-wrap gap-2">
                                     {TRENDING.map((t, i) => (
-                                        <button key={t} className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold transition-all hover:scale-105"
-                                            style={{ background: i === 0 ? "linear-gradient(135deg,#fff,#fff)" : "#fff", color: "#000", border: "1px solid rgba(0, 0, 0, 1)" }}
-                                            onClick={onClose}>
+                                        <button 
+                                            key={t} 
+                                            className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold transition-all hover:scale-105"
+                                            style={{ background: i === 0 ? "linear-gradient(135deg,#f9f5f0,#fff)" : "#fff", color: i === 0 ? "#000" : "#333", border: "1px solid rgba(111,78,55,0.15)" }}
+                                            onClick={() => handleTermClick(t)}
+                                        >
                                             {i === 0 && <ZapIcon c="w-2.5 h-2.5" />}{t}
                                         </button>
                                     ))}
@@ -325,10 +387,14 @@ const SearchOverlay = ({ open, onClose }) => {
                                 <p className="text-[9px] font-black uppercase tracking-widest mb-3" style={{ color: "#000" }}>Popular Categories</p>
                                 <div className="grid grid-cols-2 gap-2">
                                     {SUGGESTIONS.slice(0, 4).map(s => (
-                                        <button key={s.label} className="flex items-center justify-between px-3 py-2.5 rounded-xl transition-colors hover:bg-[#f0ebe4] text-left"
-                                            style={{ background: "#fff", border: "1px solid rgba(0, 0, 0, 1)" }} onClick={onClose}>
+                                        <button 
+                                            key={s.label} 
+                                            className="flex items-center justify-between px-3 py-2.5 rounded-xl transition-colors hover:bg-[#f0ebe4] text-left"
+                                            style={{ background: "#fff", border: "1px solid rgba(111,78,55,0.12)" }} 
+                                            onClick={() => handleSuggestionClick(s)}
+                                        >
                                             <span className="text-xs font-semibold" style={{ color: "#000" }}>{s.label}</span>
-                                            <span className="text-[9px] font-medium" style={{ color: "#0c0c0c" }}>{s.tag}</span>
+                                            <span className="text-[9px] font-medium" style={{ color: "#7a6a5a" }}>{s.tag}</span>
                                         </button>
                                     ))}
                                 </div>
