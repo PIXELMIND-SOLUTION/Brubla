@@ -1106,7 +1106,7 @@ const Navbar = () => {
                         <div className="flex items-center gap-2">
                             {/* Logo image */}
                             <div onClick={() => navigate('/home')} className="cursor-pointer flex-shrink-0">
-                                <img src="/logo2.png" className="h-10 w-10" alt="logo"
+                                <img src="/logo2.png" className={transparent ? "bg-white h-10 w-10" : "h-10 w-10"} alt="logo"
                                     onError={e => { e.target.style.display = "none"; }} />
                             </div>
 

@@ -1,23 +1,27 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 
 // ─────────────────────────────────────────────────────────────────────────────
-// CATEGORY DATA (FALLBACK IF API FAILS)
+// FALLBACK DATA (USED ONLY IF API FAILS)
 // ─────────────────────────────────────────────────────────────────────────────
-const FALLBACK_CATEGORIES = [];
-
+const FALLBACK_CATEGORIES = [
+  { id: "1", name: "Women", productCount: 124, image: "https://images.unsplash.com/photo-1483985988355-763728e1935b?w=300&h=300&fit=crop" },
+  { id: "2", name: "Men", productCount: 98, image: "https://images.unsplash.com/photo-1490578474895-699cd4e2cf59?w=300&h=300&fit=crop" },
+  { id: "3", name: "Kids", productCount: 76, image: "https://images.unsplash.com/photo-1519238263530-99bdd11df2ea?w=300&h=300&fit=crop" },
+  { id: "4", name: "Accessories", productCount: 203, image: "https://images.unsplash.com/photo-1523381210434-271e8be1f52b?w=300&h=300&fit=crop" },
+];
 
 // ─────────────────────────────────────────────────────────────────────────────
 // ARROW ICONS
 // ─────────────────────────────────────────────────────────────────────────────
-const ChevRight = ({ color = "#000", size = 13 }) => (
+const ChevRight = ({ color = "#000", size = 14 }) => (
   <svg width={size} height={size} viewBox="0 0 24 24" fill="none"
     stroke={color} strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round">
     <path d="M9 18l6-6-6-6" />
   </svg>
 );
 
-const ChevLeft = ({ color = "#000", size = 13 }) => (
+const ChevLeft = ({ color = "#000", size = 14 }) => (
   <svg width={size} height={size} viewBox="0 0 24 24" fill="none"
     stroke={color} strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round">
     <path d="M15 18l-6-6 6-6" />
@@ -25,11 +29,12 @@ const ChevLeft = ({ color = "#000", size = 13 }) => (
 );
 
 // ─────────────────────────────────────────────────────────────────────────────
-// CATEGORY CARD COMPONENT
+// CIRCULAR CATEGORY CARD COMPONENT
 // ─────────────────────────────────────────────────────────────────────────────
-const CategoryCard = ({ cat, index }) => {
+const CategoryCard = ({ cat, index, onClick }) => {
   const [hovered, setHovered] = useState(false);
   const [visible, setVisible] = useState(false);
+  const [imgError, setImgError] = useState(false);
   const ref = useRef(null);
 
   useEffect(() => {
@@ -43,111 +48,71 @@ const CategoryCard = ({ cat, index }) => {
     return () => obs.disconnect();
   }, []);
 
-  const isSale = cat.label === "Sale";
+  const fallbackImage = `https://placehold.co/400x400/111111/f5f5f5?font=playfair-display&text=${encodeURIComponent(
+    cat.name.charAt(0)
+  )}`;
 
   return (
     <div
       ref={ref}
-      className="relative flex-shrink-0 overflow-hidden cursor-pointer rounded-xl transition-all duration-300"
-      style={{
-        width: "200px",
-        aspectRatio: "3 / 4",
-        opacity: visible ? 1 : 0,
-        transform: visible ? "translateY(0) scale(1)" : "translateY(20px) scale(0.97)",
-        transition: `opacity 0.5s ease ${index * 0.06}s, transform 0.5s ease ${index * 0.06}s`,
-        boxShadow: hovered
-          ? "0 18px 44px rgba(12,12,12,0.22), 0 4px 14px rgba(12,12,12,0.1)"
-          : "0 3px 14px rgba(12,12,12,0.09)",
-      }}
+      onClick={onClick}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
+      className="flex-shrink-0 cursor-pointer transition-all duration-500 group"
+      style={{
+        opacity: visible ? 1 : 0,
+        transition: `opacity 0.5s cubic-bezier(0.2, 0.9, 0.4, 1.1) ${index * 0.05}s, transform 0.5s cubic-bezier(0.2, 0.9, 0.4, 1.1) ${index * 0.05}s`,
+      }}
     >
-      {/* IMAGE */}
-      <img
-        src={cat.img}
-        alt={cat.label}
-        className="absolute inset-0 w-full h-full object-cover object-center transition-transform duration-700"
-        style={{
-          transform: hovered ? "scale(1.09)" : "scale(1.0)",
-        }}
-        loading="lazy"
-        draggable={false}
-        onError={(e) => {
-          e.target.src =
-            "https://placehold.co/600x800/e5e7eb/64748b?text=No+Image";
-        }}
-      />
-
-      {/* OVERLAY — default */}
+      {/* Circular Image Container */}
       <div
-        className="absolute inset-0 transition-opacity duration-400"
-        style={{
-          background: "linear-gradient(180deg,rgba(12,12,12,0) 40%,rgba(12,12,12,0.78) 100%)",
-          opacity: hovered ? 0 : 1,
-        }}
-      />
-
-      {/* OVERLAY — hover */}
-      <div
-        className="absolute inset-0 transition-opacity duration-400"
-        style={{
-          background: "linear-gradient(180deg,rgba(12,12,12,0.08) 0%,rgba(12,12,12,0.88) 100%)",
-          opacity: hovered ? 1 : 0,
-        }}
-      />
-
-      {/* SALE badge */}
-      {isSale && (
-        <div className="absolute top-3 right-3 z-10 text-[9px] font-black tracking-[0.12em] uppercase px-2 py-0.5 rounded-sm"
-          style={{ background: cat.accent, color: "#0C0C0C" }}>
-          HOT
-        </div>
-      )}
-
-      {/* TOP ACCENT LINE on hover */}
-      <div
-        className="absolute top-0 left-0 right-0 h-[3px] z-10 transition-opacity duration-350"
-        style={{
-          background: `linear-gradient(90deg,transparent,${cat.accent},transparent)`,
-          opacity: hovered ? 1 : 0,
-        }}
-      />
-
-      {/* TEXT BLOCK */}
-      <div
-        className="absolute bottom-0 left-0 right-0 z-10 px-3 pb-3 pt-2 transition-transform duration-400"
-        style={{
-          transform: hovered ? "translateY(0)" : "translateY(3px)",
-        }}
+        className={`relative overflow-hidden rounded-full mx-auto transition-all duration-400 ${hovered ? 'shadow-xl scale-[1.02]' : 'shadow-md scale-100'
+          }`}
+        style={{ width: "140px", height: "140px" }}
       >
-        <h3 className="font-black text-white leading-tight text-base md:text-lg tracking-tight"
-          style={{ fontFamily: "Georgia,'Times New Roman',serif" }}>
-          {cat.label}
-        </h3>
-        <div className="flex items-center justify-between mt-0.5">
-          <p
-            className="text-[10px] font-semibold tracking-wide transition-opacity duration-300"
-            style={{
-              color: "#c9b7b7",
-              opacity: hovered ? 1 : 0.75,
-              letterSpacing: "0.05em",
-            }}>
-            {cat.sublabel}
-          </p>
-          {/* Arrow chip */}
-          <div
-            className="flex items-center justify-center transition-all duration-300 rounded-full"
-            style={{
-              width: "26px",
-              height: "26px",
-              background: cat.accent,
-              opacity: hovered ? 1 : 0,
-              transform: hovered ? "scale(1) translateX(0)" : "scale(0.5) translateX(8px)",
-            }}>
-            <ChevRight color="#fff" size={11} />
-          </div>
-        </div>
+        <img
+          src={imgError ? fallbackImage : cat.image}
+          alt={cat.name}
+          className="w-full h-full object-cover object-center transition-transform duration-700 ease-out"
+          style={{ transform: hovered ? "scale(1.1)" : "scale(1)" }}
+          loading="lazy"
+          draggable={false}
+          onError={() => setImgError(true)}
+        />
+
+        {/* Hover Overlay */}
+        <div
+          className={`absolute inset-0 rounded-full transition-opacity duration-300 ${hovered ? 'opacity-100' : 'opacity-0'
+            }`}
+          style={{ background: "linear-gradient(135deg, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.5) 100%)" }}
+        />
       </div>
+
+      {/* Category Name & Count */}
+      <div className={`mt-3 text-center transition-all duration-300 ${hovered ? 'transform -translate-y-0.5' : ''}`}>
+        <h3 className={`font-bold text-sm md:text-base tracking-tight transition-colors duration-200 ${hovered ? 'text-black' : 'text-gray-800'
+          }`}>
+          {cat.name}
+        </h3>
+        <p className={`text-[11px] font-medium transition-all duration-200 ${hovered ? 'text-gray-800 opacity-80' : 'text-gray-800 opacity-60'
+          }`}>
+          {cat.productCount} {cat.productCount === 1 ? "Product" : "Products"}
+        </p>
+      </div>
+
+      {/* Accent Ring on Hover */}
+      <div
+        className={`absolute rounded-full pointer-events-none transition-all duration-300 ${hovered ? 'opacity-100 scale-100' : 'opacity-0 scale-95'
+          }`}
+        style={{
+          top: "-4px",
+          left: "-4px",
+          right: "-4px",
+          bottom: "-4px",
+          border: `2px solid ${cat.accent || "#000"}`,
+          borderRadius: "50%",
+        }}
+      />
     </div>
   );
 };
@@ -159,42 +124,37 @@ const ScrollBtn = ({ dir, onClick, visible }) => (
   <button
     onClick={onClick}
     aria-label={dir === "left" ? "Scroll left" : "Scroll right"}
-    className="flex-shrink-0 flex items-center justify-center transition-all duration-200
-               hover:scale-110 active:scale-95 rounded-full"
-    style={{
-      width: "38px",
-      height: "38px",
-      background: "#000",
-      border: "1.5px solid rgba(201,169,110,0.3)",
-      opacity: visible ? 1 : 0.25,
-      cursor: visible ? "pointer" : "not-allowed",
-      pointerEvents: visible ? "auto" : "none",
-    }}
+    className={`flex-shrink-0 flex items-center justify-center transition-all duration-200
+               hover:scale-110 active:scale-95 rounded-full bg-white border border-gray-200 shadow-sm
+               ${visible ? 'opacity-100 cursor-pointer' : 'opacity-30 cursor-not-allowed'}`}
+    style={{ width: "36px", height: "36px" }}
+    disabled={!visible}
   >
     {dir === "left"
-      ? <ChevLeft color="#fff" size={13} />
-      : <ChevRight color="#fff" size={13} />}
+      ? <ChevLeft color="#000" size={14} />
+      : <ChevRight color="#000" size={14} />}
   </button>
 );
 
 // ─────────────────────────────────────────────────────────────────────────────
-// LOADING SKELETON COMPONENT
+// LOADING SKELETON
 // ─────────────────────────────────────────────────────────────────────────────
 const LoadingSkeleton = () => (
-  <div className="flex gap-3 md:gap-4 overflow-x-auto" style={{ paddingLeft: "16px", paddingRight: "16px" }}>
-    {[1, 2, 3, 4].map((i) => (
-      <div
-        key={i}
-        className="relative flex-shrink-0 rounded-xl bg-gray-200 animate-pulse"
-        style={{ width: "200px", aspectRatio: "3 / 4" }}
-      />
+  <div className="flex gap-3 sm:gap-5 overflow-x-auto px-4 sm:px-6 lg:px-8">
+    {[1, 2, 3, 4, 5].map((i) => (
+      <div key={i} className="flex-shrink-0 text-center">
+        <div className="rounded-full bg-gray-200 animate-pulse" style={{ width: "140px", height: "140px" }} />
+        <div className="mt-3 space-y-1">
+          <div className="h-3 bg-gray-200 rounded animate-pulse w-20 mx-auto" />
+          <div className="h-2 bg-gray-100 rounded animate-pulse w-16 mx-auto" />
+        </div>
+      </div>
     ))}
   </div>
 );
 
 // ─────────────────────────────────────────────────────────────────────────────
-// MAIN EXPORT - Category Section
-// Shows 4 cards on md/lg devices, 2 cards on mobile with horizontal scroll
+// MAIN EXPORT - Category Section (Circular Cards)
 // ─────────────────────────────────────────────────────────────────────────────
 export default function CategorySection() {
   const trackRef = useRef(null);
@@ -202,6 +162,7 @@ export default function CategorySection() {
   const [canRight, setCanRight] = useState(true);
   const [headerVis, setHeaderVis] = useState(false);
   const headerRef = useRef(null);
+  const [isMobile, setIsMobile] = useState(false);
 
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -209,9 +170,9 @@ export default function CategorySection() {
 
   const navigate = useNavigate();
 
-  // Helper function to generate a consistent color accent based on category name
+  // Helper: Generate consistent accent color
   const getAccentColor = (name) => {
-    const colors = ["#000", "#2c3e50", "#8e44ad", "#c0392b", "#2980b9", "#d35400", "#27ae60", "#7f8c8d"];
+    const colors = ["#1a1a1a", "#c0392b", "#2980b9", "#27ae60", "#8e44ad", "#d35400", "#2c3e50"];
     let hash = 0;
     for (let i = 0; i < name.length; i++) {
       hash = ((hash << 5) - hash) + name.charCodeAt(i);
@@ -220,35 +181,33 @@ export default function CategorySection() {
     return colors[Math.abs(hash) % colors.length];
   };
 
-  // Helper function to get sublabel text
-  const getSublabel = (category) => {
+  // Helper: Estimate product count from subcategories
+  const getProductCount = (category) => {
     const subCount = category.subcategories?.length || 0;
-    if (subCount === 0) return "Explore now";
-    if (subCount === 1) return `${subCount} style`;
-    return `${subCount} styles`;
+    return subCount;
   };
 
-  // Helper function to get first subcategory image or fallback
+  // Helper: Get image for category
   const getCategoryImage = (category) => {
-    if (category.subcategories && category.subcategories.length > 0 && category.subcategories[0].image) {
-      // Replace localhost with actual API base URL if needed
-      let imgUrl = category.subcategories[0].image;
-      // If the image URL points to localhost, replace with the actual API host
-      if (imgUrl.includes("localhost:4077")) {
-        imgUrl = imgUrl.replace("http://localhost:4077", "http://31.97.228.17:4077");
+    if (category.subcategories && category.subcategories.length > 0) {
+      const imgUrl = category.subcategories[0].image;
+      if (imgUrl) {
+        if (imgUrl.includes("localhost:4077")) {
+          return imgUrl.replace("http://localhost:4077", "http://31.97.228.17:4077");
+        }
+        return imgUrl;
       }
-      return imgUrl;
     }
-    // Fallback images based on category name
-    const fallbackImages = {
-      "Men": "https://images.unsplash.com/photo-1490578474895-699cd4e2cf59?w=600&q=80",
-      "Women": "https://images.unsplash.com/photo-1483985988355-763728e1935b?w=800&q=80",
-      "Kids": "https://images.unsplash.com/photo-1519238263530-99bdd11df2ea?w=600&q=80",
+    const fallbacks = {
+      "Men": "https://images.unsplash.com/photo-1490578474895-699cd4e2cf59?w=300&h=300&fit=crop",
+      "Women": "https://images.unsplash.com/photo-1483985988355-763728e1935b?w=300&h=300&fit=crop",
+      "Womenn": "https://images.unsplash.com/photo-1483985988355-763728e1935b?w=300&h=300&fit=crop",
+      "Kids": "https://images.unsplash.com/photo-1519238263530-99bdd11df2ea?w=300&h=300&fit=crop",
     };
-    return fallbackImages[category.name] || "https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=600&q=80";
+    return fallbacks[category.name] || "https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=300&h=300&fit=crop";
   };
 
-  // Fetch categories from API
+  // Fetch categories
   useEffect(() => {
     const fetchCategories = async () => {
       setLoading(true);
@@ -256,48 +215,35 @@ export default function CategorySection() {
       try {
         const response = await fetch("http://31.97.228.17:4077/api/admin/categories");
 
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
+        if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
 
         const data = await response.json();
 
         if (data.success && data.categories && data.categories.length > 0) {
-          // Filter only active categories
           const activeCategories = data.categories.filter(cat => cat.isActive === true);
 
-          const mappedCategories = activeCategories.map((cat) => ({
+          const mappedCategories = activeCategories.map(cat => ({
             id: cat._id,
-            label: cat.name,
-            sublabel: getSublabel(cat),
-            img: getCategoryImage(cat),
+            name: cat.name === "Womenn" ? "Women" : cat.name,
+            productCount: getProductCount(cat),
+            image: getCategoryImage(cat),
             accent: getAccentColor(cat.name),
-            originalData: cat,
           }));
 
           setCategories(mappedCategories);
         } else {
-          // No categories from API, use fallback
-          console.warn("No categories found in API response, using fallback data");
-          const fallbackMapped = FALLBACK_CATEGORIES.map((cat) => ({
-            id: String(cat.id),
-            label: cat.label,
-            sublabel: cat.sublabel,
-            img: cat.img,
-            accent: cat.accent,
+          const fallbackMapped = FALLBACK_CATEGORIES.map(cat => ({
+            ...cat,
+            accent: getAccentColor(cat.name),
           }));
           setCategories(fallbackMapped);
         }
       } catch (err) {
         console.error("Failed to fetch categories:", err);
         setError(err instanceof Error ? err.message : "Failed to load categories");
-        // Use fallback data on error
-        const fallbackMapped = FALLBACK_CATEGORIES.map((cat) => ({
-          id: String(cat.id),
-          label: cat.label,
-          sublabel: cat.sublabel,
-          img: cat.img,
-          accent: cat.accent,
+        const fallbackMapped = FALLBACK_CATEGORIES.map(cat => ({
+          ...cat,
+          accent: getAccentColor(cat.name),
         }));
         setCategories(fallbackMapped);
       } finally {
@@ -306,6 +252,14 @@ export default function CategorySection() {
     };
 
     fetchCategories();
+  }, []);
+
+  // Detect mobile for scroll adjustments
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth < 640);
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
   }, []);
 
   // Header entrance animation
@@ -320,139 +274,150 @@ export default function CategorySection() {
     return () => obs.disconnect();
   }, []);
 
-  // Track scroll state for button visibility
-  const updateScroll = () => {
+  // Update scroll button visibility
+  const updateScroll = useCallback(() => {
     const el = trackRef.current;
     if (!el) return;
-    setCanLeft(el.scrollLeft > 8);
-    setCanRight(el.scrollLeft < el.scrollWidth - el.clientWidth - 8);
-  };
+    const threshold = 4;
+    setCanLeft(el.scrollLeft > threshold);
+    setCanRight(el.scrollLeft < el.scrollWidth - el.clientWidth - threshold);
+  }, []);
 
   useEffect(() => {
     const el = trackRef.current;
     if (!el) return;
     el.addEventListener("scroll", updateScroll, { passive: true });
     updateScroll();
-    return () => el.removeEventListener("scroll", updateScroll);
-  }, [categories]); // Re-run when categories change
+    window.addEventListener("resize", updateScroll);
+    return () => {
+      el.removeEventListener("scroll", updateScroll);
+      window.removeEventListener("resize", updateScroll);
+    };
+  }, [categories, updateScroll]);
 
-  const scrollBy = (dir) => {
+  const scrollBy = useCallback((dir) => {
     const el = trackRef.current;
     if (!el) return;
-    // Scroll 2 cards at a time for better UX
-    const scrollAmount = 340;
+    const cardWidth = 140;
+    const gap = isMobile ? 12 : 20;
+    const scrollAmount = (cardWidth + gap) * (isMobile ? 2 : 3);
     el.scrollBy({ left: dir === "right" ? scrollAmount : -scrollAmount, behavior: "smooth" });
-  };
+  }, [isMobile]);
 
-  const handleCategoryClick = (category) => {
-    // Navigate to category page with the category name
-    const encodedName = encodeURIComponent(category.label);
-    navigate(`/category/${category.id}`);
-  };
+  const handleCategoryClick = useCallback((category) => {
+    navigate(`/category/${category.id}`, { state: { categoryName: category.name } });
+  }, [navigate]);
 
   return (
-    <section className="w-full p-10 md:py-14 bg-white" aria-label="Shop by Category">
+    <section className="w-full p-10 md:py-12 bg-white overflow-hidden" aria-label="Shop by Category">
+      <style>{`
+    .category-track::-webkit-scrollbar { display: none; }
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    .animate-fadeInUp {
+      animation: fadeInUp 0.3s ease-out;
+    }
+  `}</style>
+
       <div className="max-w-9xl mx-auto">
 
-        {/* ── HEADER ── */}
+        {/* HEADER */}
         <div
           ref={headerRef}
-          className="flex items-end justify-between px-4 md:px-6 lg:px-10 xl:px-14 mb-6 md:mb-8 transition-all duration-500"
-          style={{
-            opacity: headerVis ? 1 : 0,
-            transform: headerVis ? "translateY(0)" : "translateY(14px)",
-          }}
+          className={[
+            "px-4 md:px-6 lg:px-8 mb-4 md:mb-5",
+            "flex items-center justify-between",
+            "transition-[opacity,transform] duration-500",
+            headerVis ? "opacity-100 translate-y-0" : "opacity-100 translate-y-3",
+          ].join(" ")}
         >
-          {/* Left: title */}
           <div>
-            <p className="text-[10px] font-black uppercase tracking-[0.22em] mb-1 text-[#0C0C0C]">
-              Shop by
-            </p>
-            <h2
-              className="font-black leading-none text-2xl md:text-3xl lg:text-4xl text-[#000] tracking-tight"
-              style={{ fontFamily: "Georgia,'Times New Roman',serif" }}
+            <h2 className="text-[14px] font-medium text-[#1a1a1a] tracking-wide"
+              style={{
+                fontSize: "clamp(26px,4.5vw,44px)",
+                fontFamily: "Georgia,'Times New Roman',serif",
+                letterSpacing: "-0.02em",
+              }}
             >
-              Categories
+              Shop by Category
             </h2>
-            <div className="mt-2 h-[3px] w-10 bg-gradient-to-r from-[#000] to-[#000]" />
+            {/* <p className="text-[11px] text-gray-400 mt-0.5">
+              Explore our curated collections
+            </p> */}
           </div>
 
-          {/* Right: scroll arrows + view all */}
-          <div className="flex items-center gap-2">
-            <ScrollBtn dir="left" onClick={() => scrollBy("left")} visible={canLeft} />
-            <ScrollBtn dir="right" onClick={() => scrollBy("right")} visible={canRight} />
+          <div className="flex items-center gap-1.5">
+            {categories.length > 4 && (
+              <>
+                <ScrollBtn dir="left" onClick={() => scrollBy("left")} show={canLeft} />
+                <ScrollBtn dir="right" onClick={() => scrollBy("right")} show={canRight} />
+              </>
+            )}
             <button
-              className="hidden sm:flex items-center gap-1.5 text-xs font-bold ml-2 transition-all duration-200 group text-black"
-              onClick={() => navigate('/category')}
+              onClick={() => navigate("/category")}
+              className="hidden sm:flex items-center gap-0.5 text-[12px] text-[#999] hover:text-[#1a1a1a] transition-colors duration-200 ml-2"
             >
-              View All
-              <span className="flex items-center justify-center transition-all duration-200 group-hover:scale-110 w-[26px] h-[26px] bg-[#000] rounded-full">
-                <ChevRight color="#fff" size={11} />
-              </span>
+              View all
+              <ChevRight color="#999" size={11} />
             </button>
           </div>
         </div>
 
-        {/* ── HORIZONTAL SCROLL TRACK ── */}
-        {/* Shows 2 cards on mobile (sm), 4 cards on medium and up (md) */}
+        {/* CATEGORY TRACK */}
         {loading ? (
           <LoadingSkeleton />
         ) : (
-          <div
-            ref={trackRef}
-            className="flex gap-3 md:gap-4 overflow-x-auto scroll-smooth category-track"
-            style={{
-              paddingLeft: "16px",
-              paddingRight: "16px",
-              paddingBottom: "12px",
-              scrollbarWidth: "none",
-              msOverflowStyle: "none",
-              WebkitOverflowScrolling: "touch",
-              scrollSnapType: "x mandatory",
-            }}
-          >
-            {/* Hide scrollbar in webkit */}
-            <style>{`
-              .category-track::-webkit-scrollbar { display: none; }
-            `}</style>
+          <>
+            <div
+              ref={trackRef}
+              className="category-track flex gap-3 overflow-x-auto"
+              style={{
+                paddingLeft: "clamp(16px,2vw,32px)",
+                paddingRight: "clamp(16px,2vw,32px)",
+                paddingBottom: "8px",
+                scrollbarWidth: "none",
+                WebkitOverflowScrolling: "touch",
+                scrollSnapType: "x mandatory",
+              }}
+            >
+              {categories.map((cat, i) => (
+                <div key={cat.id} className="flex-shrink-0" style={{ scrollSnapAlign: "start" }}>
+                  <CategoryCard
+                    cat={cat}
+                    index={i}
+                    onClick={() => handleCategoryClick(cat)}
+                  />
+                </div>
+              ))}
+              <div className="min-w-2 flex-shrink-0" />
+            </div>
 
-            {categories.map((cat, i) => (
-              <div
-                key={cat.id}
-                style={{ scrollSnapAlign: "start", flexShrink: 0 }}
-                className="cursor-pointer"
-                onClick={() => handleCategoryClick(cat)}
+            {/* MOBILE VIEW ALL */}
+            <div className="sm:hidden flex justify-center mt-5 px-4">
+              <button
+                onClick={() => navigate("/category")}
+                className="text-[13px] text-[#999] underline underline-offset-4 hover:text-[#1a1a1a] transition-colors"
               >
-                <CategoryCard cat={cat} index={i} />
-              </div>
-            ))}
-
-            {/* Trailing spacer for better edge scrolling */}
-            <div className="min-w-[4px] flex-shrink-0" />
-          </div>
+                View all categories
+              </button>
+            </div>
+          </>
         )}
 
-        {/* Error message (silent fallback, no UI change) */}
+        {/* Error Message */}
         {error && !loading && categories.length === 0 && (
-          <div className="text-center text-red-500 text-sm mt-4">
-            Unable to load categories. Please try again later.
+          <div className="text-center text-red-500 text-sm mt-4 py-4">
+            Unable to load categories. Please check your connection.
           </div>
         )}
-
-        {/* ── MOBILE "View All" button below track ── */}
-        <div className="flex justify-center mt-4 sm:hidden">
-          <button
-            className="flex items-center gap-2 text-xs font-bold px-5 py-2.5 transition-all active:scale-95 rounded-full"
-            style={{
-              background: "#000",
-              color: "#fff",
-            }}
-            onClick={() => navigate('/category')}
-          >
-            View All Categories
-            <ChevRight color="#fff" size={11} />
-          </button>
-        </div>
 
       </div>
     </section>

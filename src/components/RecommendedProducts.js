@@ -68,9 +68,8 @@ const Toast = ({ message, type, onClose }) => {
 
   return (
     <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 animate-fadeInUp">
-      <div className={`flex items-center gap-3 px-4 py-3 rounded-xl shadow-lg ${
-        type === "success" ? "bg-black text-white" : "bg-red-500 text-white"
-      }`}>
+      <div className={`flex items-center gap-3 px-4 py-3 rounded-xl shadow-lg ${type === "success" ? "bg-black text-white" : "bg-red-500 text-white"
+        }`}>
         {type === "success" ? (
           <CheckIcon size={18} />
         ) : (
@@ -106,15 +105,15 @@ const ProductCard = ({ product, index, onWishlistToggle, isWishlisted, showToast
   // Get product images
   useEffect(() => {
     const productImages = [];
-    
+
     if (product.mainImage) {
       productImages.push(normaliseUrl(product.mainImage));
     }
-    
+
     if (product.mainImages && product.mainImages.length > 0) {
       product.mainImages.forEach(img => productImages.push(normaliseUrl(img)));
     }
-    
+
     if (product.variants && product.variants.length > 0) {
       product.variants.forEach(variant => {
         if (variant.mainImage) productImages.push(normaliseUrl(variant.mainImage));
@@ -123,11 +122,11 @@ const ProductCard = ({ product, index, onWishlistToggle, isWishlisted, showToast
         }
       });
     }
-    
+
     if (productImages.length === 0) {
       productImages.push("https://placehold.co/600x800/e5e7eb/64748b?text=No+Image");
     }
-    
+
     setImages([...new Set(productImages)]);
   }, [product]);
 
@@ -160,8 +159,8 @@ const ProductCard = ({ product, index, onWishlistToggle, isWishlisted, showToast
   const totalImgs = images.length;
   const displayPrice = product.displayPrice || 0;
   const originalPrice = product.displayActualPrice || 0;
-  const discount = originalPrice > displayPrice 
-    ? Math.round(((originalPrice - displayPrice) / originalPrice) * 100) 
+  const discount = originalPrice > displayPrice
+    ? Math.round(((originalPrice - displayPrice) / originalPrice) * 100)
     : product.maxDiscount || 0;
   const productName = product.name || "Product";
   const productBrand = product.brand || product.subcategoryName || "Brubla";
@@ -283,9 +282,9 @@ const ProductCard = ({ product, index, onWishlistToggle, isWishlisted, showToast
           )}
         </div>
 
-        <button 
-          onClick={(e) => { e.stopPropagation(); navigate(`/product/${product._id}`); }} 
-          className="flex-shrink-0 w-8 h-8 border border-black flex items-center justify-center rounded-full bg-white text-[#000] hover:bg-[#000] hover:text-white transition-colors duration-200" 
+        <button
+          onClick={(e) => { e.stopPropagation(); navigate(`/product/${product._id}`); }}
+          className="flex-shrink-0 w-8 h-8 border border-black flex items-center justify-center rounded-full bg-white text-[#000] hover:bg-[#000] hover:text-white transition-colors duration-200"
           aria-label="Quick view"
         >
           <FaEye size={14} className="text-[#000] hover:text-[#fff] transition-colors duration-200" />
@@ -366,13 +365,13 @@ export default function RecommendedProducts() {
       try {
         setLoading(true);
         const response = await fetch(RECOMMENDED_API_URL);
-        
+
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
-        
+
         const result = await response.json();
-        
+
         if (result.success && Array.isArray(result.data)) {
           const transformedProducts = result.data.map((product) => ({
             _id: product._id,
@@ -388,7 +387,7 @@ export default function RecommendedProducts() {
             brand: product.brand || product.subcategoryName || "Recommended",
             variants: product.variants || [],
           }));
-          
+
           setProducts(transformedProducts);
         } else {
           throw new Error('Invalid API response structure');
@@ -515,16 +514,19 @@ export default function RecommendedProducts() {
             "px-4 md:px-6 lg:px-8 mb-4 md:mb-5",
             "flex items-center justify-between",
             "transition-[opacity,transform] duration-500",
-            headerVis ? "opacity-100 translate-y-0" : "opacity-0 translate-y-3",
+            headerVis ? "opacity-100 translate-y-0" : "opacity-100 translate-y-3",
           ].join(" ")}
         >
           <div>
-            <h2 className="text-[14px] font-medium text-[#1a1a1a] tracking-wide">
+            <h2 className="text-[14px] font-medium text-[#1a1a1a] tracking-wide"
+              style={{
+                fontSize: "clamp(26px,4.5vw,44px)",
+                fontFamily: "Georgia,'Times New Roman',serif",
+                letterSpacing: "-0.02em",
+              }}>
               Recommended for you
             </h2>
-            <p className="text-[11px] text-gray-400 mt-0.5">
-              Personalized picks based on your preferences
-            </p>
+            
           </div>
 
           <div className="flex items-center gap-1.5">
@@ -559,9 +561,9 @@ export default function RecommendedProducts() {
         >
           {products.map((p, i) => (
             <div key={p._id} className="flex-shrink-0" style={{ scrollSnapAlign: "start" }}>
-              <ProductCard 
-                product={p} 
-                index={i} 
+              <ProductCard
+                product={p}
+                index={i}
                 isWishlisted={wishlist.includes(p._id)}
                 onWishlistToggle={toggleWishlist}
                 showToast={showToast}
@@ -585,10 +587,10 @@ export default function RecommendedProducts() {
 
       {/* Toast Notification */}
       {toast && (
-        <Toast 
-          message={toast.message} 
-          type={toast.type} 
-          onClose={() => setToast(null)} 
+        <Toast
+          message={toast.message}
+          type={toast.type}
+          onClose={() => setToast(null)}
         />
       )}
     </section>
