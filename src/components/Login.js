@@ -3,9 +3,9 @@ import { useNavigate } from "react-router-dom";
 
 const letters = ["B", "R", "U", "B", "L", "A"];
 
-const BASE = "http://31.97.228.17:4077/api/users";
-const LOGIN_INIT = "http://31.97.228.17:4077/api/users/login";
-const MEDIA_API = "http://31.97.228.17:4077/api/users/login-screen/media";
+const BASE = "https://brublabackend.onrender.com/api/users";
+const LOGIN_INIT = "https://brublabackend.onrender.com/api/users/login";
+const MEDIA_API = "https://brublabackend.onrender.com/api/users/login-screen/media";
 
 async function apiPost(url, body) {
   const res = await fetch(url, {

@@ -6,7 +6,7 @@ import banner from '../assets/banner.mp4';
    API CONFIGURATION
 ───────────────────────────────────────────── */
 
-const API_BASE_URL = "http://31.97.228.17:4077";
+const API_BASE_URL = "https://brublabackend.onrender.com";
 const HERO_API_ENDPOINT = `${API_BASE_URL}/api/admin/homepage/hero`;
 
 /* ─────────────────────────────────────────────

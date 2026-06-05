@@ -445,7 +445,7 @@ const LocationSelector = () => {
     };
 
     const userId = getUserId();
-    const API_BASE = "http://31.97.228.17:4077";
+    const API_BASE = "https://brublabackend.onrender.com";
 
     // Fetch existing live location from API on mount
     useEffect(() => {
@@ -676,7 +676,7 @@ const CollectionsPanel = ({
             setLoadingCollections(true);
 
             const response = await fetch(
-                "http://31.97.228.17:4077/api/users/collections"
+                "https://brublabackend.onrender.com/api/users/collections"
             );
 
             const result = await response.json();
@@ -691,7 +691,7 @@ const CollectionsPanel = ({
                         description: item.description,
                         img: item.image.replace(
                             "http://localhost:4077",
-                            "http://31.97.228.17:4077"
+                            "https://brublabackend.onrender.com"
                         ),
                     }));
 
@@ -1065,7 +1065,7 @@ const Header = () => {
     const fetchCartCount = async () => {
         try {
             const res = await fetch(
-                `http://31.97.228.17:4077/api/users/cart/${userId}`
+                `https://brublabackend.onrender.com/api/users/cart/${userId}`
             );
 
             const data = await res.json();

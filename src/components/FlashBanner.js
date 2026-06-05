@@ -4,7 +4,7 @@ import { useState, useEffect, useRef, useCallback } from "react";
    API CONFIGURATION
 ───────────────────────────── */
 
-const API_BASE_URL = "http://31.97.228.17:4077";
+const API_BASE_URL = "https://brublabackend.onrender.com";
 const BANNER_API_ENDPOINT = `${API_BASE_URL}/api/admin/homepage/banner`;
 
 /* ─────────────────────────────

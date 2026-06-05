@@ -25,7 +25,7 @@ const SearchResultsPage = () => {
         setLoading(true);
         try {
             // Replace with your actual search API endpoint
-            const response = await fetch(`http://31.97.228.17:4077/api/users/search?q=${encodeURIComponent(searchQuery)}`);
+            const response = await fetch(`https://brublabackend.onrender.com/api/users/search?q=${encodeURIComponent(searchQuery)}`);
             const data = await response.json();
             setResults(data.data || []);
             
@@ -44,7 +44,7 @@ const SearchResultsPage = () => {
     const fetchSuggestions = async (searchQuery) => {
         try {
             // Replace with your suggestions API endpoint
-            const response = await fetch(`http://31.97.228.17:4077/api/users/search/suggestions?q=${encodeURIComponent(searchQuery)}`);
+            const response = await fetch(`https://brublabackend.onrender.com/api/users/search/suggestions?q=${encodeURIComponent(searchQuery)}`);
             const data = await response.json();
             setSuggestions(data.data || []);
         } catch (error) {

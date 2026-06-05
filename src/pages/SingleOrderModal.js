@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 
 // API Base URL
-const API_BASE_URL = "http://31.97.228.17:4077/api";
+const API_BASE_URL = "https://brublabackend.onrender.com/api";
 
 // Format price in Indian Rupees
 const formatPrice = (price) => {

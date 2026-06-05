@@ -7,7 +7,7 @@ import { Heart } from "lucide-react";
 // ─────────────────────────────────────────────────────────────────────────────
 // API CONFIGURATION
 // ─────────────────────────────────────────────────────────────────────────────
-const API_BASE_URL = "http://31.97.228.17:4077";
+const API_BASE_URL = "https://brublabackend.onrender.com";
 const RECOMMENDED_API_URL = `${API_BASE_URL}/api/users/recommended`;
 
 // ─────────────────────────────────────────────────────────────────────────────

@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 // ─────────────────────────────────────────────────────────────────────────────
 // API CONFIGURATION
 // ─────────────────────────────────────────────────────────────────────────────
-const API_BASE_URL = "http://31.97.228.17:4077";
+const API_BASE_URL = "https://brublabackend.onrender.com";
 const COLLECTIONS_API_URL = `${API_BASE_URL}/api/users/homepage/collections`;
 
 // ─────────────────────────────────────────────────────────────────────────────

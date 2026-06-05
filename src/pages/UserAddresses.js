@@ -484,7 +484,7 @@ export default function UserAddresses() {
   };
   
   const userId = getUserId();
-  const API_BASE = "http://31.97.228.17:4077";
+  const API_BASE = "https://brublabackend.onrender.com";
   
   // Helper function to show toast
   const showToast = (message, type) => {
