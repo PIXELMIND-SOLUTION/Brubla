@@ -193,7 +193,7 @@ export default function CategorySection() {
       const imgUrl = category.subcategories[0].image;
       if (imgUrl) {
         if (imgUrl.includes("localhost:4077")) {
-          return imgUrl.replace("http://localhost:4077", "https://brublabackend.onrender.com");
+          return imgUrl.replace("http://localhost:4077", "http://31.97.228.17:4077");
         }
         return imgUrl;
       }
@@ -213,7 +213,7 @@ export default function CategorySection() {
       setLoading(true);
       setError(null);
       try {
-        const response = await fetch("https://brublabackend.onrender.com/api/admin/categories");
+        const response = await fetch("http://31.97.228.17:4077/api/admin/categories");
 
         if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
 

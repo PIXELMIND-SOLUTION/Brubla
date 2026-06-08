@@ -14,7 +14,7 @@ import Header from "../components/Header";
 import axios from "axios";
 
 // API Base URL
-const API_BASE_URL = "https://brublabackend.onrender.com/api";
+const API_BASE_URL = "http://31.97.228.17:4077/api";
 
 // Format price in Indian Rupees
 const formatPrice = (price) => {

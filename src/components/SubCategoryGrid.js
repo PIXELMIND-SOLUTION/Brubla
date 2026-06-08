@@ -49,7 +49,7 @@ export default function SubCategoriesGrid() {
             let imgUrl = subcategory.image;
             // Replace localhost with actual API host
             if (imgUrl.includes("localhost:4077")) {
-                imgUrl = imgUrl.replace("http://localhost:4077", "https://brublabackend.onrender.com");
+                imgUrl = imgUrl.replace("http://localhost:4077", "http://31.97.228.17:4077");
             }
             return imgUrl;
         }
@@ -98,7 +98,7 @@ export default function SubCategoriesGrid() {
             setLoading(true);
             setError(null);
             try {
-                const response = await fetch(`https://brublabackend.onrender.com/api/admin/categories/${categoryId}/subcategories`);
+                const response = await fetch(`http://31.97.228.17:4077/api/admin/categories/${categoryId}/subcategories`);
 
                 if (!response.ok) {
                     throw new Error(`HTTP error! status: ${response.status}`);

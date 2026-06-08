@@ -5,7 +5,7 @@ import Header from "../components/Header";
 const COFFEE = "#1B1816";
 
 // API Configuration
-const API_BASE_URL = "https://brublabackend.onrender.com";
+const API_BASE_URL = "http://31.97.228.17:4077";
 const COLLECTIONS_API_URL = `${API_BASE_URL}/api/users/collections`;
 
 // Collection Card Component

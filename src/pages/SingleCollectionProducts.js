@@ -5,7 +5,7 @@ import axios from "axios";
 import { Heart, ShoppingBag, Star, X, Loader2, CheckCircle, AlertCircle, ChevronDown, SlidersHorizontal } from "lucide-react";
 
 const COFFEE = "#C9A96E";
-const API_BASE_URL = "https://brublabackend.onrender.com";
+const API_BASE_URL = "http://31.97.228.17:4077";
 
 // ─── URL normaliser ────────────────────────────────────────────────────────────
 const normaliseUrl = (url) => {

@@ -10,7 +10,7 @@ import SizeGuideModal from "../views/SizeGuide";
 import axios from "axios";
 
 const COFFEE = "#000";
-const API_BASE = "https://brublabackend.onrender.com";
+const API_BASE = "http://31.97.228.17:4077";
 
 // ─── URL normaliser ────────────────────────────────────────────────────────────
 const normaliseUrl = (url) => {
@@ -615,7 +615,7 @@ export default function ProductDetails() {
             try {
 
                 const res = await axios.get(
-                    `https://brublabackend.onrender.com/api/users/${userId}`
+                    `http://31.97.228.17:4077/api/users/${userId}`
                 );
 
                 if (res.data.success) {
@@ -654,7 +654,7 @@ export default function ProductDetails() {
             // const token = sessionStorage.getItem("authToken");
 
             await axios.post(
-                `https://brublabackend.onrender.com/api/users/wishlist/${userId}/toggle`,
+                `http://31.97.228.17:4077/api/users/wishlist/${userId}/toggle`,
                 {
                     productId,
                 },
@@ -691,7 +691,7 @@ export default function ProductDetails() {
             }
 
             await axios.post(
-                `https://brublabackend.onrender.com/api/users/cart/${userId}/add`,
+                `http://31.97.228.17:4077/api/users/cart/${userId}/add`,
                 {
                     productId: product._id,
                     variantId: variant._id,
