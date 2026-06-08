@@ -43,202 +43,30 @@ function App() {
       <ScrollToTop />
 
       <Routes>
-
-        {/* PUBLIC ROUTES */}
         <Route path="/" element={<BrublaLogin />} />
 
-        {/* PRIVATE ROUTES */}
-        <Route
-          path="/home"
-          element={
-            <PrivateRoute>
-              <Home />
-            </PrivateRoute>
-          }
-        />
-
-        <Route
-          path="/exclusive"
-          element={
-            <PrivateRoute>
-              <ExclusivePage />
-            </PrivateRoute>
-          }
-        />
-
-        <Route
-          path="/exclusiveproducts"
-          element={
-            <PrivateRoute>
-              <ExclusiveProductsPage />
-            </PrivateRoute>
-          }
-        />
-
-        <Route
-          path="/exclusiveproducts/:id"
-          element={
-            <PrivateRoute>
-              <SingleExclusiveProduct />
-            </PrivateRoute>
-          }
-        />
-
-        <Route
-          path="/profile"
-          element={
-            <PrivateRoute>
-              <ProfilePage />
-            </PrivateRoute>
-          }
-        />
-
-        <Route
-          path="/category"
-          element={
-            <PrivateRoute>
-              <CategoriesGrid />
-            </PrivateRoute>
-          }
-        />
-
-        <Route
-          path="/products"
-          element={
-            <PrivateRoute>
-              <AllProducts />
-            </PrivateRoute>
-          }
-        />
-
-        <Route
-          path="/category/:categoryId"
-          element={
-            <PrivateRoute>
-              <SubCategoriesGrid />
-            </PrivateRoute>
-          }
-        />
-
-        <Route
-          path="/category/subcategory/:subcategoryId"
-          element={
-            <PrivateRoute>
-              <SubCategoryProductsPage />
-            </PrivateRoute>
-          }
-        />
-
-        <Route
-          path="/product/:id"
-          element={
-            <PrivateRoute>
-              <ProductDetails />
-            </PrivateRoute>
-          }
-        />
-
-        <Route
-          path="/joinUs"
-          element={
-            <PrivateRoute>
-              <JoinUs />
-            </PrivateRoute>
-          }
-        />
-
-        <Route
-          path="/mycart"
-          element={
-            <PrivateRoute>
-              <CartPage />
-            </PrivateRoute>
-          }
-        />
-
-        {/* <Route
-          path="/profile/personal-details"
-          element={
-            <PrivateRoute>
-              <PersonalDetails />
-            </PrivateRoute>
-          }
-        /> */}
-
-        <Route
-          path="/profile/my-orders"
-          element={
-            <PrivateRoute>
-              <MyOrders />
-            </PrivateRoute>
-          }
-        />
-
-        <Route
-          path="/profile/saved-addresses"
-          element={
-            <PrivateRoute>
-              <UserAddresses />
-            </PrivateRoute>
-          }
-        />
-
-        <Route 
-          path="/profile/wishlists"
-          element={
-            <PrivateRoute>
-              <WishlistPage />
-            </PrivateRoute>
-          }
-        />
-
-        <Route
-          path="/profile/notifications"
-          element={
-            <PrivateRoute>
-              <UserNotifications />
-            </PrivateRoute>
-          }
-        />
-
-        <Route
-          path="/collections"
-          element={
-            <PrivateRoute>
-              <Collections />
-            </PrivateRoute>
-          }
-        />
-
-        <Route
-          path="/collections/:id"
-          element={
-            <PrivateRoute>
-              <SingleCollectionProducts />
-            </PrivateRoute>
-          }
-        />
-
-        <Route
-          path="/wedding"
-          element={
-            <PrivateRoute>
-              <WeddingPlannerPage />
-            </PrivateRoute>
-          }
-        />
-
-        <Route
-          path="/search"
-          element={
-            <PrivateRoute>
-              <SearchResultsPage />
-            </PrivateRoute>
-          }
-        />
+        <Route path="/home" element={<PrivateRoute><Home /></PrivateRoute>} />
+        <Route path="/exclusive" element={<PrivateRoute><ExclusivePage /></PrivateRoute>} />
+        <Route path="/exclusiveproducts" element={<PrivateRoute><ExclusiveProductsPage /></PrivateRoute>} />
+        <Route path="/exclusiveproducts/:id" element={<PrivateRoute><SingleExclusiveProduct /></PrivateRoute>} />
+        <Route path="/profile" element={<PrivateRoute><ProfilePage /></PrivateRoute>} />
+        <Route path="/category" element={<PrivateRoute><CategoriesGrid /></PrivateRoute>} />
+        <Route path="/products" element={<PrivateRoute><AllProducts /></PrivateRoute>} />
+        <Route path="/category/:categoryId" element={<PrivateRoute><SubCategoriesGrid /></PrivateRoute>} />
+        <Route path="/category/subcategory/:subcategoryId" element={<PrivateRoute><SubCategoryProductsPage /></PrivateRoute>} />
+        <Route path="/product/:id" element={<PrivateRoute><ProductDetails /></PrivateRoute>} />
+        <Route path="/joinUs" element={<PrivateRoute><JoinUs /></PrivateRoute>} />
+        <Route path="/mycart" element={<PrivateRoute><CartPage /></PrivateRoute>} />
+        <Route path="/profile/my-orders" element={<PrivateRoute><MyOrders /></PrivateRoute>} />
+        <Route path="/profile/saved-addresses" element={<PrivateRoute><UserAddresses /></PrivateRoute>} />
+        <Route path="/profile/wishlists" element={<PrivateRoute><WishlistPage /></PrivateRoute>} />
+        <Route path="/profile/notifications" element={<PrivateRoute><UserNotifications /></PrivateRoute>} />
+        <Route path="/collections" element={<PrivateRoute><Collections /></PrivateRoute>} />
+        <Route path="/collections/:id" element={<PrivateRoute><SingleCollectionProducts /></PrivateRoute>} />
+        <Route path="/wedding" element={<PrivateRoute><WeddingPlannerPage /></PrivateRoute>} />
+        <Route path="/search" element={<PrivateRoute><SearchResultsPage /></PrivateRoute>} />
 
         <Route path="*" element={<NotFoundPage />} />
-
       </Routes>
     </>
   );

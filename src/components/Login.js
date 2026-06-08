@@ -262,7 +262,7 @@ function FormView({ type, onBack, onOtpRequired }) {
     { key: "email", label: "Email", type: "email", placeholder: "you@email.com" },
     {
       key: "role", label: "Role", type: "select",
-      options: ["Tailor", "User", "Admin", "Manager"],
+      options: ["User"],
     },
   ];
 
@@ -344,14 +344,30 @@ function FormView({ type, onBack, onOtpRequired }) {
               <input
                 type={f.type}
                 value={values[f.key]}
-                maxLength={10}
+                maxLength={f.type === "tel" ? 10 : undefined}
                 placeholder={f.placeholder}
-                onChange={(e) => { setValues((v) => ({ ...v, [f.key]: e.target.value })); setError(""); }}
+                onChange={(e) => {
+                  let value = e.target.value;
+
+                  if (f.type === "tel") {
+                    value = value.replace(/\D/g, "").slice(0, 10);
+                  }
+
+                  setValues((v) => ({
+                    ...v,
+                    [f.key]: value,
+                  }));
+                  setError("");
+                }}
                 onFocus={() => setFocused(f.key)}
                 onBlur={() => setFocused(null)}
                 onKeyDown={(e) => e.key === "Enter" && handleSubmit()}
+                inputMode={f.type === "tel" ? "numeric" : undefined}
+                pattern={f.type === "tel" ? "[0-9]*" : undefined}
                 className="bg-transparent border-none text-white text-sm py-2 w-full outline-none transition-colors font-['Inter',sans-serif] placeholder-gray-700"
-                style={{ borderBottom: `1px solid ${focused === f.key ? "#fff" : "#2e2e2e"}` }}
+                style={{
+                  borderBottom: `1px solid ${focused === f.key ? "#fff" : "#2e2e2e"}`
+                }}
               />
             )}
           </div>
@@ -382,6 +398,7 @@ export default function BrublaLogin() {
   const [videoReady, setVideoReady] = useState(false);
   const [isNavigating, setIsNavigating] = useState(false);
   const [mediaUrl, setMediaUrl] = useState(null);
+  const [mediaType, setMediaType] = useState(null);
   const [mediaLoading, setMediaLoading] = useState(true);
   const [mediaError, setMediaError] = useState(false);
 
@@ -399,6 +416,7 @@ export default function BrublaLogin() {
             url = url.replace("localhost:4077", "31.97.228.17:4077");
           }
           setMediaUrl(url);
+          setMediaType(data.data.type || "image"); // Default to image if type not specified
         } else {
           console.error("Invalid media response:", data);
           setMediaError(true);
@@ -451,7 +469,7 @@ export default function BrublaLogin() {
     return (
       <div className="min-h-screen bg-black flex items-center justify-center relative overflow-hidden">
         <div className="absolute inset-0">
-          {mediaUrl && (
+          {mediaUrl && mediaType === "video" && (
             <video
               autoPlay
               muted
@@ -463,6 +481,15 @@ export default function BrublaLogin() {
             >
               <source src={mediaUrl} type="video/mp4" />
             </video>
+          )}
+          {mediaUrl && mediaType === "image" && (
+            <img
+              src={mediaUrl}
+              alt="Background"
+              className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none w-[300vw] h-[170vw] sm:w-[220vw] sm:h-[125vw] md:w-[180vw] md:h-[101vw] lg:w-[140vw] lg:h-[78vw] xl:w-[120vw] xl:h-[67.5vw] min-w-full min-h-full object-cover"
+              style={{ opacity: 1, transition: "opacity 1s" }}
+              onLoad={() => setVideoReady(true)}
+            />
           )}
           <div className="absolute inset-0 backdrop-grayscale backdrop-brightness-[0.45] backdrop-contrast-110" />
           <div className="absolute inset-0" style={{ background: "radial-gradient(ellipse at center, rgba(0,0,0,0.3) 0%, transparent 50%, rgba(0,0,0,0.75) 100%)" }} />
@@ -527,21 +554,34 @@ export default function BrublaLogin() {
 
       <div className="min-h-screen bg-black flex flex-col items-center justify-center relative overflow-hidden p-3 sm:p-4 font-['Inter',_Helvetica_Neue,_Arial,_sans-serif]">
 
-        {/* Video background - dynamically loaded from API */}
+        {/* Media background - dynamically loaded from API */}
         <div className="absolute inset-0 overflow-hidden">
           {!mediaLoading && mediaUrl && !mediaError && (
-            <video
-              autoPlay
-              muted
-              loop
-              playsInline
-              className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none w-[300vw] h-[170vw] sm:w-[220vw] sm:h-[125vw] md:w-[180vw] md:h-[101vw] lg:w-[140vw] lg:h-[78vw] xl:w-[120vw] xl:h-[67.5vw] min-w-full min-h-full object-cover"
-              style={{ opacity: videoReady ? 1 : 0, transition: "opacity 1s" }}
-              onLoadedData={() => setVideoReady(true)}
-              onError={() => setMediaError(true)}
-            >
-              <source src={mediaUrl} type="video/mp4" />
-            </video>
+            <>
+              {mediaType === "video" ? (
+                <video
+                  autoPlay
+                  muted
+                  loop
+                  playsInline
+                  className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none w-[300vw] h-[170vw] sm:w-[220vw] sm:h-[125vw] md:w-[180vw] md:h-[101vw] lg:w-[140vw] lg:h-[78vw] xl:w-[120vw] xl:h-[67.5vw] min-w-full min-h-full object-cover"
+                  style={{ opacity: videoReady ? 1 : 0, transition: "opacity 1s" }}
+                  onLoadedData={() => setVideoReady(true)}
+                  onError={() => setMediaError(true)}
+                >
+                  <source src={mediaUrl} type="video/mp4" />
+                </video>
+              ) : (
+                <img
+                  src={mediaUrl}
+                  alt="Background"
+                  className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none w-[300vw] h-[170vw] sm:w-[220vw] sm:h-[125vw] md:w-[180vw] md:h-[101vw] lg:w-[140vw] lg:h-[78vw] xl:w-[120vw] xl:h-[67.5vw] min-w-full min-h-full object-cover"
+                  style={{ opacity: 1, transition: "opacity 1s" }}
+                  onLoad={() => setVideoReady(true)}
+                  onError={() => setMediaError(true)}
+                />
+              )}
+            </>
           )}
           {!mediaLoading && mediaError && (
             <div className="absolute inset-0 bg-gradient-to-br from-gray-900 via-gray-800 to-black" />

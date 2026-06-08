@@ -5,7 +5,7 @@ import Header from "./Header";
 // ─────────────────────────────────────────────────────────────────────────────
 // FALLBACK DATA (if API fails)
 // ─────────────────────────────────────────────────────────────────────────────
-const FALLBACK_CATEGORIES = [ ];
+const FALLBACK_CATEGORIES = [];
 
 
 const COFFEE = "#000";
@@ -193,7 +193,7 @@ export default function CategoriesGrid() {
                                         draggable={false}
                                         onError={(e) => {
                                             e.target.src =
-                                                "https://placehold.co/600x800/e5e7eb/64748b?text=No+Image";
+                                                `https://placehold.co/600x800/000000/ffffff?text=${cat.name}`;
                                         }}
                                     />
 
