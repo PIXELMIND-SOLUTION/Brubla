@@ -26,6 +26,7 @@ import SubCategoryProductsPage from './pages/SubCategoryProductsPage';
 import NotFoundPage from './views/NotFoundPage';
 import WishlistPage from './pages/UserWishlist';
 import SearchResultsPage from './pages/SearchPage';
+import UserWallet from './pages/UserWallet';
 
 /* =========================
    PRIVATE ROUTE COMPONENT
@@ -57,6 +58,7 @@ function App() {
         <Route path="/product/:id" element={<PrivateRoute><ProductDetails /></PrivateRoute>} />
         <Route path="/joinUs" element={<PrivateRoute><JoinUs /></PrivateRoute>} />
         <Route path="/mycart" element={<PrivateRoute><CartPage /></PrivateRoute>} />
+        <Route path="/profile/wallet" element={<PrivateRoute><UserWallet /></PrivateRoute>} />
         <Route path="/profile/my-orders" element={<PrivateRoute><MyOrders /></PrivateRoute>} />
         <Route path="/profile/saved-addresses" element={<PrivateRoute><UserAddresses /></PrivateRoute>} />
         <Route path="/profile/wishlists" element={<PrivateRoute><WishlistPage /></PrivateRoute>} />

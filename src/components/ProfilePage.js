@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import SingleOrderModal from "../pages/SingleOrderModal";
 import Header from "./Header";
 import axios from "axios";
+import { Wallet } from "lucide-react";
 
 // API Base URL
 const API_BASE_URL = "http://31.97.228.17:4077/api";
@@ -620,33 +621,99 @@ const SectionHead = ({ eyebrow, title, cta, onCta }) => {
   );
 };
 
-// ─────────────────────────────────────────────────────────────────────────────
-// QUICK LINKS
-// ─────────────────────────────────────────────────────────────────────────────
+
 const QuickLinks = () => {
   const [ref, vis] = useVis(50);
+  const [walletBalance, setWalletBalance] = useState(0);
+
+  useEffect(() => {
+    const fetchWallet = async () => {
+      try {
+        const userId = localStorage.getItem("userId");
+
+        if (!userId) return;
+
+        const res = await fetch(
+          `http://31.97.228.17:4077/api/users/wallet/${userId}`
+        );
+
+        const data = await res.json();
+
+        if (data.success) {
+          setWalletBalance(data.data.wallet.balance);
+        }
+      } catch (err) {
+        console.error("Wallet fetch error:", err);
+      }
+    };
+
+    fetchWallet();
+  }, []);
+
   const items = [
-    { Icon: MapPin, label: "Addresses", sub: "Manage addresses", link: "/profile/saved-addresses" },
-    { Icon: Truck, label: "My Orders", sub: "View all orders", link: "/profile/my-orders" },
-    { Icon: Heart, label: "Wishlist", sub: "Saved items", link: "/profile/wishlists" },
+    {
+      Icon: Wallet,
+      label: `₹${walletBalance}`,
+      sub: "My Wallet",
+      link: "/profile/wallet",
+      bg: "bg-green-600",
+    },
+    {
+      Icon: MapPin,
+      label: "Addresses",
+      sub: "Manage addresses",
+      link: "/profile/saved-addresses",
+      bg: "bg-black",
+    },
+    {
+      Icon: Truck,
+      label: "My Orders",
+      sub: "View all orders",
+      link: "/profile/my-orders",
+      bg: "bg-black",
+    },
+    {
+      Icon: Heart,
+      label: "Wishlist",
+      sub: "Saved items",
+      link: "/profile/wishlists",
+      bg: "bg-black",
+    },
   ];
+
   return (
-    <div ref={ref} className="grid grid-cols-3 gap-2 sm:gap-3"
-      style={{ opacity: vis ? 1 : 0, animation: vis ? "fadeUp 0.55s ease both" : "none" }}>
-      {items.map(({ Icon, label, sub, link }, i) => (
-        <button key={i} onClick={() => window.location.href = link} className="flex flex-col items-center gap-1.5 sm:gap-2 py-3 sm:py-4 px-1 sm:px-2 rounded-xl sm:rounded-2xl transition-all duration-200 cursor-pointer active:scale-95 bg-white border border-gray-200 hover:border-black">
-          <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl flex items-center justify-center bg-black text-white">
-            <Icon c="w-4 h-4 sm:w-5 sm:h-5" />
+    <div
+      ref={ref}
+      className="grid grid-cols-2 sm:grid-cols-4 gap-3"
+      style={{
+        opacity: vis ? 1 : 0,
+        animation: vis ? "fadeUp 0.55s ease both" : "none",
+      }}
+    >
+      {items.map(({ Icon, label, sub, link, bg }, i) => (
+        <button
+          key={i}
+          onClick={() => (window.location.href = link)}
+          className={`flex flex-col items-center gap-2 py-4 px-2 rounded-2xl transition-all duration-200 cursor-pointer active:scale-95 ${sub === 'My Wallet' ? 'bg-green-50 hover:border-green-400' : 'bg-white hover:border-black'} border border-gray-200 `}
+        >
+          <div
+            className={`w-10 h-10 rounded-xl flex items-center justify-center text-white ${bg}`}
+          >
+            <Icon className="w-5 h-5" />
           </div>
+
           <div className="text-center">
-            <p className="text-[10px] sm:text-[11px] font-bold text-black fs leading-tight">{label}</p>
-            <p className="text-[8px] sm:text-[9px] fs mt-0.5 text-gray-400">{sub}</p>
+            <p className="text-xs font-bold text-black leading-tight">
+              {label}
+            </p>
+            <p className="text-[10px] mt-1 text-gray-400">{sub}</p>
           </div>
         </button>
       ))}
     </div>
   );
 };
+
 
 // ─────────────────────────────────────────────────────────────────────────────
 // MENU GROUP
