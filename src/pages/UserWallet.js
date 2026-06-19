@@ -139,7 +139,7 @@ const TransactionCard = ({ transaction }) => {
           <div className={`w-10 h-10 rounded-xl ${config.bg} flex items-center justify-center flex-shrink-0`}>
             <Icon size={18} className={config.color} />
           </div>
-          
+
           <div className="flex-1 min-w-0">
             <div className="flex flex-wrap items-start justify-between gap-2">
               <div>
@@ -177,13 +177,13 @@ const TransactionCard = ({ transaction }) => {
 // ─────────────────────────────────────────────────────────────────────────────
 // STAT CARD
 // ─────────────────────────────────────────────────────────────────────────────
-const StatCard = ({ 
-  icon: Icon, 
-  label, 
-  value, 
-  subValue, 
-  color, 
-  bgColor = "bg-gray-100" 
+const StatCard = ({
+  icon: Icon,
+  label,
+  value,
+  subValue,
+  color,
+  bgColor = "bg-gray-100"
 }) => (
   <div className="bg-white rounded-xl p-4 border border-gray-200 shadow-sm hover:shadow-md transition-shadow">
     <div className="flex items-center gap-3">
@@ -211,6 +211,19 @@ export default function UserWallet() {
   const [balanceVisible, setBalanceVisible] = useState(true);
   const [toast, setToast] = useState(null);
   const [copied, setCopied] = useState(false);
+
+  const [balanceVisibleForUserWallet, setBalanceVisibleForUserWallet] = useState(() => {
+    const saved = localStorage.getItem("balanceVisibleforUserWallet");
+    return saved !== null ? JSON.parse(saved) : true;
+  });
+
+  const toggleBalanceVisibility = () => {
+    setBalanceVisibleForUserWallet((prev) => {
+      const newValue = !prev;
+      localStorage.setItem("balanceVisibleforUserWallet", JSON.stringify(newValue));
+      return newValue;
+    });
+  };
 
   // Get userId from sessionStorage
   const getUserId = () => {
@@ -321,7 +334,7 @@ export default function UserWallet() {
         {/* Hero Section */}
         <div className="relative overflow-hidden pb-6 sm:pb-8 bg-gradient-to-r from-black to-gray-800 border-b border-gray-700">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 md:py-10">
-            <button 
+            <button
               onClick={() => navigate(-1)}
               className="flex items-center gap-1.5 sm:gap-2 text-gray-400 hover:text-white transition-colors mb-4 sm:mb-6 fs text-xs sm:text-sm group"
             >
@@ -352,7 +365,7 @@ export default function UserWallet() {
 
         {/* Main Content */}
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-4 sm:-mt-6 relative z-10">
-          
+
           {/* Balance Card */}
           <div className="bg-white rounded-2xl border border-gray-200 shadow-lg p-6 sm:p-8 mb-6 sm:mb-8">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
@@ -360,13 +373,20 @@ export default function UserWallet() {
                 <p className="text-sm font-medium text-gray-500 fs">Available Balance</p>
                 <div className="flex items-center gap-3 mt-1">
                   <h2 className="text-3xl sm:text-4xl md:text-5xl font-black text-gray-900 fd">
-                    {balanceVisible ? formatCurrency(wallet?.balance || 0) : "••••••"}
+                    {balanceVisibleForUserWallet
+                      ? formatCurrency(wallet?.balance || 0)
+                      : "••••••"}
                   </h2>
+
                   <button
-                    onClick={() => setBalanceVisible(!balanceVisible)}
+                    onClick={toggleBalanceVisibility}
                     className="p-1 rounded-lg hover:bg-gray-100 transition-colors"
                   >
-                    {balanceVisible ? <EyeOff size={18} className="text-gray-400" /> : <Eye size={18} className="text-gray-400" />}
+                    {balanceVisibleForUserWallet ? (
+                      <EyeOff size={18} className="text-gray-400" />
+                    ) : (
+                      <Eye size={18} className="text-gray-400" />
+                    )}
                   </button>
                 </div>
                 {wallet?.isActive ? (
@@ -564,9 +584,8 @@ export default function UserWallet() {
         {/* Toast Notification */}
         {toast && (
           <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 animate-slideInRight">
-            <div className={`flex items-center gap-3 px-4 py-3 rounded-xl shadow-lg ${
-              toast.type === "success" ? "bg-black text-white" : "bg-red-500 text-white"
-            }`}>
+            <div className={`flex items-center gap-3 px-4 py-3 rounded-xl shadow-lg ${toast.type === "success" ? "bg-black text-white" : "bg-red-500 text-white"
+              }`}>
               {toast.type === "success" ? <CheckCircle size={18} /> : <AlertCircle size={18} />}
               <p className="text-sm font-medium">{toast.message}</p>
               <button onClick={() => setToast(null)} className="opacity-70 hover:opacity-100">

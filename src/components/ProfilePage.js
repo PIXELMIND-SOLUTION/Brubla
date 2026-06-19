@@ -545,7 +545,6 @@ const ProfileHero = ({
 // ─────────────────────────────────────────────────────────────────────────────
 const OrderCard = ({ order, onClick }) => {
   const item = order.items?.[0];
-  console.log("Rendering OrderCard for order:", order);
   const orderStatus = order.orderStatus || "pending";
   const getStatusColor = () => {
     switch (orderStatus.toLowerCase()) {
@@ -622,16 +621,13 @@ const SectionHead = ({ eyebrow, title, cta, onCta }) => {
 };
 
 
-const QuickLinks = () => {
+const QuickLinks = ({ userId }) => {
   const [ref, vis] = useVis(50);
   const [walletBalance, setWalletBalance] = useState(0);
 
   useEffect(() => {
     const fetchWallet = async () => {
       try {
-        const userId = localStorage.getItem("userId");
-
-        if (!userId) return;
 
         const res = await fetch(
           `http://31.97.228.17:4077/api/users/wallet/${userId}`
@@ -798,11 +794,9 @@ export default function ProfilePage() {
     try {
       const response = await axios.get(`${API_BASE_URL}/users/${userId}`);
 
-      console.log("User data response:", response.data);
 
       if (response.data.success && response.data.user) {
         setUser(response.data.user);
-        console.log("User's Orders data set successfully:", response.data.user.orders);
       } else {
         setError(response.data.message || "Failed to load user data");
       }
@@ -828,7 +822,6 @@ export default function ProfilePage() {
   const recentOrders = Array.isArray(user?.orders)
     ? [...user.orders].reverse().slice(0, 4)
     : [];
-  console.log("Recent Orders for display:", recentOrders);
 
   const MENU_GROUPS = [
     {
@@ -906,7 +899,7 @@ export default function ProfilePage() {
 
               <div>
                 <SectionHead eyebrow="Quick Access" title="Shortcuts" />
-                <QuickLinks />
+                <QuickLinks userId={userId} />
               </div>
 
               {recentOrders.length > 0 && (
