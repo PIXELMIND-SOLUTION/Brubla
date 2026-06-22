@@ -271,29 +271,11 @@ const DesignerCard = ({ product }) => {
                         </div>
                     </div>
                 </div>
-                <button onClick={() => setFollowing(!following)} className={`flex-shrink-0 px-3 py-1.5 rounded-full text-xs font-medium transition-all ${following ? "bg-gray-100 text-gray-700 border border-gray-200" : "bg-gray-900 text-white"}`}>
-                    {following ? "Following" : "Follow"}
-                </button>
             </div>
-
-            <div className="grid grid-cols-3 gap-2 mb-4 pb-4 border-b border-gray-100">
-                {[
-                    { val: designer.followers, label: "Followers" },
-                    { val: designer.products, label: "Products" },
-                    { val: `${designer.joined}`, label: "Since" },
-                ].map(({ val, label }) => (
-                    <div key={label} className="text-center">
-                        <p className="text-base font-bold text-gray-900">{val}</p>
-                        <p className="text-[11px] text-gray-400">{label}</p>
-                    </div>
-                ))}
-            </div>
-
-            <p className="text-sm text-gray-600 leading-relaxed mb-4">{designer.bio}</p>
 
             <div className="space-y-2 mb-4">
                 {[
-                    { Icon: MapPin, text: designer.location },
+                   
                     { Icon: Calendar, text: `Joined ${designer.joined}` },
                 ].map(({ Icon, text }) => (
                     <div key={text} className="flex items-center gap-2 text-sm text-gray-500">
@@ -301,10 +283,6 @@ const DesignerCard = ({ product }) => {
                     </div>
                 ))}
             </div>
-
-            <button className="w-full py-2.5 rounded-xl border border-gray-200 text-sm text-gray-700 hover:border-gray-400 transition-all">
-                Message Designer
-            </button>
         </div>
     );
 };
